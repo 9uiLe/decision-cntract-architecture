@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="278" viewBox="0 0 800 278" role="img" aria-labelledby="title description">
-  <title id="title">予約操作の前提・結果・次の操作</title>
-  <desc id="description">確認済みの予約内容を受け取った Core が送信する。結果不明の場合は元の要求を照会し、未成立が確定した場合は期限内に再試行できる。</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="422" viewBox="0 0 800 422" role="img" aria-labelledby="title description">
+  <title id="title">予約送信の前提と結果ごとの操作</title>
+  <desc id="description">確認済みの予約内容を受け取った Core は、現在の確認内容と開始時刻を照合して送信する。送信結果のうち、結果不明と未成立が確定した場合を示す。結果不明なら照会券で元の要求を照会でき、未成立が確定したら再試行券で開催開始前に新しい要求を送れる。</desc>
   <defs>
     <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
       <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
@@ -9,28 +9,41 @@
   <style>
     text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
     .title { font-size: 31px; font-weight: 700; }
-    .label { font-size: 23px; font-weight: 700; }
-    .body { font-size: 19px; }
+    .heading { font-size: 21px; font-weight: 700; }
+    .body { font-size: 18px; }
     .small { font-size: 17px; fill: #475569; }
-    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
-    .blue { fill: #1d4ed8; }
-    .teal { fill: #0f766e; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 17px; fill: #475569; }
   </style>
-  <rect width="800" height="278" rx="20" fill="#f8fafc"/>
-  <text x="40" y="57" class="title" text-anchor="start">予約操作の前提・結果・次の操作</text>
-  <rect x="40" y="93" width="220" height="108" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
-  <text x="55" y="126" class="body" text-anchor="start">前提</text>
-  <text x="55" y="158" class="small" text-anchor="start">確認済みの予約内容</text>
-  <text x="55" y="183" class="small" text-anchor="start">ConfirmedDraft</text>
-  <path d="M260 147H285" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
-  <rect x="290" y="93" width="220" height="108" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
-  <text x="305" y="126" class="body" text-anchor="start">Core が送信</text>
-  <text x="305" y="158" class="small" text-anchor="start">予約の結果を判定</text>
-  <text x="305" y="183" class="small" text-anchor="start">必要な操作券を返す</text>
-  <path d="M510 147H535" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
-  <rect x="540" y="93" width="220" height="108" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
-  <text x="555" y="126" class="body" text-anchor="start">次の操作</text>
-  <text x="555" y="158" class="small" text-anchor="start">不明 → 元の要求を照会</text>
-  <text x="555" y="183" class="small" text-anchor="start">未成立 → 期限内に再試行</text>
-  <text x="40" y="247" class="small" text-anchor="start">結果と画面の分岐は型でつなぎ、時刻と対象は操作時に照合します。</text>
+  <rect width="800" height="422" rx="20" fill="#f8fafc"/>
+  <text x="40" y="54" class="title">予約送信の前提と結果ごとの操作</text>
+
+  <rect x="40" y="80" width="306" height="75" rx="12" fill="#eff6ff" stroke="#93b5f2"/>
+  <text x="58" y="110" class="heading">確認済みの予約内容</text>
+  <text x="58" y="137" class="code">ConfirmedDraft</text>
+
+  <rect x="400" y="80" width="360" height="75" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="418" y="110" class="heading">Core に送信を依頼</text>
+  <text x="418" y="137" class="body">現在の確認内容と開催開始時刻を照合</text>
+
+  <g fill="none" stroke="#47647b" stroke-width="2">
+    <path d="M346 118H394" marker-end="url(#arrow)"/>
+    <path d="M580 155V174H400V188" marker-end="url(#arrow)"/>
+    <path d="M400 236V251H213V266" marker-end="url(#arrow)"/>
+    <path d="M400 251H587V266" marker-end="url(#arrow)"/>
+  </g>
+
+  <rect x="250" y="193" width="300" height="43" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="400" y="221" class="body" text-anchor="middle">送信結果から2つを抜粋</text>
+
+  <rect x="40" y="271" width="346" height="101" rx="12" fill="#eff6ff" stroke="#93b5f2"/>
+  <text x="58" y="302" class="heading">結果不明</text>
+  <text x="58" y="331" class="body">照会券で元の要求 ID を照会</text>
+  <text x="58" y="356" class="small">開催開始後も照会できる</text>
+
+  <rect x="414" y="271" width="346" height="101" rx="12" fill="#ecfdf5" stroke="#88cbbd"/>
+  <text x="432" y="302" class="heading">未成立が確定</text>
+  <text x="432" y="331" class="body">再試行券で新しい要求を送信</text>
+  <text x="432" y="356" class="small">開催開始前に限り再試行できる</text>
+
+  <text x="40" y="402" class="small">照会や再試行の前に、Core が操作券を現在の結果と照合します。</text>
 </svg>
