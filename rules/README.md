@@ -13,17 +13,19 @@
 
 シンボル解決によって、指定の型や関数を参照しているかを判定します。型エイリアスや import の別名があっても、参照先が同じなら検査対象です。許可パッケージは名前が一致するパッケージとその配下です。`example.app.composition` の許可は `example.app.compositionExtra` に及びません。[detekt の型解決](https://detekt.dev/docs/gettingstarted/type-resolution/)
 
-## 予約アプリ固有の検査
+## 検証アプリ固有の検査
 
-予約アプリでは、予約の結果を画面状態に変換する関数、画面状態を描画する関数、Core を組み立てられるコードの場所を指定します。アプリを変更するときは、この適用先を実際の型や関数に合わせて更新します。
+`reservation-contract` は、各 Port を呼び出せる Core を指定します。呼び出しや呼び出し可能参照をシンボルから解決する処理は、汎用ルールと共有します。別のプロダクトへ導入するときは、その業務の Port、操作、所有 Core を指定します。
 
-予約の作成・照会・取消は、予約 Core が状態と操作の前提を確認したうえでサービスに要求します。`reservation-contract` の [`ReservationPortCall`](../product/detekt-rules/src/main/kotlin/example/detekt/reservation/ReservationPortCall.kt) は、`ReservationPort` の `create`、`lookup`、`cancel` を予約 Core のパッケージ外から呼び出すか、呼び出し可能参照を取得すると報告します。別のプロダクトでは、その業務の Port と呼び出しを許す場所を定めます。
+| ルール | 検査する呼び出し | 呼び出せる場所 |
+| --- | --- | --- |
+| `EligibilityPortCall` | 資格の照会 | 参加資格 Core |
+| `ReservationPortCall` | 予約の作成、照会、取消、現在状態の照会 | 予約 Core |
+| `CheckInPortCall` | 受付の作成と照会 | 来場受付 Core |
 
-`ReservationPortCall` は呼び出し先の解決を汎用の実装と共有し、予約固有の対象を別のルールセットに置いています。二つの汎用ルールは `decision-contract` に登録しています。
+[dca.yml](../product/config/detekt/dca.yml) の `decisionFunctions` と `decisionTypes` は、見直しが必要な判断箇所と型を指定します。たとえば、資格結果から予約に進めるかを決める処理と、資格の状態を画面へ変換する処理を登録します。`restrictedCallables` と `allowedCallerPackages` は、Core の組み立て関数と呼び出し元を指定します。
 
-適用先は [dca.yml](../product/config/detekt/dca.yml) に記載しています。`decisionFunctions` と `decisionTypes` が必須の判断箇所と型を指定し、`restrictedCallables` と `allowedCallerPackages` が組み立て関数と呼び出し元を指定します。
-
-`product/` の `./gradlew check` は、Android の `detektDebug` と JVM の `detektMain` を使います。検証用の `:conformance` には意図した違反があり、`check` の出力にも診断が表示されます。テストは、検出されたルールと行が検証用コードに記した期待値と一致することを確かめます。設定で指定した型や関数の名前と、許可パッケージを宣言できるモジュールも照合します。
+`./gradlew check` は、Android・JVM・KMP の型解決付きタスクを実行します。KMP の `detektMainJvm` と `detektMainAndroid` は `commonMain` も検査します。`:conformance` の診断には検査用の違反が含まれ、テストはルール名と診断行を照合します。許可した組み立てパッケージの所有モジュール、Gradle の依存宣言、Core と UI の import を同じ検査で確認します。特に基準仕様では、来場受付 Core から参加資格 Core への参照を禁止します。
 
 ## 型・ビルド・実行時の確認
 
@@ -35,4 +37,4 @@
 | 利用側が必要な結果の違いを取得できること | `Boolean` や `null` にまとめる箇所は、受け取った側の判断まで追ってレビューする |
 | 期限の境界、照会対象、要求回数が正しいこと | 時刻や外部サービスの応答を制御したテストで確かめる |
 
-[Android の検証用アプリの実行手順](../docs/android-product.md)にビルドと検査のコマンドを記載しています。規約の設計根拠は、隣接する `usapo-type-driven-design` の `10-coding-principles.md` です。
+[検証アプリの実行手順](../docs/android-product.md)にビルドと検査のコマンドを記載しています。規約の設計根拠は、隣接する `usapo-type-driven-design` の `10-coding-principles.md` です。

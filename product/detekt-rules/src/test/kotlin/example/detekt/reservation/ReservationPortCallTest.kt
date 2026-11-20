@@ -11,21 +11,23 @@ import kotlin.test.assertTrue
 private val environment = createEnvironment()
 
 private const val PORTS = """
-package example.reservation.ports
+package example.reservation.core
 interface ReservationPort {
     suspend fun create(request: String)
     suspend fun lookup(request: String)
     suspend fun cancel(reservation: String)
+    suspend fun usage(reservation: String)
 }
 """
 
 private const val ADAPTER = """
 package example.adapter
-import example.reservation.ports.ReservationPort
+import example.reservation.core.ReservationPort
 class Wired : ReservationPort {
     override suspend fun create(request: String) = Unit
     override suspend fun lookup(request: String) = Unit
     override suspend fun cancel(reservation: String) = Unit
+    override suspend fun usage(reservation: String) = Unit
 }
 """
 
@@ -34,19 +36,20 @@ private fun lint(code: String) =
 
 class ReservationPortCallTest {
     @Test
-    fun `Core 以外からの create・lookup・cancel を呼び出しの行で報告する`() {
+    fun `Core 以外からの create・lookup・cancel・usage を呼び出しの行で報告する`() {
         val findings = lint(
             """
             package example.app.composition
-            import example.reservation.ports.ReservationPort
+            import example.reservation.core.ReservationPort
             suspend fun misuse(port: ReservationPort) {
                 port.create("q")
                 port.lookup("q")
                 port.cancel("r")
+                port.usage("r")
             }
             """.trimIndent(),
         )
-        assertEquals(listOf(4, 5, 6), findings.map { it.location.source.line })
+        assertEquals(listOf(4, 5, 6, 7), findings.map { it.location.source.line })
     }
 
     @Test
@@ -55,7 +58,7 @@ class ReservationPortCallTest {
             """
             package example.ui
             import example.adapter.Wired
-            import example.reservation.ports.ReservationPort
+            import example.reservation.core.ReservationPort
             suspend fun viaImplementation(wired: Wired) = wired.create("q")
             fun viaReference(port: ReservationPort) = port::lookup
             """.trimIndent(),
@@ -69,7 +72,7 @@ class ReservationPortCallTest {
             val findings = lint(
                 """
                 package $pkg
-                import example.reservation.ports.ReservationPort
+                import example.reservation.core.ReservationPort
                 suspend fun legitimate(port: ReservationPort) = port.create("q")
                 """.trimIndent(),
             )
@@ -82,7 +85,7 @@ class ReservationPortCallTest {
         val findings = lint(
             """
             package example.reservation.coreExtra
-            import example.reservation.ports.ReservationPort
+            import example.reservation.core.ReservationPort
             suspend fun misuse(port: ReservationPort) = port.create("q")
             """.trimIndent(),
         )

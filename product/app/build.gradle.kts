@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "example.app"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "example.reservation.dca"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "0.1"
     }
@@ -27,14 +27,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":reservation-core"))
-    implementation(project(":adapter-simulator"))
-    implementation(project(":ui"))
-    implementation(platform(libs.compose.bom))
+    implementation(project(":shared"))
+    implementation(libs.compose.runtime)
     implementation(libs.compose.ui)
-    implementation(libs.compose.foundation)
-    implementation(libs.compose.material3)
     implementation(libs.activity.compose)
-    implementation(libs.lifecycle.viewmodel.compose)
-    implementation(libs.lifecycle.runtime.compose)
 }

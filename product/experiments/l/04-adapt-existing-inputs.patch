@@ -1,0 +1,34 @@
+--- a/adapter-simulator/src/commonTest/kotlin/example/adapter/simulator/QualificationWireTest.kt
++++ b/adapter-simulator/src/commonTest/kotlin/example/adapter/simulator/QualificationWireTest.kt
+@@ -15,8 +15,8 @@
+ class QualificationWireTest {
+     @Test
+     fun `固定した入力を型付きの外部データに解析し、期限の事実として観測に変換する`() {
+-        val text = "held=true&code=POTTERY-ADV&valid_until=$POTTERY_ADV_UNTIL"
+-        assertEquals(QualificationWire(true, "POTTERY-ADV", POTTERY_ADV_UNTIL), QualificationWireFormat.parse(text))
++        val text = "held=true&qualification_code=workshop.pottery.level2&expires_at=$POTTERY_ADV_UNTIL"
++        assertEquals(QualificationWire(true, "workshop.pottery.level2", POTTERY_ADV_UNTIL), QualificationWireFormat.parse(text))
+         assertEquals(
+             QualificationObservation.Held(EpochMillis(POTTERY_ADV_UNTIL_MILLIS)),
+             QualificationDecoder.decode(text, pottery),
+@@ -28,16 +28,16 @@
+     fun `未知のコード・別の種別のコード・欠けた期限・形式の崩れは、有効な資格と推測しない`() {
+         assertEquals(
+             QualificationObservation.Unavailable,
+-            QualificationDecoder.decode("held=true&code=UNKNOWN-01&valid_until=$POTTERY_ADV_UNTIL", pottery),
++            QualificationDecoder.decode("held=true&qualification_code=UNKNOWN-01&expires_at=$POTTERY_ADV_UNTIL", pottery),
+         )
+         assertEquals(
+             QualificationObservation.Unavailable,
+-            QualificationDecoder.decode("held=true&code=POTTERY-ADV&valid_until=$POTTERY_ADV_UNTIL", roasting),
++            QualificationDecoder.decode("held=true&qualification_code=workshop.pottery.level2&expires_at=$POTTERY_ADV_UNTIL", roasting),
+         )
+-        assertEquals(QualificationObservation.Unavailable, QualificationDecoder.decode("held=true&code=POTTERY-ADV", pottery))
++        assertEquals(QualificationObservation.Unavailable, QualificationDecoder.decode("held=true&qualification_code=workshop.pottery.level2", pottery))
+         assertEquals(
+             QualificationObservation.Unavailable,
+-            QualificationDecoder.decode("held=true&code=POTTERY-ADV&valid_until=いつか", pottery),
++            QualificationDecoder.decode("held=true&qualification_code=workshop.pottery.level2&expires_at=いつか", pottery),
+         )
+         assertEquals(QualificationObservation.Unavailable, QualificationDecoder.decode("unrecognized-response", pottery))
+         assertEquals(QualificationObservation.Unavailable, QualificationDecoder.decode("held=maybe", pottery))

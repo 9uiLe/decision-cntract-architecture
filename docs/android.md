@@ -1,20 +1,10 @@
-# Android と KMP への適用
+# モバイルアプリへの適用
 
-予約できる条件と予約結果の意味は、業務 Core が決めます。Compose は利用者の操作を ViewModel に伝え、ViewModel は Core を呼び出します。ViewModel が結果を画面状態に変換し、Compose がその状態を描画します。この流れは Android の単方向データフローに沿います。[Android のアーキテクチャ推奨事項](https://developer.android.com/topic/architecture/recommendations)
+参加資格、予約、来場受付の条件は、それぞれを所有する Core が決めます。Compose Multiplatform の画面は利用者の操作を伝え、Core から変換した画面状態を描画します。OS ごとの入口が起動とライフサイクルを接続します。
 
 ## 責務と依存方向
 
-図の矢印は、コードが静的に参照する向きです。Port は Core が外部に求める操作のインターフェースです。図は Port の宣言を Core に置く構成を示します。
-
-```mermaid
-flowchart LR
-    Compose["Compose<br/>描画と操作通知"] --> ViewModel["ViewModel<br/>画面状態の生成"]
-    ViewModel --> Core["業務 Core<br/>前提・結果・状態遷移・Port"]
-    Adapter["Adapter<br/>通信と応答の解釈"] --> Core
-    Composition["組み立て<br/>Core と実装の接続"] --> Core
-    Composition --> Adapter
-    Composition --> ViewModel
-```
+Core、Port、Adapter、画面状態の関係は [3つの Core の判断契約](product/core-contracts.md) を参照してください。
 
 Core は結果の意味と、次に許される操作を公開します。ViewModel はその結果から画面状態を作り、Compose は文言やボタンを選びます。たとえば取消操作が渡された画面には、Compose が取消ボタンを表示します。利用者がボタンを押した時点の取消期限は Core が確認します。
 
@@ -53,8 +43,8 @@ sequenceDiagram
 
 ## 検証用アプリでの状態管理
 
-[Android の検証用アプリ](android-product.md)では、組み立て時にアプリのプロセスで共有する Core を作ります。Core が下書き、進行中の要求、確定済みの予約を管理します。画面が切り替わっても、元の要求を照会し、確定済みの予約を取り消せます。操作の有効性は Core が判断し、Jetpack Compose は状態に応じた操作を表示します。
+[検証アプリ](android-product.md)では、組み立て時にプロセスで共有する Core を作ります。予約 Core が下書きと予約要求、成立済みの予約を管理し、来場受付 Core が参加者ごとの受付状態を管理します。画面が切り替わっても、元の要求を照会できます。
 
-[Kotlin/JVM のサンプル](../examples/README.md)では、確認済みの値や結果の分岐をコンパイラがどう検査するかを確認できます。Android の検証用アプリは、シミュレーターで再現した結果と実際の画面操作を使って確かめます。
+[Kotlin/JVM のサンプル](../examples/README.md)では、確認済みの値や結果の分岐をコンパイラがどう検査するかを確認できます。検証アプリでは、シミュレーターの応答と Android・iOS の画面操作を使って、業務条件と各 OS への接続を確かめます。
 
 責務と Port の設計根拠は `usapo-type-driven-design` の `08-module-structure.md` と `09-external-adapters.md` です。

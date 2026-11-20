@@ -1,0 +1,53 @@
+{
+  "changes": [
+    "adapter-simulator"
+  ],
+  "steps": [
+    {
+      "name": "00-old-wire",
+      "gradle": [
+        ":adapter-simulator:jvmTest"
+      ],
+      "patches": [
+        "00-pin-wire-inputs.patch"
+      ],
+      "requiredTests": {
+        "adapter-simulator:example.adapter.simulator.QualificationWireExperimentTest": 2
+      }
+    },
+    {
+      "name": "01-old-field-references",
+      "patches": [
+        "01-expiry-field.patch"
+      ],
+      "gradle": [
+        ":adapter-simulator:compileKotlinJvm"
+      ],
+      "diagnostics": [
+        "e:\\ adapter\\-simulator/src/commonMain/kotlin/example/adapter/simulator/QualificationWire\\.kt:59:5\\ \\[NAMED_PARAMETER_NOT_FOUND\\].*",
+        "e:\\ adapter\\-simulator/src/commonMain/kotlin/example/adapter/simulator/QualificationWire\\.kt:59:5\\ \\[NO_VALUE_FOR_PARAMETER\\].*",
+        "e:\\ adapter\\-simulator/src/commonMain/kotlin/example/adapter/simulator/Simulator\\.kt:264:88\\ \\[NAMED_PARAMETER_NOT_FOUND\\].*",
+        "e:\\ adapter\\-simulator/src/commonMain/kotlin/example/adapter/simulator/Simulator\\.kt:264:88\\ \\[NO_VALUE_FOR_PARAMETER\\].*"
+      ]
+    },
+    {
+      "name": "02-new-wire",
+      "gradle": [
+        ":shared:compileKotlinJvm",
+        ":adapter-simulator:jvmTest",
+        ":reservation-core:jvmTest",
+        ":eligibility-core:jvmTest",
+        ":checkin-core:jvmTest"
+      ],
+      "patches": [
+        "02-adapter-format.patch",
+        "03-verify-new-inputs.patch",
+        "04-adapt-existing-inputs.patch"
+      ],
+      "requiredTests": {
+        "adapter-simulator:example.adapter.simulator.QualificationWireExperimentTest": 2,
+        "adapter-simulator:example.adapter.simulator.QualificationWireTest": 3
+      }
+    }
+  ]
+}

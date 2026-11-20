@@ -1,9 +1,10 @@
 package example.reservation.conformance.violations
 
+import example.eligibility.core.EligibilityOutcome
 import example.reservation.core.ActiveRequest
+import example.reservation.core.CreateObservation
+import example.reservation.core.LookupObservation
 import example.reservation.core.Rejection
-import example.reservation.ports.CreateObservation
-import example.reservation.ports.LookupObservation
 import example.reservation.ui.RequestCard
 
 private typealias Looked = LookupObservation
@@ -37,6 +38,11 @@ fun cardWithFallback(card: RequestCard): String = card.let { shown ->
     }
 }
 
+fun readinessWithFallback(outcome: EligibilityOutcome): Boolean = when (outcome) {
+    is EligibilityOutcome.Eligible -> true
+    else -> false // EXPECT: ExhaustiveDecisionWhen
+}
+
 fun projectExhaustively(request: ActiveRequest?): String = when (request) {
     null -> "none"
     is ActiveRequest.Creating -> "creating"
@@ -46,6 +52,7 @@ fun projectExhaustively(request: ActiveRequest?): String = when (request) {
     is ActiveRequest.NotCreated -> "not created"
     is ActiveRequest.SoldOut -> "sold out"
     is ActiveRequest.RegistrationClosed -> "closed"
+    is ActiveRequest.EligibilityLost -> "eligibility lost"
 }
 
 fun parseExternalCode(code: String): Int = when (code) {

@@ -1,0 +1,142 @@
+--- /dev/null
++++ b/adapter-simulator/src/commonTest/kotlin/example/adapter/simulator/RequalifyOnArrivalExperimentTest.kt
+@@ -0,0 +1,139 @@
++package example.adapter.simulator
++
++import example.checkin.core.CheckInAttemptId
++import example.checkin.core.CheckInKey
++import example.checkin.core.Denial
++import example.checkin.core.ParticipantCheckIn
++import example.checkin.core.createCheckInCore
++import example.eligibility.core.EligibilityCertificate
++import example.eligibility.core.EligibilityOutcome
++import example.eligibility.core.EligibilityStatus
++import example.eligibility.core.QualificationKind
++import example.eligibility.core.createEligibilityCore
++import example.kernel.Clock
++import example.kernel.EpochMillis
++import example.kernel.ParticipantId
++import example.kernel.SessionId
++import example.reservation.core.Catalog
++import example.reservation.core.ConfirmOutcome
++import example.reservation.core.NewBookingRequirement
++import example.reservation.core.Participant
++import example.reservation.core.RequestId
++import example.reservation.core.ReservationAdmission
++import example.reservation.core.ReservationRecord
++import example.reservation.core.Workshop
++import example.reservation.core.createReservationCore
++import kotlin.test.Test
++import kotlin.test.assertEquals
++import kotlin.test.assertIs
++import kotlin.test.assertNull
++import kotlin.time.Duration.Companion.seconds
++import kotlinx.coroutines.ExperimentalCoroutinesApi
++import kotlinx.coroutines.test.TestScope
++import kotlinx.coroutines.test.runCurrent
++import kotlinx.coroutines.test.runTest
++
++@OptIn(ExperimentalCoroutinesApi::class)
++class RequalifyOnArrivalExperimentTest {
++    private class Fixture(scope: TestScope, requirement: NewBookingRequirement) {
++        val first = ParticipantId("a")
++        val second = ParticipantId("b")
++        val pottery = QualificationKind("pottery-advanced")
++        val roasting = QualificationKind("roasting-advanced")
++        val session = SessionId("lesson")
++        val start = EpochMillis(1_800_000_000_000L)
++        var now = EpochMillis(start.value - 72 * 3_600_000)
++        val clock = Clock { now }
++        val simulator = createSimulator(
++            mapOf(session to 2),
++            listOf(
++                QualificationHolding(first, pottery, EpochMillis(start.value + 3_600_000)),
++                QualificationHolding(first, roasting, EpochMillis(start.value + 3_600_000)),
++                QualificationHolding(second, pottery, EpochMillis(start.value - 3_600_000)),
++            ),
++        )
++        val eligibility = createEligibilityCore(simulator.eligibility, clock, scope, 2.seconds)
++        private val catalog = Catalog(
++            listOf(Workshop(session, "講習", start, 2, requirement)),
++            listOf(Participant(first, "佐藤"), Participant(second, "鈴木")),
++        )
++        val reservation = createReservationCore(catalog, simulator.reservation, eligibility, clock, scope, { RequestId("r") }, 2.seconds)
++        private var sequence = 0
++        val checkIn = createCheckInCore(
++            reservation, eligibility, simulator.checkIn, clock, scope,
++            { CheckInAttemptId("a-${++sequence}") }, 2.seconds,
++        )
++
++        fun selectParticipants() {
++            reservation.selectWorkshop(session)
++            reservation.toggleParticipant(first)
++            reservation.toggleParticipant(second)
++        }
++
++        fun certificate(person: ParticipantId, kind: QualificationKind): EligibilityCertificate {
++            val status = assertIs<EligibilityStatus.Settled>(eligibility.status(person, kind))
++            return assertIs<EligibilityOutcome.Eligible>(status.outcome).certificate
++        }
++
++        fun record() = assertIs<ReservationRecord.Reserved>(reservation.snapshot.value.reservations.single())
++    }
++
++    @Test
++    fun `AとBの資格は予約時に有効で、来場時に有効なAだけ受け付ける`() = runTest {
++        val f = Fixture(this, NewBookingRequirement.Required(QualificationKind("pottery-advanced")))
++        f.selectParticipants()
++        f.reservation.requestEligibility()
++        f.eligibility.request(f.first, f.roasting)
++        runCurrent()
++        val firstCertificate = f.certificate(f.first, f.pottery)
++        val secondCertificate = f.certificate(f.second, f.pottery)
++        val wrongKind = f.certificate(f.first, f.roasting)
++        val confirmed = assertIs<ConfirmOutcome.Confirmed>(f.reservation.confirmQualified())
++        f.reservation.submit(confirmed.draft)
++        runCurrent()
++        val booking = f.record()
++        val first = assertIs<ReservationAdmission.Qualified>(booking.admissions.first { it.participant == f.first })
++        val second = assertIs<ReservationAdmission.Qualified>(booking.admissions.first { it.participant == f.second })
++        val firstKey = CheckInKey(booking.reservation, f.first)
++        val secondKey = CheckInKey(booking.reservation, f.second)
++
++        f.now = EpochMillis(f.start.value - 20 * 60_000)
++        f.checkIn.checkIn(first, secondCertificate)
++        runCurrent()
++        assertEquals(Denial.QualificationUnconfirmed, assertIs<ParticipantCheckIn.NotAdmitted>(f.checkIn.snapshot.value.entries[firstKey]).denial)
++        f.checkIn.checkIn(first, wrongKind)
++        runCurrent()
++        assertEquals(0, f.simulator.controls.observations.value.checkInCreateRequests)
++
++        f.checkIn.checkIn(first, firstCertificate)
++        runCurrent()
++        assertEquals(ParticipantCheckIn.CheckedIn, f.checkIn.snapshot.value.entries[firstKey])
++        assertNull(f.checkIn.snapshot.value.entries[secondKey])
++        f.checkIn.checkIn(second, secondCertificate)
++        runCurrent()
++        val denial = assertIs<ParticipantCheckIn.NotAdmitted>(f.checkIn.snapshot.value.entries[secondKey]).denial
++        assertEquals(Denial.QualificationUnconfirmed, denial)
++        val observed = f.simulator.controls.observations.value
++        assertEquals(1, observed.createRequests)
++        assertEquals(1, observed.activeReservations)
++        assertEquals(1, observed.checkInCreateRequests)
++        assertEquals(f.first, observed.checkInRecords.single().participant)
++    }
++
++    @Test
++    fun `資格なしで成立した予約は来場時も資格なしで受け付ける`() = runTest {
++        val f = Fixture(this, NewBookingRequirement.NotRequired)
++        f.selectParticipants()
++        val confirmed = assertIs<ConfirmOutcome.Confirmed>(f.reservation.confirmWithoutQualification())
++        f.reservation.submit(confirmed.draft)
++        runCurrent()
++        val reservation = f.record()
++        val first = assertIs<ReservationAdmission.Open>(reservation.admissions.first { it.participant == f.first })
++
++        f.now = EpochMillis(f.start.value - 20 * 60_000)
++        f.checkIn.checkIn(first)
++        runCurrent()
++        assertEquals(0, f.simulator.controls.observations.value.qualificationRequests)
++        assertEquals(1, f.simulator.controls.observations.value.checkInCreateRequests)
++    }
++}

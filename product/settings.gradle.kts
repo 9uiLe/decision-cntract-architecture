@@ -16,11 +16,15 @@ dependencyResolutionManagement {
 rootProject.name = "dca-reservation"
 
 include(
-    ":reservation-ports",
+    ":kernel",
+    ":eligibility-core",
     ":reservation-core",
+    ":checkin-core",
     ":adapter-simulator",
     ":ui",
+    ":shared",
     ":app",
     ":detekt-rules",
     ":conformance",
+    ":compile-contracts",
 )

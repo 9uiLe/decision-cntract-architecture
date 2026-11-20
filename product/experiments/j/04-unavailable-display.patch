@@ -1,0 +1,8 @@
+--- a/ui/src/commonMain/kotlin/example/reservation/ui/Messages.kt
++++ b/ui/src/commonMain/kotlin/example/reservation/ui/Messages.kt
+@@ -102,4 +102,5 @@
+     AdmissionUnavailableReason.NotIncluded -> "この予約に含まれない参加者です。"
+     AdmissionUnavailableReason.NotReserved -> "成立が確認できた予約ではありません。"
+     AdmissionUnavailableReason.Cancelled -> "取り消された予約のため受付できません。"
++    AdmissionUnavailableReason.Suspended -> "予約の利用が停止されているため、受付できません。"
+ }

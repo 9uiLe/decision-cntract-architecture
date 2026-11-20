@@ -1,0 +1,264 @@
+--- a/reservation-core/src/commonMain/kotlin/example/reservation/core/ReservationCore.kt
++++ b/reservation-core/src/commonMain/kotlin/example/reservation/core/ReservationCore.kt
+@@ -35,6 +35,7 @@
+     private val newRequestId: () -> RequestId,
+     private val scope: CoroutineScope,
+     private val operationTimeout: Duration,
++    initialReservations: List<ReservationRecord> = emptyList(),
+ ) : AdmissionSource {
+     private val lock = SynchronizedObject()
+     private var lastOperation = 0L
+@@ -42,7 +43,7 @@
+         CoreSnapshot(
+             draft = Draft(workshop = null, participants = emptyList(), confirmation = Confirmation.Unconfirmed),
+             request = null,
+-            reservations = emptyList(),
++            reservations = initialReservations,
+         )
+     )
+ 
+--- a/reservation-core/build.gradle.kts
++++ b/reservation-core/build.gradle.kts
+@@ -19,6 +19,9 @@
+             implementation(libs.atomicfu)
+         }
+         commonTest.dependencies {
++            implementation(project(":adapter-simulator"))
++            implementation(project(":checkin-core"))
++            implementation(project(":ui"))
+             implementation(libs.kotlin.test)
+             implementation(libs.coroutines.test)
+         }
+--- a/reservation-core/src/commonTest/kotlin/example/reservation/core/ReservationCoreTest.kt
++++ b/reservation-core/src/commonTest/kotlin/example/reservation/core/ReservationCoreTest.kt
+@@ -28,8 +28,8 @@
+ private const val START = 100 * HOUR
+ private const val CANCEL_DEADLINE = START - 24 * HOUR
+ 
+-private val pottery = Workshop(SessionId("pottery"), "陶芸", EpochMillis(START), 4, NewBookingRequirement.NotRequired)
+-private val cooking = Workshop(SessionId("cooking"), "料理", EpochMillis(START + 10 * HOUR), 4, NewBookingRequirement.NotRequired)
++private val pottery = Workshop(SessionId("pottery"), "陶芸", EpochMillis(START), 4, NewBookingRequirement(QualificationKind("basic-safety")))
++private val cooking = Workshop(SessionId("cooking"), "料理", EpochMillis(START + 10 * HOUR), 4, NewBookingRequirement(QualificationKind("basic-safety")))
+ private val alice = ParticipantId("alice")
+ private val bob = ParticipantId("bob")
+ private val catalog = Catalog(
+@@ -63,9 +63,9 @@
+     override suspend fun usage(reservation: ReservationId): UsageObservation = UsageObservation.Active
+ }
+ 
+-private object NoQualificationService : EligibilityPort {
++private object AvailableQualificationService : EligibilityPort {
+     override suspend fun fetch(participant: ParticipantId, kind: QualificationKind): QualificationObservation =
+-        QualificationObservation.Unavailable
++        QualificationObservation.Held(EpochMillis(START + 100 * HOUR))
+ }
+ 
+ private class Fixture(private val scope: TestScope, var now: Long = START - HOUR, timeout: kotlin.time.Duration = 30.seconds) {
+@@ -74,7 +74,7 @@
+     private val coroutines = CoroutineScope(SupervisorJob() + StandardTestDispatcher(scope.testScheduler))
+     private val clock = Clock { EpochMillis(now) }
+     val core = createReservationCore(
+-        catalog, port, createEligibilityCore(NoQualificationService, clock, coroutines, timeout), clock,
++        catalog, port, createEligibilityCore(AvailableQualificationService, clock, coroutines, timeout), clock,
+         coroutines, { RequestId("req-${++counter}") }, timeout,
+     )
+     val snapshot get() = core.snapshot.value
+@@ -82,7 +82,13 @@
+     fun confirmed(workshop: Workshop = pottery, who: List<ParticipantId> = listOf(alice)): ConfirmedDraft {
+         core.selectWorkshop(workshop.id)
+         who.forEach { core.toggleParticipant(it) }
+-        return (core.confirmWithoutQualification() as ConfirmOutcome.Confirmed).draft
++        return confirmSelected()
++    }
++
++    fun confirmSelected(): ConfirmedDraft {
++        core.requestEligibility()
++        scope.runCurrent()
++        return assertIs<ConfirmOutcome.Confirmed>(core.confirmQualified()).draft
+     }
+ 
+     fun reserve(workshop: Workshop = pottery): ReservationRecord.Reserved {
+@@ -117,7 +123,7 @@
+         val old = f.confirmed()
+         f.core.toggleParticipant(bob)
+         assertEquals(Rejection.Stale, f.core.submit(old).rejection())
+-        val latest = (f.core.confirmWithoutQualification() as ConfirmOutcome.Confirmed).draft
++        val latest = f.confirmSelected()
+         assertEquals(Acceptance.Accepted, f.core.submit(latest))
+         runCurrent()
+         assertEquals(1, f.port.createCalls.size)
+@@ -127,9 +133,9 @@
+     fun `参加者が空では確認できず、確認だけでは要求を送らない`() = runTest {
+         val f = Fixture(this)
+         f.core.selectWorkshop(pottery.id)
+-        assertEquals(ConfirmOutcome.EmptyParticipants, f.core.confirmWithoutQualification())
++        assertEquals(ConfirmOutcome.EmptyParticipants, f.core.confirmQualified())
+         f.core.toggleParticipant(alice)
+-        assertIs<ConfirmOutcome.Confirmed>(f.core.confirmWithoutQualification())
++        f.confirmSelected()
+         runCurrent()
+         assertTrue(f.port.createCalls.isEmpty())
+     }
+@@ -194,7 +200,7 @@
+ 
+         f.core.selectWorkshop(pottery.id)
+         f.core.toggleParticipant(bob)
+-        val draft = (f.core.confirmWithoutQualification() as ConfirmOutcome.Confirmed).draft
++        val draft = f.confirmSelected()
+         assertEquals(Rejection.Busy, f.core.submit(draft).rejection())
+         assertEquals(pottery, f.snapshot.draft.workshop)
+         assertEquals(unknown, f.snapshot.request)
+@@ -286,7 +292,7 @@
+         val notCreated = assertIs<ActiveRequest.NotCreated>(f.snapshot.request)
+ 
+         f.now = START
+-        val again = (f.core.confirmWithoutQualification() as ConfirmOutcome.Confirmed).draft
++        val again = f.confirmSelected()
+         assertEquals(Rejection.RegistrationClosed, f.core.submit(again).rejection())
+         assertEquals(notCreated, f.snapshot.request)
+     }
+--- a/reservation-core/src/commonTest/kotlin/example/reservation/core/QualifiedReservationTest.kt
++++ b/reservation-core/src/commonTest/kotlin/example/reservation/core/QualifiedReservationTest.kt
+@@ -32,14 +32,13 @@
+ private const val START = 100 * HOUR
+ private val pottery = QualificationKind("pottery-advanced")
+ private val roasting = QualificationKind("roasting-advanced")
+-private val open = Workshop(SessionId("open"), "通常回", EpochMillis(START), 4, NewBookingRequirement.NotRequired)
+-private val advanced = Workshop(SessionId("adv-pottery"), "上級ろくろ", EpochMillis(START), 4, NewBookingRequirement.Required(pottery))
+-private val advancedRoasting = Workshop(SessionId("adv-roast"), "上級焙煎", EpochMillis(START), 4, NewBookingRequirement.Required(roasting))
++private val advanced = Workshop(SessionId("adv-pottery"), "上級ろくろ", EpochMillis(START), 4, NewBookingRequirement(pottery))
++private val advancedRoasting = Workshop(SessionId("adv-roast"), "上級焙煎", EpochMillis(START), 4, NewBookingRequirement(roasting))
+ private val alice = ParticipantId("alice")
+ private val bob = ParticipantId("bob")
+ private val carol = ParticipantId("carol")
+ private val catalog = Catalog(
+-    listOf(open, advanced, advancedRoasting),
++    listOf(advanced, advancedRoasting),
+     listOf(Participant(alice, "アリス"), Participant(bob, "ボブ"), Participant(carol, "キャロル")),
+ )
+ 
+@@ -128,29 +127,6 @@
+ @OptIn(ExperimentalCoroutinesApi::class)
+ class QualifiedReservationTest {
+     @Test
+-    fun `通常回は資格を確認せずに予約でき、資格の照会は行わない`() = runTest {
+-        val f = QFixture(this)
+-        f.select(open, listOf(alice))
+-        val confirmed = (f.core.confirmWithoutQualification() as ConfirmOutcome.Confirmed).draft
+-        assertIs<ConfirmedDraft.Open>(confirmed)
+-        f.core.submit(confirmed)
+-        runCurrent()
+-        assertEquals(1, f.port.creates)
+-        assertEquals(0, f.service.fetches)
+-        assertEquals(BookedBasis.WithoutQualification, f.snapshot.reservations.single().booking.basis)
+-    }
+-
+-    @Test
+-    fun `通常回の入口を要資格回に使うことも、要資格の入口を通常回に使うこともできない`() = runTest {
+-        val f = QFixture(this)
+-        f.select(advanced, listOf(alice))
+-        assertEquals(ConfirmOutcome.QualificationRequired, f.core.confirmWithoutQualification())
+-        f.select(open, listOf(alice))
+-        assertEquals(ConfirmOutcome.QualificationNotRequired, f.core.confirmQualified())
+-        assertEquals(Acceptance.Rejected(Rejection.QualificationNotRequired), f.core.requestEligibility())
+-    }
+-
+-    @Test
+     fun `要資格回は全参加者の資格が有効なら予約でき、作成要求は一度だけ送る`() = runTest {
+         val f = QFixture(this)
+         f.grant(alice)
+--- /dev/null
++++ b/reservation-core/src/commonTest/kotlin/example/reservation/core/RequiredQualificationExperimentTest.kt
+@@ -0,0 +1,92 @@
++package example.reservation.core
++
++import example.adapter.simulator.QualificationHolding
++import example.adapter.simulator.createSimulator
++import example.checkin.core.CheckInAttemptId
++import example.checkin.core.CheckInKey
++import example.checkin.core.ParticipantCheckIn
++import example.checkin.core.createCheckInCore
++import example.eligibility.core.QualificationKind
++import example.eligibility.core.createEligibilityCore
++import example.kernel.Clock
++import example.kernel.EpochMillis
++import example.kernel.ParticipantId
++import example.kernel.SessionId
++import example.reservation.ui.CheckInView
++import example.reservation.ui.ReservationCard
++import example.reservation.ui.projectReservation
++import kotlin.test.Test
++import kotlin.test.assertEquals
++import kotlin.test.assertIs
++import kotlin.time.Duration.Companion.seconds
++import kotlinx.coroutines.ExperimentalCoroutinesApi
++import kotlinx.coroutines.test.runCurrent
++import kotlinx.coroutines.test.runTest
++
++@OptIn(ExperimentalCoroutinesApi::class)
++class RequiredQualificationExperimentTest {
++    @Test
++    fun `新規は基礎安全講習を要し、導入前の予約は履歴から読み出して受付できる`() = runTest {
++        val start = EpochMillis(1_800_000_000_000L)
++        var now = EpochMillis(start.value - 72 * 3_600_000)
++        val clock = Clock { now }
++        val safety = QualificationKind("basic-safety", "基礎安全講習修了")
++        val participant = ParticipantId("a")
++        val session = SessionId("beginner")
++        val workshop = Workshop(session, "初心者向け講習", start, 4, NewBookingRequirement(safety))
++        val simulator = createSimulator(mapOf(session to 4), listOf(QualificationHolding(participant, safety, start)))
++        val eligibility = createEligibilityCore(simulator.eligibility, clock, this, 2.seconds)
++        val previousId = assertIs<CreateObservation.Created>(
++            simulator.reservation.create(RequestId("before-policy"), session, listOf(participant)),
++        ).reservation
++        val previousBooking = Booking(workshop, listOf(participant), BookedBasis.WithoutQualification)
++        val previousRecord = ReservationRecord.Reserved(
++            previousId,
++            previousBooking,
++            CancelTicket(previousId),
++            lastCancelFailure = null,
++            admissions = listOf(ReservationAdmission.Open(previousId, participant, session, start)),
++        )
++        val reservation = ReservationCore(
++            Catalog(listOf(workshop), listOf(Participant(participant, "佐藤"))),
++            simulator.reservation,
++            eligibility,
++            clock,
++            { RequestId("after-policy") },
++            this,
++            2.seconds,
++            initialReservations = listOf(previousRecord),
++        )
++        val checkIn = createCheckInCore(reservation, simulator.checkIn, clock, this, { CheckInAttemptId("a") }, 2.seconds)
++
++        reservation.selectWorkshop(session)
++        reservation.toggleParticipant(participant)
++        assertIs<ConfirmOutcome.EligibilityNotMet>(reservation.confirmQualified())
++        assertEquals(1, simulator.controls.observations.value.createRequests)
++
++        reservation.requestEligibility()
++        runCurrent()
++        val verified = assertIs<ConfirmOutcome.Confirmed>(reservation.confirmQualified())
++        assertEquals(Acceptance.Accepted, reservation.submit(verified.draft))
++        runCurrent()
++        val history = reservation.snapshot.value.reservations
++        assertEquals(BookedBasis.WithoutQualification, history.first().booking.basis)
++        val historicalCard = assertIs<ReservationCard.Reserved>(
++            projectReservation(history.first(), null, mapOf(participant to "佐藤"), checkIn.snapshot.value),
++        )
++        assertEquals(previousId.value, historicalCard.reservationId)
++        assertEquals(CheckInView.NotCheckedIn, historicalCard.participants.single().view)
++        assertEquals(BookedBasis.WithQualification(safety), history.last().booking.basis)
++        assertEquals(2, simulator.controls.observations.value.activeReservations)
++
++        now = EpochMillis(start.value - 20 * 60_000)
++        val before = simulator.controls.observations.value.qualificationRequests
++        val admission = assertIs<AdmissionLookup.Valid>(reservation.admission(previousId, participant)).admission
++        checkIn.checkIn(assertIs<ReservationAdmission.Open>(admission))
++        runCurrent()
++        assertEquals(ParticipantCheckIn.CheckedIn, checkIn.snapshot.value.entries[CheckInKey(previousId, participant)])
++        assertEquals(before, simulator.controls.observations.value.qualificationRequests)
++        assertEquals(1, simulator.controls.observations.value.checkInCreateRequests)
++        assertEquals(1, simulator.controls.observations.value.checkInRecords.single().records)
++    }
++}

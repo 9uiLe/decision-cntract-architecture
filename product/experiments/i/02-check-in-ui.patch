@@ -1,0 +1,45 @@
+--- a/ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel.kt
++++ b/ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel.kt
+@@ -7,6 +7,8 @@
+ import example.checkin.core.CheckInRetryTicket
+ import example.checkin.core.CheckInStatusTicket
+ import example.eligibility.core.EligibilityAuthority
++import example.eligibility.core.EligibilityOutcome
++import example.eligibility.core.EligibilityStatus
+ import example.kernel.ParticipantId
+ import example.kernel.SessionId
+ import example.reservation.core.Acceptance
+@@ -70,7 +72,22 @@
+ 
+     fun cancel(ticket: CancelTicket): Acceptance = relay(core.cancel(ticket))
+ 
+-    fun checkInParticipant(admission: ReservationAdmission): CheckInAcceptance = relayCheckIn(checkIn.checkIn(admission))
++    fun checkInParticipant(admission: ReservationAdmission) {
++        when (admission) {
++            is ReservationAdmission.Open -> relayCheckIn(checkIn.checkIn(admission))
++            is ReservationAdmission.Qualified -> {
++                val status = eligibility.status(admission.participant, admission.kind)
++                val outcome = (status as? EligibilityStatus.Settled)?.outcome
++                when (outcome) {
++                    is EligibilityOutcome.Eligible -> relayCheckIn(checkIn.checkIn(admission, outcome.certificate))
++                    EligibilityOutcome.Expired, EligibilityOutcome.NotHeld, EligibilityOutcome.Unknown, null -> {
++                        eligibility.request(admission.participant, admission.kind)
++                        notify("資格の状況を確認します。確認後にもう一度受付をお試しください。")
++                    }
++                }
++            }
++        }
++    }
+ 
+     fun lookUpCheckIn(ticket: CheckInStatusTicket): CheckInAcceptance = relayCheckIn(checkIn.checkStatus(ticket))
+ 
+--- a/ui/src/commonMain/kotlin/example/reservation/ui/Messages.kt
++++ b/ui/src/commonMain/kotlin/example/reservation/ui/Messages.kt
+@@ -96,6 +96,7 @@
+     Denial.NotYetOpen -> "受付はまだ始まっていません。"
+     Denial.Closed -> "受付は終了しています。"
+     Denial.WrongTarget -> "予約と参加者の組み合わせを確認できませんでした。"
++    Denial.QualificationUnconfirmed -> "来場時の資格を確認できないため、受付していません。"
+ }
+ 
+ fun unavailableMessage(reason: AdmissionUnavailableReason): String = when (reason) {

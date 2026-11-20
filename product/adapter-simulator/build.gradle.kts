@@ -1,22 +1,28 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.kmp.library)
     alias(libs.plugins.detekt)
 }
 
 kotlin {
-    jvmToolchain(21)
-}
+    android {
+        namespace = "example.adapter.simulator"
+        compileSdk = 37
+        minSdk = 26
+    }
 
-dependencies {
-    api(project(":reservation-ports"))
-    api(libs.coroutines.core)
-
-    testImplementation(libs.coroutines.test)
-    testImplementation(libs.kotlin.test.junit5)
-    testImplementation(libs.junit.jupiter)
-    testRuntimeOnly(libs.junit.platform.launcher)
-}
-
-tasks.test {
-    useJUnitPlatform()
+    sourceSets {
+        commonMain.dependencies {
+            api(project(":kernel"))
+            api(project(":eligibility-core"))
+            api(project(":reservation-core"))
+            api(project(":checkin-core"))
+            api(libs.coroutines.core)
+            implementation(libs.atomicfu)
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.coroutines.test)
+        }
+    }
 }

@@ -32,3 +32,15 @@
 比較対象にも閉じた結果型や通常の責務分離を備え、同じ要求、時刻、外部応答を使います。比較では、同じ変更でどの対応漏れを検出できたか、どこまで修正が必要になったかを見ます。DCA では、どの処理で Kotlin の網羅性チェックを使うかを設計時に決めます。
 
 評価の根拠は `usapo-type-driven-design/13-verification.md` と `dca-mobile-product-spec/verification/` です。
+
+## 3つの Core を使う変更実験
+
+[課題 H〜L](README.md#仕様変更の検証)は、それぞれ同じ基準仕様に適用します。[実行スクリプト](../product/experiments/run.py)は作業ツリーのアプリをコピーし、実験ごとに別の一時ディレクトリで差分を適用します。各段階でコンパイル診断やテスト結果を記録します。
+
+Android 用の Nix シェルを使い、リポジトリのルートから実行します。`all` を `h`、`i`、`j`、`k`、`l` のいずれかに変えると、その課題だけを実行できます。
+
+```sh
+python3 product/experiments/run.py all --evidence runs/multicore/experiments
+```
+
+実際に確認した結果は [検証記録](product/verification-results.md) を参照してください。

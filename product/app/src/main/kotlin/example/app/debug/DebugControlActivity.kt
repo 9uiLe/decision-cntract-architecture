@@ -5,17 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import example.app.DcaApplication
-import example.reservation.ui.ReservationTheme
+import example.app.DebugControlEntry
 
 class DebugControlActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val container = (application as DcaApplication).container
-        setContent {
-            ReservationTheme {
-                DebugControlScreen(container.simulatorControls, container.clock, container.catalog)
-            }
-        }
+        setContent { DebugControlEntry(container) }
     }
 }

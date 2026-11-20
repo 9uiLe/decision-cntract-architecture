@@ -1,0 +1,67 @@
+{
+  "changes": [
+    "eligibility-core",
+    "adapter-simulator",
+    "ui",
+    "reservation-core/src/commonMain/kotlin/example/reservation/core/ReservationCore.kt"
+  ],
+  "steps": [
+    {
+      "name": "00-baseline",
+      "gradle": [
+        ":ui:compileKotlinJvm",
+        ":adapter-simulator:jvmTest",
+        ":reservation-core:jvmTest",
+        ":eligibility-core:jvmTest",
+        ":checkin-core:jvmTest"
+      ],
+      "requiredTests": {
+        "adapter-simulator:example.adapter.simulator.AcceptanceTest": 1,
+        "reservation-core:example.reservation.core.ReservationCoreTest": 24
+      }
+    },
+    {
+      "name": "01-reservation-decision",
+      "patches": [
+        "01-outcome.patch"
+      ],
+      "gradle": [
+        ":reservation-core:compileKotlinJvm"
+      ],
+      "diagnostics": [
+        "e:\\ reservation\\-core/src/commonMain/kotlin/example/reservation/core/ReservationCore\\.kt:410:9\\ \\[NO_ELSE_IN_WHEN\\].*"
+      ]
+    },
+    {
+      "name": "02-projection",
+      "patches": [
+        "02-reservation-gate.patch"
+      ],
+      "gradle": [
+        ":ui:compileKotlinJvm"
+      ],
+      "diagnostics": [
+        "e:\\ ui/src/commonMain/kotlin/example/reservation/ui/Projection\\.kt:68:71\\ \\[NO_ELSE_IN_WHEN\\].*"
+      ]
+    },
+    {
+      "name": "03-fixed",
+      "gradle": [
+        ":shared:compileKotlinJvm",
+        ":adapter-simulator:jvmTest",
+        ":reservation-core:jvmTest",
+        ":eligibility-core:jvmTest",
+        ":checkin-core:jvmTest"
+      ],
+      "patches": [
+        "03-qualification-state.patch",
+        "04-qualification-display.patch",
+        "05-runtime-scenarios.patch"
+      ],
+      "requiredTests": {
+        "adapter-simulator:example.adapter.simulator.SuspendedQualificationExperimentTest": 2,
+        "checkin-core:example.checkin.core.CheckInCoreTest": 1
+      }
+    }
+  ]
+}

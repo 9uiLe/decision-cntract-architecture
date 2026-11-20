@@ -1,0 +1,187 @@
+--- a/checkin-core/build.gradle.kts
++++ b/checkin-core/build.gradle.kts
+@@ -4,7 +4,6 @@
+     alias(libs.plugins.detekt)
+ }
+ 
+-// 基準仕様の来場受付 Core は、予約 Core の公開契約だけに依存する。資格 Core への直接の依存は課題 I で初めて加える。
+ kotlin {
+     android {
+         namespace = "example.checkin.core"
+@@ -16,6 +15,7 @@
+         commonMain.dependencies {
+             api(project(":kernel"))
+             api(project(":reservation-core"))
++            api(project(":eligibility-core"))
+             api(libs.coroutines.core)
+             implementation(libs.atomicfu)
+         }
+--- a/checkin-core/src/commonMain/kotlin/example/checkin/core/CheckInCore.kt
++++ b/checkin-core/src/commonMain/kotlin/example/checkin/core/CheckInCore.kt
+@@ -1,5 +1,8 @@
+ package example.checkin.core
+ 
++import example.eligibility.core.EligibilityAuthority
++import example.eligibility.core.EligibilityCertificate
++import example.eligibility.core.Reverification
+ import example.kernel.Clock
+ import example.kernel.EpochMillis
+ import example.reservation.core.AdmissionLookup
+@@ -24,6 +27,7 @@
+ // 結果は理由を保ったまま受付の拒否として画面へ渡す。参加者ごとに独立して進行し、受付の記録は参加者単位で一件。
+ class CheckInCore internal constructor(
+     private val source: AdmissionSource,
++    private val eligibility: EligibilityAuthority,
+     private val port: CheckInPort,
+     private val clock: Clock,
+     private val newAttemptId: () -> CheckInAttemptId,
+@@ -37,9 +41,20 @@
+ 
+     val snapshot: StateFlow<CheckInSnapshot> get() = state
+ 
+-    fun checkIn(admission: ReservationAdmission): CheckInAcceptance {
++    fun checkIn(admission: ReservationAdmission.Open): CheckInAcceptance =
++        startCheckIn(admission, certificate = null)
++
++    fun checkIn(
++        admission: ReservationAdmission.Qualified,
++        certificate: EligibilityCertificate,
++    ): CheckInAcceptance = startCheckIn(admission, certificate)
++
++    private fun startCheckIn(
++        admission: ReservationAdmission,
++        certificate: EligibilityCertificate?,
++    ): CheckInAcceptance {
+         val key = CheckInKey(admission.reservation, admission.participant)
+-        return begin(key, admission) { current ->
++        return begin(key, admission, certificate) { current ->
+             when (current) {
+                 null, is ParticipantCheckIn.NotAdmitted -> null
+                 is ParticipantCheckIn.Processing -> CheckInRejection.Busy
+@@ -52,7 +67,7 @@
+     fun retry(ticket: CheckInRetryTicket): CheckInAcceptance {
+         val admission = ticket.admission
+         val key = CheckInKey(admission.reservation, admission.participant)
+-        return begin(key, admission) { current ->
++        return begin(key, admission, ticket.certificate) { current ->
+             when (current) {
+                 is ParticipantCheckIn.NotCreated -> if (current.retry === ticket) null else CheckInRejection.Stale
+                 is ParticipantCheckIn.Processing -> CheckInRejection.Busy
+@@ -79,9 +94,9 @@
+         scope.launch {
+             val next: ParticipantCheckIn = when (observe(CheckInLookupObservation.Failed) { port.lookup(ticket.attempt) }) {
+                 CheckInLookupObservation.Found -> ParticipantCheckIn.CheckedIn
+-                CheckInLookupObservation.NotCreated -> ParticipantCheckIn.NotCreated(CheckInRetryTicket(admission))
++                CheckInLookupObservation.NotCreated -> ParticipantCheckIn.NotCreated(CheckInRetryTicket(admission, ticket.certificate))
+                 CheckInLookupObservation.NotFound, CheckInLookupObservation.Failed ->
+-                    ParticipantCheckIn.Unknown(CheckInStatusTicket(ticket.attempt, admission))
++                    ParticipantCheckIn.Unknown(CheckInStatusTicket(ticket.attempt, admission, ticket.certificate))
+             }
+             settle(key, operation, next)
+         }
+@@ -91,6 +106,7 @@
+     private inline fun begin(
+         key: CheckInKey,
+         admission: ReservationAdmission,
++        certificate: EligibilityCertificate?,
+         precondition: (ParticipantCheckIn?) -> CheckInRejection?,
+     ): CheckInAcceptance {
+         val operation = synchronized(lock) {
+@@ -104,12 +120,17 @@
+             put(key, operation, ParticipantCheckIn.Processing(ProcessingStage.ConfirmingReservation))
+             operation
+         }
+-        scope.launch { proceed(key, operation, admission) }
++        scope.launch { proceed(key, operation, admission, certificate) }
+         return CheckInAcceptance.Accepted
+     }
+ 
+     // 処理中を確保した後で予約の現在の状態を確かめる。戻ったら、対象と時刻を取り直してから受付を要求する。
+-    private suspend fun proceed(key: CheckInKey, operation: Long, requested: ReservationAdmission) {
++    private suspend fun proceed(
++        key: CheckInKey,
++        operation: Long,
++        requested: ReservationAdmission,
++        certificate: EligibilityCertificate?,
++    ) {
+         val lookup = try {
+             source.admission(key.reservation, key.participant)
+         } catch (e: CancellationException) {
+@@ -125,6 +146,18 @@
+             AdmissionLookup.Unconfirmed -> return deny(key, operation, requested, Denial.ReservationUnconfirmed)
+         }
+         if (!admission.isFor(key, requested)) return deny(key, operation, requested, Denial.WrongTarget)
++        val verified = when (admission) {
++            is ReservationAdmission.Open -> certificate == null
++            is ReservationAdmission.Qualified -> {
++                certificate != null &&
++                    certificate.matches(admission) &&
++                    when (val result = eligibility.verify(listOf(certificate))) {
++                        is Reverification.Verified -> result.certificates.singleOrNull()?.matches(admission) == true
++                        is Reverification.Failed -> false
++                    }
++            }
++        }
++        if (!verified) return deny(key, operation, admission, Denial.QualificationUnconfirmed)
+         when (windowAt(admission.start)) {
+             Window.NotYetOpen -> return deny(key, operation, admission, Denial.NotYetOpen)
+             Window.Closed -> return deny(key, operation, admission, Denial.Closed)
+@@ -136,11 +169,14 @@
+             observe(CheckInCreateObservation.NoResponse) { port.create(attempt, key.reservation, key.participant) }
+         ) {
+             CheckInCreateObservation.Recorded, CheckInCreateObservation.AlreadyRecorded -> ParticipantCheckIn.CheckedIn
+-            CheckInCreateObservation.NotCreated -> ParticipantCheckIn.NotCreated(CheckInRetryTicket(admission))
+-            CheckInCreateObservation.NoResponse -> ParticipantCheckIn.Unknown(CheckInStatusTicket(attempt, admission))
++            CheckInCreateObservation.NotCreated -> ParticipantCheckIn.NotCreated(CheckInRetryTicket(admission, certificate))
++            CheckInCreateObservation.NoResponse -> ParticipantCheckIn.Unknown(CheckInStatusTicket(attempt, admission, certificate))
+         }
+         settle(key, operation, next)
+     }
++
++    private fun EligibilityCertificate.matches(admission: ReservationAdmission.Qualified): Boolean =
++        participant == admission.participant && kind == admission.kind
+ 
+     private fun ReservationAdmission.isFor(key: CheckInKey, requested: ReservationAdmission): Boolean =
+         reservation == key.reservation && participant == key.participant && session == requested.session
+@@ -199,9 +235,10 @@
+ 
+ fun createCheckInCore(
+     source: AdmissionSource,
++    eligibility: EligibilityAuthority,
+     port: CheckInPort,
+     clock: Clock,
+     scope: CoroutineScope,
+     newAttemptId: () -> CheckInAttemptId,
+     operationTimeout: Duration,
+-): CheckInCore = CheckInCore(source, port, clock, newAttemptId, scope, operationTimeout)
++): CheckInCore = CheckInCore(source, eligibility, port, clock, newAttemptId, scope, operationTimeout)
+--- a/checkin-core/src/commonMain/kotlin/example/checkin/core/State.kt
++++ b/checkin-core/src/commonMain/kotlin/example/checkin/core/State.kt
+@@ -1,5 +1,6 @@
+ package example.checkin.core
+ 
++import example.eligibility.core.EligibilityCertificate
+ import example.kernel.ParticipantId
+ import example.reservation.core.AdmissionUnavailableReason
+ import example.reservation.core.ReservationAdmission
+@@ -10,10 +11,12 @@
+ class CheckInStatusTicket internal constructor(
+     internal val attempt: CheckInAttemptId,
+     internal val admission: ReservationAdmission,
++    internal val certificate: EligibilityCertificate?,
+ )
+ 
+ class CheckInRetryTicket internal constructor(
+     internal val admission: ReservationAdmission,
++    internal val certificate: EligibilityCertificate?,
+ )
+ 
+ // 受付できない理由。受付結果不明や未成立の確定とは別の状態として扱う。
+@@ -23,6 +26,7 @@
+     data object NotYetOpen : Denial
+     data object Closed : Denial
+     data object WrongTarget : Denial
++    data object QualificationUnconfirmed : Denial
+ }
+ 
+ enum class ProcessingStage { ConfirmingReservation, Recording, LookingUp }

@@ -6,20 +6,21 @@ import dev.detekt.api.config
 import dev.detekt.psi.FunctionMatcher
 import example.detekt.dca.CallerRestriction
 
-// 汎用の呼び出し元制限に、予約の方針を既定値として与える。Port への要求は Core だけが出し、
+// 汎用の呼び出し元制限に、予約の方針を既定値として与える。Port への要求は所有する Core だけが出し、
 // 要求回数と結果の解釈を一か所に保つ。
 class ReservationPortCall(config: Config) :
     CallerRestriction(
         config,
-        "ReservationPort の create・lookup・cancel は予約の Core だけが呼び出す。",
+        "ReservationPort の create・lookup・cancel・usage は予約の Core だけが呼び出す。",
     ) {
 
     @Configuration("呼び出しを制限する ReservationPort の操作。")
     override val restrictedCallables: List<FunctionMatcher> by config(
         listOf(
-            "example.reservation.ports.ReservationPort.create",
-            "example.reservation.ports.ReservationPort.lookup",
-            "example.reservation.ports.ReservationPort.cancel",
+            "example.reservation.core.ReservationPort.create",
+            "example.reservation.core.ReservationPort.lookup",
+            "example.reservation.core.ReservationPort.cancel",
+            "example.reservation.core.ReservationPort.usage",
         ),
     ) { signatures -> signatures.map(FunctionMatcher::fromFunctionSignature) }
 

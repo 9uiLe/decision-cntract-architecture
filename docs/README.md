@@ -1,11 +1,26 @@
 # Decision Contract Architecture の設計
 
-判断契約は、業務操作に必要な前提、その操作が返す結果、結果ごとに許される操作を定めます。ワークショップ予約を例に、業務上の判断を誰が担い、仕様変更への対応漏れをどこで検出するかを説明します。
+判断契約は、業務操作に必要な前提、その操作が返す結果、結果ごとに許される操作を定めます。定員制ワークショップを例に、判断を誰が担い、結果を受け取る側の対応漏れをどこで検出するかを説明します。
 
-1. [設計思想と判断契約](architecture.md)で、結果を受け取る側にどの判断を求めるかを確認してください。
-2. [Android と KMP への適用](android.md)で、Core、Adapter、画面状態、組み立ての責務を確認してください。
-3. [仕様変更を使った検証](verification.md)で、コンパイルと動作テストで何を確かめるかを確認してください。
+## 設計と基準仕様
 
-予約画面を操作するには、[Android の検証用アプリの実行手順](android-product.md)を参照してください。
+- [設計思想と判断契約](architecture.md)
+- [モバイルアプリへの適用](android.md)
+- [3つの Core の判断契約と依存関係](product/core-contracts.md)
+- [検証アプリの技術選定](product/technology.md)
+- [参加資格](product/qualification.md)
+- [来場受付](product/check-in.md)
+- [画面と操作](product/screens.md)
+- [Android・iOS の実行手順](android-product.md)
 
-このリポジトリだけで資料を読み、サンプルを実行できます。設計の出典は隣接する `usapo-type-driven-design` の `01-design-intent.md` から `13-verification.md` です。予約の要件と変更課題は、隣接する `dca-mobile-product-spec` の `product/requirements/` と `experiments/` にあります。
+## 仕様変更の検証
+
+- [検証方法と課題 A〜G](verification.md)
+- [H. 資格に一時停止を追加する](experiments/h-suspended-qualification.md)
+- [I. 来場時に資格を再確認する](experiments/i-check-in-qualification.md)
+- [J. 予約に利用停止を追加する](experiments/j-suspended-reservation.md)
+- [K. 資格不要の新規予約を廃止する](experiments/k-required-qualification.md)
+- [L. 資格サービスの形式を変更する](experiments/l-qualification-wire-format.md)
+- [検証記録](product/verification-results.md)
+
+設計の出典は隣接する `usapo-type-driven-design` の `01-design-intent.md` から `13-verification.md` です。予約の詳細要件と変更課題の出典は、隣接する `dca-mobile-product-spec` の `product/requirements/`、`experiments/`、`dca-multi-core-implementation-prompt.md` です。

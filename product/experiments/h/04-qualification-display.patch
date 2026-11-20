@@ -1,0 +1,38 @@
+--- a/ui/src/commonMain/kotlin/example/reservation/ui/Projection.kt
++++ b/ui/src/commonMain/kotlin/example/reservation/ui/Projection.kt
+@@ -69,6 +69,7 @@
+     is EligibilityOutcome.Eligible -> QualificationBadge.Valid
+     EligibilityOutcome.NotHeld -> QualificationBadge.NotHeld
+     EligibilityOutcome.Expired -> QualificationBadge.Expired
++    EligibilityOutcome.Suspended -> QualificationBadge.Suspended
+     EligibilityOutcome.Unknown -> QualificationBadge.Unknown
+ }
+ 
+--- a/ui/src/commonMain/kotlin/example/reservation/ui/ScreenState.kt
++++ b/ui/src/commonMain/kotlin/example/reservation/ui/ScreenState.kt
+@@ -25,7 +25,7 @@
+ 
+ data class BookingSummary(val workshopName: String, val start: EpochMillis, val participantNames: List<String>)
+ 
+-enum class QualificationBadge { NotChecked, Checking, Valid, NotHeld, Expired, Unknown }
++enum class QualificationBadge { NotChecked, Checking, Valid, NotHeld, Expired, Suspended, Unknown }
+ 
+ data class ParticipantRow(val id: ParticipantId, val name: String, val selected: Boolean, val qualification: QualificationBadge?)
+ 
+--- a/ui/src/commonMain/kotlin/example/reservation/ui/Messages.kt
++++ b/ui/src/commonMain/kotlin/example/reservation/ui/Messages.kt
+@@ -50,12 +50,14 @@
+     QualificationBadge.Valid -> "資格あり"
+     QualificationBadge.NotHeld -> "資格を取得していません"
+     QualificationBadge.Expired -> "資格の有効期限が切れています"
++    QualificationBadge.Suspended -> "資格が一時停止されています"
+     QualificationBadge.Unknown -> "資格を確認できませんでした"
+ }
+ 
+ fun eligibilityLostMessage(reason: ReverificationFailure): String = when (reason) {
+     ReverificationFailure.NotHeld -> "送信の直前に資格を確認したところ、取得を確認できませんでした。"
+     ReverificationFailure.Expired -> "送信の直前に資格を確認したところ、有効期限が切れていました。"
++    ReverificationFailure.Suspended -> "資格が一時停止されているため、予約を送信できません。"
+     ReverificationFailure.Unconfirmed -> "送信の直前に資格を確認できませんでした。"
+     ReverificationFailure.TargetMismatch -> "資格の確認結果が参加者と一致しませんでした。"
+ }

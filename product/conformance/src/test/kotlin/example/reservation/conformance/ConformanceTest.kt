@@ -14,12 +14,19 @@ private class SourceFile(val module: String, val path: File, val packageName: St
 
 private val sources: List<SourceFile> = productRoot.listFiles { dir -> dir.isDirectory }.orEmpty()
     .flatMap { module ->
-        File(module, "src/main/kotlin").walkTopDown().filter { it.isFile && it.extension == "kt" }.map { file ->
+        mainSourceRoots(module).flatMap { it.walkTopDown().filter { file -> file.isFile && file.extension == "kt" }.toList() }.map { file ->
             val text = file.readText()
             val pkg = Regex("^package\\s+([\\w.]+)", RegexOption.MULTILINE).find(text)?.groupValues?.get(1).orEmpty()
             SourceFile(module.name, file, pkg, text)
         }.toList()
     }
+
+// KMP の main source set（commonMain・androidMain・iosMain・jvmMain など）と、JVM/Android の src/main を含む。
+private fun mainSourceRoots(module: File): List<File> =
+    File(module, "src").listFiles { dir -> dir.isDirectory && (dir.name == "main" || dir.name.endsWith("Main")) }.orEmpty()
+        .map { File(it, "kotlin") }
+
+private val coreOwnerPackages = setOf("example.reservation.core", "example.eligibility.core", "example.checkin.core")
 
 private fun policyLists(): Map<String, List<String>> {
     val lists = mutableMapOf<String, MutableList<String>>()
@@ -90,17 +97,17 @@ class ConformanceTest {
     @Test
     fun `許可するパッケージの宣言は、一つの所有 module のソースにだけある`() {
         val allowed = policyLists().getValue("allowedCallerPackages") +
-            reservationRuleDefaults().filter { it == "example.reservation.core" }
+            reservationRuleDefaults().filter { it in coreOwnerPackages }
         val owners = allowed.associateWith { allowedPackage ->
             sources.filter { it.packageName == allowedPackage || it.packageName.startsWith("$allowedPackage.") }
                 .map { it.module }.toSet()
         }
         assertEquals(allowed.associateWith { 1 }, owners.mapValues { it.value.size })
-        assertEquals("app", owners.getValue("example.app.composition").single())
+        assertEquals("shared", owners.getValue("example.app.composition").single())
     }
 
     private fun reservationRuleDefaults(): List<String> =
-        sources.single { it.path.name == "ReservationPortCall.kt" }.text.let { text ->
-            Regex("\"(example\\.reservation\\.[\\w.]+)\"").findAll(text).map { it.groupValues[1] }.toList()
+        sources.filter { it.module == "detekt-rules" && it.path.name.endsWith("PortCall.kt") }.flatMap { source ->
+            Regex("\"(example\\.(?:reservation|eligibility|checkin)\\.[\\w.]+)\"").findAll(source.text).map { it.groupValues[1] }.toList()
         }
 }

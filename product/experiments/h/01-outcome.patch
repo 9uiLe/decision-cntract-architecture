@@ -1,0 +1,9 @@
+--- a/eligibility-core/src/commonMain/kotlin/example/eligibility/core/Outcome.kt
++++ b/eligibility-core/src/commonMain/kotlin/example/eligibility/core/Outcome.kt
+@@ -8,5 +8,6 @@
+     class Eligible(val certificate: EligibilityCertificate) : EligibilityOutcome
+     data object NotHeld : EligibilityOutcome
+     data object Expired : EligibilityOutcome
++    data object Suspended : EligibilityOutcome
+     data object Unknown : EligibilityOutcome
+ }

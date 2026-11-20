@@ -3,4 +3,6 @@
 /product/.kotlin/
 /product/**/build/
 /product/local.properties
+/product/iosApp/DcaApp.xcodeproj/
+/product/iosApp/DcaApp/Info.plist
 /runs/

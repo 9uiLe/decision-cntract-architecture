@@ -1,0 +1,23 @@
+--- a/adapter-simulator/src/commonTest/kotlin/example/adapter/simulator/QualificationWireExperimentTest.kt
++++ b/adapter-simulator/src/commonTest/kotlin/example/adapter/simulator/QualificationWireExperimentTest.kt
+@@ -13,16 +13,16 @@
+     fun `資格コードと期限を変更しても同じ資格観測に変換する`() {
+         assertEquals(
+             QualificationObservation.Held(EpochMillis(1830340800000L)),
+-            QualificationDecoder.decode("held=true&code=POTTERY-ADV&valid_until=2028-01-01T12:00:00Z", pottery),
++            QualificationDecoder.decode("held=true&qualification_code=workshop.pottery.level2&expires_at=2028-01-01T12:00:00Z", pottery),
+         )
+     }
+ 
+     @Test
+     fun `旧版と新版を取り違えた入力や未知の資格と不正な期限から有効とは判断しない`() {
+         listOf(
+-            "held=true&qualification_code=workshop.pottery.level2&expires_at=2028-01-01T12:00:00Z",
+-            "held=true&code=OTHER&valid_until=2028-01-01T12:00:00Z",
+-            "held=true&code=POTTERY-ADV&valid_until=tomorrow",
++            "held=true&code=POTTERY-ADV&valid_until=2028-01-01T12:00:00Z",
++            "held=true&qualification_code=workshop.unknown&expires_at=2028-01-01T12:00:00Z",
++            "held=true&qualification_code=workshop.pottery.level2&expires_at=tomorrow",
+         ).forEach { input ->
+             assertEquals(QualificationObservation.Unavailable, QualificationDecoder.decode(input, pottery))
+         }

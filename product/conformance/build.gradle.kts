@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "example.reservation.conformance"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 26
@@ -22,8 +22,10 @@ android {
             it.dependsOn("detektDebug")
             // テストは設定・全 module の Kotlin ソース・detekt のレポートを読む。変更時に再実行されるよう入力に宣言する。
             it.inputs.file(rootProject.file("config/detekt/dca.yml")).withPropertyName("detektPolicy")
-            it.inputs.files(rootProject.fileTree(rootProject.projectDir) { include("*/src/main/kotlin/**/*.kt") })
+            it.inputs.files(rootProject.fileTree(rootProject.projectDir) { include("*/src/*Main/kotlin/**/*.kt", "*/src/main/kotlin/**/*.kt") })
                 .withPropertyName("productSources")
+            it.inputs.files(rootProject.fileTree(rootProject.projectDir) { include("*/build.gradle.kts") })
+                .withPropertyName("moduleDependencies")
             it.inputs.files(layout.buildDirectory.file("reports/detekt/debug.xml")).withPropertyName("detektReport")
             it.systemProperty("dca.productRoot", rootProject.projectDir.absolutePath)
             it.systemProperty("dca.detektReport", layout.buildDirectory.file("reports/detekt/debug.xml").get().asFile.absolutePath)

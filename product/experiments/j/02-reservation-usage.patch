@@ -1,0 +1,21 @@
+--- a/reservation-core/src/commonMain/kotlin/example/reservation/core/ReservationCore.kt
++++ b/reservation-core/src/commonMain/kotlin/example/reservation/core/ReservationCore.kt
+@@ -191,6 +191,7 @@
+         return when (observe(UsageObservation.Failed) { port.usage(reservation) }) {
+             UsageObservation.Active -> AdmissionLookup.Valid(admission)
+             UsageObservation.Cancelled -> AdmissionLookup.Unavailable(AdmissionUnavailableReason.Cancelled)
++            UsageObservation.Suspended -> AdmissionLookup.Unavailable(AdmissionUnavailableReason.Suspended)
+             UsageObservation.NotFound -> AdmissionLookup.Unavailable(AdmissionUnavailableReason.NotReserved)
+             UsageObservation.Failed -> AdmissionLookup.Unconfirmed
+         }
+--- a/reservation-core/src/commonMain/kotlin/example/reservation/core/Evidence.kt
++++ b/reservation-core/src/commonMain/kotlin/example/reservation/core/Evidence.kt
+@@ -71,7 +71,7 @@
+     ) : ReservationAdmission()
+ }
+ 
+-enum class AdmissionUnavailableReason { NotIncluded, NotReserved, Cancelled }
++enum class AdmissionUnavailableReason { NotIncluded, NotReserved, Cancelled, Suspended }
+ 
+ sealed interface AdmissionLookup {
+     class Valid(val admission: ReservationAdmission) : AdmissionLookup

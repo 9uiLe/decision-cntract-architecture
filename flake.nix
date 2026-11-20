@@ -1,5 +1,5 @@
 {
-  description = "Development environments for the DCA examples and Android product";
+  description = "Development environments for the DCA examples and mobile product";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/d3b13ad75cc492690728f9307e443dec9ef9a20e";
 
@@ -39,9 +39,12 @@
         };
       } // nixpkgs.lib.optionalAttrs (system == "aarch64-darwin") {
         android = pkgs.mkShell {
-          packages = [ pkgs.jdk21 androidSdk ];
+          packages = [ pkgs.jdk21 pkgs.python3 androidSdk ];
           ANDROID_HOME = androidSdkRoot;
           ANDROID_SDK_ROOT = androidSdkRoot;
+        };
+        ios = pkgs.mkShell {
+          packages = [ pkgs.jdk21 pkgs.xcodegen ];
         };
       });
   };

@@ -1,0 +1,60 @@
+package example.app.composition
+
+import example.adapter.simulator.QualificationHolding
+import example.eligibility.core.QualificationKind
+import example.kernel.EpochMillis
+import example.kernel.ParticipantId
+import example.kernel.SessionId
+import example.reservation.core.Catalog
+import example.reservation.core.NewBookingRequirement
+import example.reservation.core.Participant
+import example.reservation.core.Workshop
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+
+private const val HOUR = 3_600_000L
+
+val DemoStart: EpochMillis = EpochMillis(LocalDate(2026, 12, 1).atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds())
+
+val PotteryAdvancedCourse = QualificationKind("pottery-advanced", "上級ろくろ修了")
+val RoastingAdvancedCourse = QualificationKind("roasting-advanced", "上級焙煎修了")
+
+private val Open = NewBookingRequirement.NotRequired
+
+val Pottery = Workshop(SessionId("pottery"), "はじめてのろくろ陶芸", EpochMillis(DemoStart.value + 72 * HOUR), seatsHint = 4, Open)
+val Cooking = Workshop(SessionId("cooking"), "季節の家庭料理教室", EpochMillis(DemoStart.value + 20 * HOUR), seatsHint = 6, Open)
+val Coffee = Workshop(SessionId("coffee"), "コーヒー豆の選び方講座", EpochMillis(DemoStart.value + 2 * HOUR), seatsHint = 2, Open)
+val AdvancedPottery = Workshop(
+    SessionId("advanced-pottery"), "上級ろくろ陶芸", EpochMillis(DemoStart.value + 96 * HOUR), seatsHint = 4,
+    NewBookingRequirement.Required(PotteryAdvancedCourse),
+)
+val AdvancedRoasting = Workshop(
+    SessionId("advanced-roasting"), "上級コーヒー焙煎", EpochMillis(DemoStart.value + 120 * HOUR), seatsHint = 4,
+    NewBookingRequirement.Required(RoastingAdvancedCourse),
+)
+
+val Akari = ParticipantId("akari")
+val Kota = ParticipantId("kota")
+val Minami = ParticipantId("minami")
+
+// 表示する残席（seatsHint）は参考値で、サービス側の定員とは独立に定める。料理教室は表示より少ない定員で満席を再現する。
+val DemoCapacities: Map<SessionId, Int> = mapOf(
+    Pottery.id to 4, Cooking.id to 2, Coffee.id to 8, AdvancedPottery.id to 4, AdvancedRoasting.id to 4,
+)
+
+// 資格の保有は初期状態。あかりは両方、こうたは上級ろくろだけ、みなみはどちらも持たない。
+val DemoHoldings: List<QualificationHolding> = listOf(
+    QualificationHolding(Akari, PotteryAdvancedCourse, EpochMillis(DemoStart.value + 30 * 24 * HOUR)),
+    QualificationHolding(Akari, RoastingAdvancedCourse, EpochMillis(DemoStart.value + 30 * 24 * HOUR)),
+    QualificationHolding(Kota, PotteryAdvancedCourse, EpochMillis(DemoStart.value + 30 * 24 * HOUR)),
+)
+
+val DemoCatalog = Catalog(
+    workshops = listOf(Pottery, Cooking, Coffee, AdvancedPottery, AdvancedRoasting),
+    participants = listOf(
+        Participant(Akari, "佐藤 あかり"),
+        Participant(Kota, "鈴木 こうた"),
+        Participant(Minami, "田中 みなみ"),
+    ),
+)

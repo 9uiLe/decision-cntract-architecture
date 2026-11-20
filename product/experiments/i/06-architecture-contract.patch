@@ -1,0 +1,89 @@
+--- a/conformance/src/test/kotlin/example/reservation/conformance/ModuleBoundaryTest.kt
++++ b/conformance/src/test/kotlin/example/reservation/conformance/ModuleBoundaryTest.kt
+@@ -15,7 +15,7 @@
+     "kernel" to emptySet(),
+     "eligibility-core" to setOf("kernel"),
+     "reservation-core" to setOf("kernel", "eligibility-core"),
+-    "checkin-core" to setOf("kernel", "reservation-core"),
++    "checkin-core" to setOf("kernel", "reservation-core", "eligibility-core"),
+     "adapter-simulator" to cores,
+     "ui" to cores,
+     "shared" to cores + setOf("adapter-simulator", "ui"),
+@@ -27,7 +27,7 @@
+     "kernel" to setOf("example.kernel"),
+     "eligibility-core" to setOf("example.kernel", "example.eligibility.core"),
+     "reservation-core" to setOf("example.kernel", "example.eligibility.core", "example.reservation.core"),
+-    "checkin-core" to setOf("example.kernel", "example.reservation.core", "example.checkin.core"),
++    "checkin-core" to setOf("example.kernel", "example.reservation.core", "example.checkin.core", "example.eligibility.core"),
+     "adapter-simulator" to setOf(
+         "example.kernel", "example.eligibility.core", "example.reservation.core", "example.checkin.core", "example.adapter.simulator",
+     ),
+@@ -77,9 +77,9 @@
+     }
+ 
+     @Test
+-    fun `基準の来場受付 Core が参加資格の型を import する例を、禁止依存として検出する`() {
++    fun `来場時の資格再確認に必要な Core 間の参照を許可する`() {
+         val source = "package example.checkin.core\nimport example.eligibility.core.EligibilityCertificate\nimport example.reservation.core.ReservationAdmission\n"
+-        assertEquals(listOf("example.eligibility.core.EligibilityCertificate"), importViolations("checkin-core", source))
++        assertTrue(importViolations("checkin-core", source).isEmpty())
+         assertTrue(importViolations("reservation-core", source).isEmpty())
+     }
+ 
+@@ -89,7 +89,7 @@
+         assertEquals(setOf("checkin-core"), declaredProjectDependencies(reversed))
+         assertTrue(declaredProjectDependencies(reversed) - allowedProjectDependencies.getValue("reservation-core") == setOf("checkin-core"))
+         val eligibility = "api(project(\":eligibility-core\"))"
+-        assertTrue(declaredProjectDependencies(eligibility) - allowedProjectDependencies.getValue("checkin-core") == setOf("eligibility-core"))
++        assertTrue((declaredProjectDependencies(eligibility) - allowedProjectDependencies.getValue("checkin-core")).isEmpty())
+     }
+ 
+     @Test
+--- a/compile-contracts/src/test/fixtures/accept/LegitimateUsage.kt
++++ b/compile-contracts/src/test/fixtures/accept/LegitimateUsage.kt
+@@ -3,6 +3,7 @@
+ import example.checkin.core.CheckInAcceptance
+ import example.checkin.core.CheckInCore
+ import example.checkin.core.ParticipantCheckIn
++import example.eligibility.core.EligibilityCertificate
+ import example.eligibility.core.EligibilityOutcome
+ import example.reservation.core.Acceptance
+ import example.reservation.core.ConfirmOutcome
+@@ -15,7 +16,13 @@
+     ConfirmOutcome.QualificationNotRequired, is ConfirmOutcome.EligibilityNotMet -> null
+ }
+ 
+-fun checkInWithAdmission(core: CheckInCore, admission: ReservationAdmission): CheckInAcceptance = core.checkIn(admission)
++fun checkInWithAdmission(core: CheckInCore, admission: ReservationAdmission.Open): CheckInAcceptance = core.checkIn(admission)
++
++fun checkInWithQualification(
++    core: CheckInCore,
++    admission: ReservationAdmission.Qualified,
++    certificate: EligibilityCertificate,
++): CheckInAcceptance = core.checkIn(admission, certificate)
+ 
+ fun describe(outcome: EligibilityOutcome): String = when (outcome) {
+     is EligibilityOutcome.Eligible -> "eligible"
+--- a/compile-contracts/src/test/fixtures/reject/ForgeCheckInTicket.kt
++++ b/compile-contracts/src/test/fixtures/reject/ForgeCheckInTicket.kt
+@@ -4,4 +4,4 @@
+ import example.checkin.core.CheckInStatusTicket
+ import example.reservation.core.ReservationAdmission
+ 
+-fun forge(admission: ReservationAdmission) = CheckInStatusTicket(CheckInAttemptId("a"), admission) // VIOLATION [INVISIBLE_REFERENCE]
++fun forge(admission: ReservationAdmission) = CheckInStatusTicket(CheckInAttemptId("a"), admission, null) // VIOLATION [INVISIBLE_REFERENCE]
+--- a/conformance/src/main/kotlin/example/reservation/conformance/violations/CompositionViolations.kt
++++ b/conformance/src/main/kotlin/example/reservation/conformance/violations/CompositionViolations.kt
+@@ -35,10 +35,10 @@
+     checkInPort: example.checkin.core.CheckInPort,
+     scope: CoroutineScope,
+ ) {
+-    example.eligibility.core.createEligibilityCore( // EXPECT: RestrictedCompositionCall
++    val eligibility = example.eligibility.core.createEligibilityCore( // EXPECT: RestrictedCompositionCall
+         eligibilityPort, { EpochMillis(0) }, scope, 1.seconds,
+     )
+     example.checkin.core.createCheckInCore( // EXPECT: RestrictedCompositionCall
+-        source, checkInPort, { EpochMillis(0) }, scope, { example.checkin.core.CheckInAttemptId("x") }, 1.seconds,
++        source, eligibility, checkInPort, { EpochMillis(0) }, scope, { example.checkin.core.CheckInAttemptId("x") }, 1.seconds,
+     )
+ }

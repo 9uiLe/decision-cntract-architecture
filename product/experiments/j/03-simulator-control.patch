@@ -1,0 +1,49 @@
+--- a/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/Controls.kt
++++ b/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/Controls.kt
+@@ -72,6 +72,7 @@
+     fun enqueueLookup(behavior: LookupBehavior)
+     fun enqueueCancel(behavior: CancelBehavior)
+     fun enqueueUsage(behavior: UsageBehavior)
++    fun suspendReservation(reservation: ReservationId)
+     fun enqueueQualification(behavior: QualificationBehavior)
+     fun enqueueCheckInCreate(behavior: CheckInBehavior)
+     fun enqueueCheckInLookup(behavior: LookupBehavior)
+--- a/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/Simulator.kt
++++ b/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/Simulator.kt
+@@ -64,6 +64,7 @@
+     private val lock = SynchronizedObject()
+     private val requests = LinkedHashMap<RequestId, RequestRecord>()
+     private val cancelled = mutableSetOf<ReservationId>()
++    private val suspendedReservations = mutableSetOf<ReservationId>()
+     private val holdings = LinkedHashMap<HoldingKey, EpochMillis>()
+     private val attempts = LinkedHashMap<CheckInAttemptId, AttemptRecord>()
+     private val recordedTargets = LinkedHashMap<Pair<ReservationId, ParticipantId>, Int>()
+@@ -101,6 +102,12 @@
+ 
+         override fun enqueueUsage(behavior: UsageBehavior) = update { usageScript.addLast(behavior) }
+ 
++        override fun suspendReservation(reservation: ReservationId) = update {
++            if (requests.values.any { it is RequestRecord.Created && it.reservation == reservation }) {
++                suspendedReservations.add(reservation)
++            }
++        }
++
+         override fun enqueueQualification(behavior: QualificationBehavior) = update { qualificationScript.addLast(behavior) }
+ 
+         override fun enqueueCheckInCreate(behavior: CheckInBehavior) = update { checkInCreateScript.addLast(behavior) }
+@@ -124,6 +131,7 @@
+             val releasing = synchronized(lock) {
+                 requests.clear()
+                 cancelled.clear()
++                suspendedReservations.clear()
+                 attempts.clear()
+                 recordedTargets.clear()
+                 createScript.clear()
+@@ -333,6 +341,7 @@
+ 
+     private fun observeUsage(reservation: ReservationId): UsageObservation = when {
+         reservation in cancelled -> UsageObservation.Cancelled
++        reservation in suspendedReservations -> UsageObservation.Suspended
+         requests.values.any { it is RequestRecord.Created && it.reservation == reservation } -> UsageObservation.Active
+         else -> UsageObservation.NotFound
+     }

@@ -1,0 +1,51 @@
+--- a/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/QualificationWire.kt
++++ b/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/QualificationWire.kt
+@@ -10,8 +10,8 @@
+ 
+ internal object ServiceCodes {
+     private val codes = mapOf(
+-        "pottery-advanced" to "POTTERY-ADV",
+-        "roasting-advanced" to "ROASTING-ADV",
++        "pottery-advanced" to "workshop.pottery.level2",
++        "roasting-advanced" to "workshop.roasting.level2",
+     )
+ 
+     fun codeFor(kind: QualificationKind): String? = codes[kind.id]
+@@ -20,8 +20,8 @@
+ internal object QualificationWireFormat {
+     fun render(wire: QualificationWire): String = buildList {
+         add("held=${wire.held}")
+-        wire.code?.let { add("code=$it") }
+-        wire.expiresAt?.let { add("valid_until=$it") }
++        wire.code?.let { add("qualification_code=$it") }
++        wire.expiresAt?.let { add("expires_at=$it") }
+     }.joinToString("&")
+ 
+     // 解釈できない文字列は null。有効な資格とは推測しない。
+@@ -36,7 +36,7 @@
+             "false" -> false
+             else -> return null
+         }
+-        return QualificationWire(held, fields["code"], fields["valid_until"])
++        return QualificationWire(held, fields["qualification_code"], fields["expires_at"])
+     }
+ }
+ 
+@@ -56,5 +56,5 @@
+ internal fun heldWire(kind: QualificationKind, expiresAt: EpochMillis): QualificationWire = QualificationWire(
+     held = true,
+     code = ServiceCodes.codeFor(kind),
+-    validUntil = Instant.fromEpochMilliseconds(expiresAt.value).toString(),
++    expiresAt = Instant.fromEpochMilliseconds(expiresAt.value).toString(),
+ )
+--- a/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/Simulator.kt
++++ b/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/Simulator.kt
+@@ -261,7 +261,7 @@
+ 
+     private fun wireFor(participant: ParticipantId, kind: QualificationKind): String {
+         val expiresAt = holdings[HoldingKey(participant, kind.id)]
+-        val wire = if (expiresAt == null) QualificationWire(held = false, code = null, validUntil = null) else heldWire(kind, expiresAt)
++        val wire = if (expiresAt == null) QualificationWire(held = false, code = null, expiresAt = null) else heldWire(kind, expiresAt)
+         return QualificationWireFormat.render(wire)
+     }
+ 

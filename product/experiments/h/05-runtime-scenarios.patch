@@ -1,0 +1,100 @@
+--- /dev/null
++++ b/adapter-simulator/src/commonTest/kotlin/example/adapter/simulator/SuspendedQualificationExperimentTest.kt
+@@ -0,0 +1,97 @@
++package example.adapter.simulator
++
++import example.checkin.core.CheckInAcceptance
++import example.checkin.core.createCheckInCore
++import example.checkin.core.CheckInAttemptId
++import example.eligibility.core.createEligibilityCore
++import example.eligibility.core.EligibilityOutcome
++import example.eligibility.core.EligibilityStatus
++import example.eligibility.core.QualificationKind
++import example.kernel.Clock
++import example.kernel.EpochMillis
++import example.kernel.ParticipantId
++import example.kernel.SessionId
++import example.reservation.core.Acceptance
++import example.reservation.core.ActiveRequest
++import example.reservation.core.Catalog
++import example.reservation.core.ConfirmOutcome
++import example.reservation.core.createReservationCore
++import example.reservation.core.NewBookingRequirement
++import example.reservation.core.Participant
++import example.reservation.core.RequestId
++import example.reservation.core.ReservationRecord
++import example.reservation.core.Workshop
++import kotlin.test.Test
++import kotlin.test.assertEquals
++import kotlin.test.assertIs
++import kotlin.time.Duration.Companion.seconds
++import kotlinx.coroutines.ExperimentalCoroutinesApi
++import kotlinx.coroutines.test.runCurrent
++import kotlinx.coroutines.test.runTest
++
++@OptIn(ExperimentalCoroutinesApi::class)
++class SuspendedQualificationExperimentTest {
++    private val person = ParticipantId("a")
++    private val session = SessionId("course")
++    private val kind = QualificationKind("pottery-advanced")
++    private val start = EpochMillis(1_800_000_000_000L)
++    private val catalog = Catalog(
++        listOf(Workshop(session, "陶芸講習", start, 2, NewBookingRequirement.Required(kind))),
++        listOf(Participant(person, "佐藤")),
++    )
++
++    @Test
++    fun `期限前の一時停止は確認と出来上がった証拠の再確認で予約を止める`() = runTest {
++        val clock = Clock { EpochMillis(start.value - 3_600_000) }
++        val sim = createSimulator(mapOf(session to 2), listOf(QualificationHolding(person, kind, start)))
++        val eligibility = createEligibilityCore(sim.eligibility, clock, this, 2.seconds)
++        val reservation = createReservationCore(catalog, sim.reservation, eligibility, clock, this, { RequestId("r") }, 2.seconds)
++
++        assertEquals(Acceptance.Accepted, reservation.selectWorkshop(session))
++        assertEquals(Acceptance.Accepted, reservation.toggleParticipant(person))
++        reservation.requestEligibility()
++        runCurrent()
++        val confirmed = assertIs<ConfirmOutcome.Confirmed>(reservation.confirmQualified())
++        sim.controls.suspendQualification(person, kind)
++        assertEquals(Acceptance.Accepted, reservation.submit(confirmed.draft))
++        runCurrent()
++        assertIs<ActiveRequest.EligibilityLost>(reservation.snapshot.value.request)
++        assertEquals(0, sim.controls.observations.value.createRequests)
++        assertEquals(0, sim.controls.observations.value.activeReservations)
++
++        eligibility.request(person, kind)
++        runCurrent()
++        val status = assertIs<EligibilityStatus.Settled>(eligibility.status(person, kind))
++        assertEquals(EligibilityOutcome.Suspended, status.outcome)
++        assertIs<ConfirmOutcome.EligibilityNotMet>(reservation.confirmQualified())
++        assertEquals(0, sim.controls.observations.value.createRequests)
++    }
++
++    @Test
++    fun `既に成立した予約は資格の一時停止後も受付に使える`() = runTest {
++        var now = EpochMillis(start.value - 72 * 3_600_000)
++        val clock = Clock { now }
++        val sim = createSimulator(mapOf(session to 2), listOf(QualificationHolding(person, kind, start)))
++        val eligibility = createEligibilityCore(sim.eligibility, clock, this, 2.seconds)
++        val reservation = createReservationCore(catalog, sim.reservation, eligibility, clock, this, { RequestId("r") }, 2.seconds)
++        val checkIn = createCheckInCore(reservation, sim.checkIn, clock, this, { CheckInAttemptId("a") }, 2.seconds)
++        reservation.selectWorkshop(session)
++        reservation.toggleParticipant(person)
++        reservation.requestEligibility()
++        runCurrent()
++        val confirmed = assertIs<ConfirmOutcome.Confirmed>(reservation.confirmQualified())
++        reservation.submit(confirmed.draft)
++        runCurrent()
++        val record = assertIs<ReservationRecord.Reserved>(reservation.snapshot.value.reservations.single())
++
++        sim.controls.suspendQualification(person, kind)
++        now = EpochMillis(start.value - 20 * 60_000)
++        assertEquals(CheckInAcceptance.Accepted, checkIn.checkIn(record.admissions.single()))
++        runCurrent()
++        val observed = sim.controls.observations.value
++        assertEquals(1, observed.createRequests)
++        assertEquals(1, observed.activeReservations)
++        assertEquals(1, observed.checkInCreateRequests)
++        assertEquals(1, observed.checkInRecords.single().records)
++    }
++}

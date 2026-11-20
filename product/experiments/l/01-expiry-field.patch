@@ -1,0 +1,32 @@
+--- a/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/QualificationWire.kt
++++ b/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/QualificationWire.kt
+@@ -6,7 +6,7 @@
+ import kotlin.time.Instant
+ 
+ // 資格サービスの外部データの形式。この形式を読み書きする処理はこのファイルに閉じる。
+-internal data class QualificationWire(val held: Boolean, val code: String?, val validUntil: String?)
++internal data class QualificationWire(val held: Boolean, val code: String?, val expiresAt: String?)
+ 
+ internal object ServiceCodes {
+     private val codes = mapOf(
+@@ -21,7 +21,7 @@
+     fun render(wire: QualificationWire): String = buildList {
+         add("held=${wire.held}")
+         wire.code?.let { add("code=$it") }
+-        wire.validUntil?.let { add("valid_until=$it") }
++        wire.expiresAt?.let { add("valid_until=$it") }
+     }.joinToString("&")
+ 
+     // 解釈できない文字列は null。有効な資格とは推測しない。
+@@ -43,9 +43,9 @@
+ internal fun QualificationWire.toObservation(requested: QualificationKind): QualificationObservation {
+     if (!held) return QualificationObservation.NotHeld
+     if (code == null || code != ServiceCodes.codeFor(requested)) return QualificationObservation.Unavailable
+-    val expiresAt = validUntil?.let { runCatching { Instant.parse(it).toEpochMilliseconds() }.getOrNull() }
++    val deadline = expiresAt?.let { runCatching { Instant.parse(it).toEpochMilliseconds() }.getOrNull() }
+         ?: return QualificationObservation.Unavailable
+-    return QualificationObservation.Held(EpochMillis(expiresAt))
++    return QualificationObservation.Held(EpochMillis(deadline))
+ }
+ 
+ internal object QualificationDecoder {

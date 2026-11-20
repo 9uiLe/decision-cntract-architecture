@@ -1,8 +1,8 @@
-# Android の検証用アプリを実行する
+# Android・iOS の検証アプリを実行する
 
-ワークショップ予約の検証用アプリは `product/` にあります。インストールには Android 8.0（API 26）以降が必要です。Jetpack Compose で開催回の選択、内容確認、予約状況を表示します。結果や時刻を操作する検証画面から、外部サービスの応答を再現できます。
+ワークショップ予約の検証用アプリは `product/` にあります。開催回の選択、参加資格の確認、予約、来場受付を Compose Multiplatform の共通画面で操作できます。検証画面では、外部サービスの応答や時刻を変えて境界条件を再現できます。
 
-## APK をビルドする
+## Android で実行する
 
 Apple Silicon の macOS では、リポジトリのルートから Android 用の Nix シェルを起動してください。このシェルは、Nixpkgs の Android SDK ライセンス同意設定を使い、JDK 21 と Android SDK を用意します。
 
@@ -12,9 +12,40 @@ cd product
 ./gradlew :app:assembleDebug
 ```
 
-ほかの対応ホストでは既存の Nix シェルで JDK を用意し、Android SDK Platform 36 と Build Tools 36.0.0 をインストールした SDK を `ANDROID_HOME` に指定してください。
+ほかの対応ホストでは既存の Nix シェルで JDK を用意し、Android SDK Platform 37 と Build Tools 37.0.0 をインストールした SDK を `ANDROID_HOME` に指定してください。
 
-Android Studio で `product/` を開き、エミュレーターまたは Android 端末を選んで `app` を実行してください。ランチャーに「ワークショップ予約」と「DCA 検証用の操作」が表示されます。
+Android Studio で `product/` を開き、Android 8.0（API 26）以降の端末またはエミュレーターを選んで `app` を実行してください。ランチャーに「ワークショップ予約」と「DCA 検証用の操作」が表示されます。
+
+## iOS で実行する
+
+Apple Silicon の macOS では、Xcode と iOS Simulator ランタイムを用意してください。リポジトリのルートから iOS 用の Nix シェルを起動し、Xcode プロジェクトを生成してください。
+
+```sh
+nix --extra-experimental-features 'nix-command flakes' develop .#ios
+cd product/iosApp
+xcodegen generate
+xcrun simctl list devices available
+```
+
+一覧から iPhone のシミュレーターを選び、下の `<UDID>` をその ID に置き換えてビルドしてください。共通フレームワークは Xcode のビルド時に Gradle が生成します。
+
+```sh
+xcodebuild -project DcaApp.xcodeproj -scheme DcaApp \
+  -destination 'id=<UDID>' -derivedDataPath build build
+```
+
+シミュレーターを起動し、ビルドしたアプリをインストールしてください。
+
+```sh
+xcrun simctl install '<UDID>' build/Build/Products/Debug-iphonesimulator/DcaApp.app
+xcrun simctl launch '<UDID>' example.reservation.dca
+```
+
+検証用のタブを表示するには、起動時に `-dca-verification` を渡します。同じプロセスの「予約」と「検証用の操作」を切り替えると、予約を保持したまま時刻やサービス応答を変えられます。
+
+```sh
+xcrun simctl launch --terminate-running-process '<UDID>' example.reservation.dca -dca-verification
+```
 
 ## 応答が失われた予約を照会する
 
@@ -24,6 +55,14 @@ Android Studio で `product/` を開き、エミュレーターまたは Android
 4. 「状況を照会する」を押してください。画面が「予約確定」になり、予約番号が表示されます。「DCA 検証用の操作」に戻ると、作成要求が1回、照会が1回、成立した予約が1件であることを確認できます。
 
 検証用画面では、次の応答、保留の解放、開催回の開始時刻、取消期限も指定できます。シナリオを最初から試す場合は、検証用アプリのプロセスを終了して開き直してください。
+
+## 資格を確認して来場を受け付ける
+
+1. 「上級ろくろ陶芸」を開き、「佐藤 あかり」と「鈴木 こうた」を選びます。「資格を確認する」を押し、2人とも「資格あり」になったら予約を送信します。
+2. 検証用の操作で、受付作成の応答を「記録して応答喪失」に設定します。「上級ろくろ陶芸」の時刻を「受付開始ちょうど」に進めます。
+3. 予約状況に戻り、佐藤さんを受け付けます。「受付結果不明」が表示されます。鈴木さんは「未受付」のままです。
+4. 一度ホーム画面に戻ってからアプリを再表示し、佐藤さんの受付結果を照会します。佐藤さんは「受付済み」になります。
+5. 検証用の操作で、受付作成1回、受付照会1回、佐藤さんの受付記録1件を確認します。
 
 ## ビルド時の検査を実行する
 
