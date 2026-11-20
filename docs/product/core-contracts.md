@@ -9,7 +9,7 @@
 | 所有者 | その Core が決めること | その Core が発行するもの |
 | --- | --- | --- |
 | `:eligibility-core` | 資格の保有、種別、有効期限 | 対象の参加者と資格種別に結び付いた `EligibilityCertificate` |
-| `:reservation-core` | 下書き、参加者全員の資格充足、送信、照会、取消、来場に使える予約か | `ConfirmedDraft`、予約の照会・再試行・取消の権限、参加者別の `ReservationAdmission` |
+| `:reservation-core` | 下書き、参加者全員の資格充足、送信、照会、取消、来場に使える予約か | `ConfirmedDraft`、予約の操作券、成立時の参加者を表す `ReservationAdmission`、照会時点の有効性を表す `CurrentAdmission` |
 | `:checkin-core` | 受付時間、受付の成立、同じ予約・参加者の重複、元の要求の照会と再試行 | 元の受付に結び付いた `CheckInStatusTicket` と `CheckInRetryTicket` |
 
 外部サービスの Port は、操作を必要とする Core が所有します。`:adapter-simulator` は Port を実装し、`:shared` で各 Core に渡します。`:ui` は Core の結果から画面状態を作ります。`:kernel` は共有する識別子と時計を持ちます。
@@ -18,6 +18,19 @@
 
 予約の成立記録は成立時の資格条件を保持します。受付では予約 Core が成立記録とサービスの現在状態を確認します。予約取消が成立して応答だけを失った場合も、現在状態の照会で受付を止めます。受付 Core は、その照会の後で受付時間を判定してから受付を作成します。
 
+## 変更に対応する箇所
+
+| 変更 | 再判断する所有者と箇所 | 判断結果を使う箇所 |
+| --- | --- | --- |
+| H の資格停止 | 参加資格 Core がサービス観測を解釈する。予約 Core の `readinessOfOutcome` が予約に使えるかを判断し、UI の `projectOutcome` が表示を選ぶ | 予約作成は送信前の再確認から可否を受け取る。基準仕様の来場受付は予約の現在状態を使う |
+| J の予約利用停止 | 予約 Core の `admission` がサービス観測を解釈する。UI の `unavailableMessage` が利用停止の説明を選ぶ | 来場受付 Core は利用できない理由を画面へ渡す。成立履歴と既存受付は保持する |
+
+![来場受付の呼び出しと成立時・照会時の値の受け渡し](../assets/check-in-contract.svg)
+
+図の実線は結果の受け渡し、破線は実行時の呼び出しです。
+
 - [参加資格の要件](qualification.md)
 - [来場受付の要件](check-in.md)
 - [画面と操作](screens.md)
+
+各契約の発行条件、再確認のタイミング、保証を検証する方法は [判断済みの値が使える時点](contract-evidence.md) に記載しています。

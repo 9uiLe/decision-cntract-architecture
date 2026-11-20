@@ -18,11 +18,14 @@ import example.kernel.SessionId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertNull
 import kotlin.test.assertSame
+import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
@@ -65,9 +68,11 @@ private class QualifiedPort : ReservationPort {
     var cancelResult: CancelObservation = CancelObservation.Cancelled
     var usageResult: UsageObservation = UsageObservation.Active
     var createResult: CreateObservation? = null
+    var sentParticipants: List<ParticipantId> = emptyList()
 
     override suspend fun create(request: RequestId, session: SessionId, participants: List<ParticipantId>): CreateObservation {
         creates++
+        sentParticipants = participants.toList()
         return createResult ?: CreateObservation.Created(ReservationId("r-${++created}"))
     }
 
@@ -344,7 +349,7 @@ class QualifiedReservationTest {
         f.service.holdings.clear()
         assertIs<ReservationRecord.Reserved>(f.snapshot.reservations.single())
         val lookup = f.core.admission(record.reservation, alice)
-        val admission = assertIs<ReservationAdmission.Qualified>(assertIs<AdmissionLookup.Valid>(lookup).admission)
+        val admission = assertIs<ReservationAdmission.Qualified>(assertIs<AdmissionLookup.Valid>(lookup).admission.record)
         assertEquals(pottery, admission.kind)
     }
 
@@ -373,5 +378,123 @@ class QualifiedReservationTest {
         assertEquals(AdmissionUnavailableReason.Cancelled, assertIs<AdmissionLookup.Unavailable>(f.core.admission(record.reservation, alice)).reason)
         f.port.usageResult = UsageObservation.Failed
         assertEquals(AdmissionLookup.Unconfirmed, f.core.admission(record.reservation, alice))
+    }
+
+    @Test
+    fun `確認済みの参加者集合は、利用側がキャストで変更しようとしても確認時の内容のまま送信される`() = runTest {
+        val f = QFixture(this)
+        f.grant(alice)
+        f.grant(bob)
+        val confirmed = f.confirmQualified()
+        @Suppress("UNCHECKED_CAST")
+        val attempt = runCatching { (confirmed.participants as MutableList<ParticipantId>).add(carol) }
+        assertTrue(attempt.isFailure)
+        assertEquals(listOf(alice, bob), confirmed.participants)
+        f.core.submit(confirmed)
+        runCurrent()
+        assertEquals(listOf(alice, bob), f.port.sentParticipants)
+    }
+
+    @Test
+    fun `公開する状態の読み取り口は書き換えられず、成立記録と受付前提の一覧も変更できない`() = runTest {
+        val f = QFixture(this)
+        f.grant(alice)
+        f.grant(bob)
+        val record = f.reserve()
+        assertNull(f.core.snapshot as? MutableStateFlow<*>)
+        @Suppress("UNCHECKED_CAST")
+        val clearRecords = runCatching { (f.snapshot.reservations as MutableList<ReservationRecord>).clear() }
+        @Suppress("UNCHECKED_CAST")
+        val clearAdmissions = runCatching { (record.admissions as MutableList<ReservationAdmission>).clear() }
+        assertTrue(clearRecords.isFailure)
+        assertTrue(clearAdmissions.isFailure)
+        assertEquals(1, f.snapshot.reservations.size)
+        assertEquals(2, (f.snapshot.reservations.single() as ReservationRecord.Reserved).admissions.size)
+    }
+
+    private fun QFixture.again(): ConfirmedDraft.Qualified {
+        verifyEligibility()
+        return (core.confirmQualified() as ConfirmOutcome.Confirmed).draft as ConfirmedDraft.Qualified
+    }
+
+    @Test
+    fun `過去の再確認結果を再生する差し替えの資格実装は、今回の呼び出し区間に入らないので拒否する`() = runTest {
+        var recorded: Reverification.Verified? = null
+        var replay = false
+        val f = QFixture(this) { real ->
+            object : EligibilityAuthority by real {
+                override suspend fun verify(certificates: List<EligibilityCertificate>): Reverification {
+                    if (replay) return checkNotNull(recorded)
+                    return real.verify(certificates).also { if (it is Reverification.Verified) recorded = it }
+                }
+            }
+        }
+        f.grant(alice)
+        f.grant(bob)
+        f.reserve()
+        f.now += 1
+        val second = f.again()
+        replay = true
+        f.core.submit(second)
+        runCurrent()
+        assertEquals(ReverificationFailure.Unconfirmed, assertIs<ActiveRequest.EligibilityLost>(f.snapshot.request).reason)
+        assertEquals(1, f.port.creates)
+    }
+
+    @Test
+    fun `判定時刻が揃わない証明書の組は、一つの判定として扱わず拒否する`() = runTest {
+        lateinit var f: QFixture
+        f = QFixture(this) { real ->
+            object : EligibilityAuthority by real {
+                override suspend fun verify(certificates: List<EligibilityCertificate>): Reverification {
+                    val first = real.verify(certificates.filter { it.participant == alice })
+                    f.now += 1
+                    val second = real.verify(certificates.filter { it.participant == bob })
+                    return Reverification.Verified(
+                        (first as Reverification.Verified).certificates + (second as Reverification.Verified).certificates,
+                    )
+                }
+            }
+        }
+        f.grant(alice)
+        f.grant(bob)
+        f.core.submit(f.confirmQualified())
+        runCurrent()
+        assertEquals(ReverificationFailure.Unconfirmed, assertIs<ActiveRequest.EligibilityLost>(f.snapshot.request).reason)
+        assertEquals(0, f.port.creates)
+    }
+
+    @Test
+    fun `判定時点の後に資格が失効しても、その判定は有効のまま送信し、期限の判定を予約は行わない`() = runTest {
+        lateinit var f: QFixture
+        f = QFixture(this) { real ->
+            object : EligibilityAuthority by real {
+                override suspend fun verify(certificates: List<EligibilityCertificate>): Reverification =
+                    real.verify(certificates).also { f.now = START - HOUR + 1 }
+            }
+        }
+        f.grant(alice, until = START - HOUR)
+        f.grant(bob, until = START - HOUR)
+        f.core.submit(f.confirmQualified())
+        runCurrent()
+        assertEquals(1, f.port.creates)
+        assertIs<ReservationRecord.Reserved>(f.snapshot.reservations.single())
+    }
+
+    @Test
+    fun `判定時点の後に送信期限を越えたときは、資格が有効でも作成要求を送らない`() = runTest {
+        lateinit var f: QFixture
+        f = QFixture(this) { real ->
+            object : EligibilityAuthority by real {
+                override suspend fun verify(certificates: List<EligibilityCertificate>): Reverification =
+                    real.verify(certificates).also { f.now = START }
+            }
+        }
+        f.grant(alice)
+        f.grant(bob)
+        f.core.submit(f.confirmQualified())
+        runCurrent()
+        assertIs<ActiveRequest.RegistrationClosed>(f.snapshot.request)
+        assertEquals(0, f.port.creates)
     }
 }

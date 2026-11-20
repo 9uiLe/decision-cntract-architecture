@@ -7,7 +7,9 @@
     "conformance/src/test/kotlin/example/reservation/conformance/ModuleBoundaryTest.kt",
     "compile-contracts/src/test/fixtures/accept/LegitimateUsage.kt",
     "compile-contracts/src/test/fixtures/reject/ForgeCheckInTicket.kt",
-    "conformance/src/main/kotlin/example/reservation/conformance/violations/CompositionViolations.kt"
+    "conformance/src/main/kotlin/example/reservation/conformance/violations/CompositionViolations.kt",
+    "compile-contracts/src/test/fixtures/reject/CheckInWithCurrentAdmission.kt",
+    "compile-contracts/src/test/fixtures/reject/RawIdentifiersToCheckIn.kt"
   ],
   "steps": [
     {
@@ -34,7 +36,7 @@
       ],
       "diagnostics": [
         "e:\\ ui/src/commonMain/kotlin/example/reservation/ui/Messages\\.kt:93:45\\ \\[NO_ELSE_IN_WHEN\\].*",
-        "e:\\ ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel\\.kt:73:111\\ \\[ARGUMENT_TYPE_MISMATCH\\].*"
+        "e:\\ ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel\\.kt:74:111\\ \\[ARGUMENT_TYPE_MISMATCH\\].*"
       ]
     },
     {
@@ -46,7 +48,9 @@
         ":eligibility-core:jvmTest",
         ":checkin-core:jvmTest",
         ":compile-contracts:test",
-        ":conformance:testDebugUnitTest"
+        ":conformance:testDebugUnitTest",
+        ":ui:detektMainJvm",
+        ":checkin-core:detektMainJvm"
       ],
       "patches": [
         "02-check-in-ui.patch",
@@ -56,7 +60,7 @@
         "06-architecture-contract.patch"
       ],
       "requiredTests": {
-        "adapter-simulator:example.adapter.simulator.RequalifyOnArrivalExperimentTest": 2,
+        "adapter-simulator:example.adapter.simulator.RequalifyOnArrivalExperimentTest": 4,
         "reservation-core:example.reservation.core.ReservationCoreTest": 24,
         "checkin-core:example.checkin.core.CheckInCoreTest": 1
       }

@@ -29,8 +29,8 @@
         ":ui:compileKotlinJvm"
       ],
       "diagnostics": [
-        "e:\\ ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel\\.kt:57:26\\ \\[UNRESOLVED_REFERENCE\\].*",
-        "e:\\ ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel\\.kt:58:55\\ \\[UNRESOLVED_REFERENCE\\].*"
+        "e:\\ ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel\\.kt:58:26\\ \\[UNRESOLVED_REFERENCE\\].*",
+        "e:\\ ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel\\.kt:59:55\\ \\[UNRESOLVED_REFERENCE\\].*"
       ]
     },
     {

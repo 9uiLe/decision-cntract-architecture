@@ -16,6 +16,8 @@ PRODUCT = EXPERIMENTS.parent
 KOTLIN_ERROR = re.compile(r"^e: .*\.kt:\d+:\d+.*$", re.MULTILINE)
 FAILED_TASK = re.compile(r"^> Task (:[\w:-]+) FAILED$", re.MULTILINE)
 BUILD_OUTPUTS = {"build", ".gradle", ".kotlin", ".git", "DcaApp.xcodeproj", "Info.plist", "local.properties", ".DS_Store"}
+CHANGE_EXPERIMENTS = ("h", "i", "j", "k", "l")
+COMPARISONS = ("c1", "c2", "c3")
 
 
 def snapshot(root):
@@ -54,6 +56,33 @@ def verify_diagnostics(output, expected, work):
         raise ValueError(f"Unexpected Kotlin diagnostics: {actual}")
 
 
+def verify_failure(work, step, output, evidence):
+    if FAILED_TASK.findall(output) != [step["gradle"][0]]:
+        raise ValueError(f"Expected only {step['gradle'][0]} to fail")
+
+    if expected := step.get("diagnostics"):
+        verify_diagnostics(output, expected, work)
+    elif expected := step.get("detektViolation"):
+        report = work / expected["report"]
+        shutil.copyfile(report, evidence)
+        violations = [
+            [str((work / file.attrib["name"]).relative_to(work)), error.attrib["line"], error.attrib["source"]]
+            for file in ElementTree.parse(report).getroot().findall("file")
+            for error in file.findall("error")
+        ]
+        if violations != [[expected["file"], str(expected["line"]), expected["rule"]]]:
+            raise ValueError(f"Unexpected detekt violations: {violations}")
+    else:
+        expected = step["unexpectedAcceptance"]
+        report = work / "compile-contracts/build/test-results/test/TEST-example.contracts.CompileContractsTest.xml"
+        shutil.copyfile(report, evidence)
+        failures = ElementTree.parse(report).getroot().findall(".//failure")
+        if len(failures) != 1 or not all(part in failures[0].attrib["message"] for part in (
+            expected, "expected: <COMPILATION_ERROR> but was: <OK>",
+        )):
+            raise ValueError(f"Expected only an unexpected successful compilation of {expected}")
+
+
 def run(experiment, baseline, revision, evidence, gradle_options):
     definition = json.loads((experiment / "steps.json").read_text(encoding="utf-8"))
     evidence.mkdir(parents=True, exist_ok=True)
@@ -82,22 +111,19 @@ def run(experiment, baseline, revision, evidence, gradle_options):
             )
             log = evidence / f"{name}.log"
             log.write_text(process.stdout, encoding="utf-8")
-            expected = step.get("diagnostics", [])
+            expected = any(key in step for key in ("diagnostics", "detektViolation", "unexpectedAcceptance"))
             if expected:
                 if process.returncode == 0:
-                    raise ValueError(f"{name}: build succeeded, expected compilation failure ({log})")
+                    raise ValueError(f"{name}: build succeeded, expected a failure ({log})")
                 try:
-                    failed_tasks = FAILED_TASK.findall(process.stdout)
-                    if failed_tasks != [task_arguments[0]]:
-                        raise ValueError(f"Expected only {task_arguments[0]} to fail; observed {failed_tasks}")
-                    verify_diagnostics(process.stdout, expected, work)
+                    verify_failure(work, step, process.stdout, evidence / f"{name}.xml")
                 except ValueError as error:
                     raise ValueError(f"{name}: {error} ({log})") from error
             elif process.returncode:
                 raise ValueError(f"{name}: Gradle exited {process.returncode} ({log})")
             if required := step.get("requiredTests"):
                 verify_tests(work, required, evidence / f"{name}-tests.json")
-            print(f"{name}: {'expected diagnostics' if expected else 'passed'} ({log})", flush=True)
+            print(f"{name}: {'expected failure' if expected else 'passed'} ({log})", flush=True)
 
         after = snapshot(work)
         changed = {path for path in before.keys() | after.keys() if before.get(path) != after.get(path)}
@@ -131,7 +157,7 @@ def verify_tests(work, required, report):
 
 def main():
     parser = argparse.ArgumentParser(description="Verify an experiment against an isolated product copy.")
-    parser.add_argument("experiment", choices=("all", *"hijkl"))
+    parser.add_argument("experiment", choices=("all", "comparisons", *CHANGE_EXPERIMENTS, *COMPARISONS))
     parser.add_argument("--evidence", required=True, type=Path)
     parser.add_argument("--gradle-option", action="append", default=[])
     arguments = parser.parse_args()
@@ -141,15 +167,16 @@ def main():
             baseline = Path(temporary) / "product"
             shutil.copytree(PRODUCT, baseline, ignore=shutil.ignore_patterns("experiments", *BUILD_OUTPUTS))
             evidence = arguments.evidence.resolve()
-            if arguments.experiment == "all":
-                for experiment in "hijkl":
+            if arguments.experiment in ("all", "comparisons"):
+                group = CHANGE_EXPERIMENTS if arguments.experiment == "all" else COMPARISONS
+                for experiment in group:
                     run(
                         EXPERIMENTS / experiment, baseline, revision, evidence / experiment,
                         arguments.gradle_option,
                     )
             else:
                 run(EXPERIMENTS / arguments.experiment, baseline, revision, evidence, arguments.gradle_option)
-    except (OSError, ValueError, subprocess.CalledProcessError) as error:
+    except (OSError, ValueError, ElementTree.ParseError, subprocess.CalledProcessError) as error:
         sys.exit(str(error))
 
 

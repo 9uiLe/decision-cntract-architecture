@@ -8,8 +8,10 @@ import example.eligibility.core.QualificationKind
 import example.eligibility.core.Reverification
 import example.eligibility.core.ReverificationFailure
 import example.kernel.Clock
+import example.kernel.EpochMillis
 import example.kernel.ParticipantId
 import example.kernel.SessionId
+import example.kernel.frozen
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +19,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
@@ -46,7 +49,7 @@ class ReservationCore internal constructor(
         )
     )
 
-    val snapshot: StateFlow<CoreSnapshot> get() = state
+    val snapshot: StateFlow<CoreSnapshot> = state.asStateFlow()
 
     fun selectWorkshop(session: SessionId): Acceptance = synchronized(lock) {
         val workshop = catalog.workshops.firstOrNull { it.id == session }
@@ -73,7 +76,7 @@ class ReservationCore internal constructor(
             current.draft.participants + participant
         }
         state.value = current.copy(
-            draft = Draft(workshop, toggled, Confirmation.Unconfirmed),
+            draft = Draft(workshop, toggled.frozen(), Confirmation.Unconfirmed),
             request = current.request.withoutFinishedResult(),
         )
         Acceptance.Accepted
@@ -189,7 +192,7 @@ class ReservationCore internal constructor(
         val admission = reserved.admissions.firstOrNull { it.participant == participant }
             ?: return AdmissionLookup.Unavailable(AdmissionUnavailableReason.NotIncluded)
         return when (observe(UsageObservation.Failed) { port.usage(reservation) }) {
-            UsageObservation.Active -> AdmissionLookup.Valid(admission)
+            UsageObservation.Active -> AdmissionLookup.Valid(CurrentAdmission(admission, clock.now()))
             UsageObservation.Cancelled -> AdmissionLookup.Unavailable(AdmissionUnavailableReason.Cancelled)
             UsageObservation.NotFound -> AdmissionLookup.Unavailable(AdmissionUnavailableReason.NotReserved)
             UsageObservation.Failed -> AdmissionLookup.Unconfirmed
@@ -225,21 +228,35 @@ class ReservationCore internal constructor(
 
     private suspend fun permitCreate(draft: ConfirmedDraft): CreatePermission {
         val certificates = draft.certificates
+        var checkedAt: EpochMillis? = null
         if (certificates.isNotEmpty()) {
+            val startedAt = clock.now()
             when (val verification = eligibility.verify(certificates)) {
-                is Reverification.Verified ->
+                is Reverification.Verified -> {
+                    val finishedAt = clock.now()
                     if (!verification.certificates.coverExactly(draft)) {
                         return CreatePermission.Denied(CreateDenial.EligibilityLost(ReverificationFailure.TargetMismatch))
                     }
+                    checkedAt = verification.certificates.commonCheckedAt(startedAt, finishedAt)
+                        ?: return CreatePermission.Denied(CreateDenial.EligibilityLost(ReverificationFailure.Unconfirmed))
+                }
                 is Reverification.Failed ->
                     return CreatePermission.Denied(CreateDenial.EligibilityLost(verification.reason))
             }
         }
-        return if (isRegistrationClosed(draft.workshop)) {
+        val closedAtCheck = checkedAt?.let { it >= draft.workshop.start } ?: false
+        return if (closedAtCheck || isRegistrationClosed(draft.workshop)) {
             CreatePermission.Denied(CreateDenial.RegistrationClosed)
         } else {
             CreatePermission.Granted
         }
+    }
+
+    // 今回の再確認で得た証明書だけを使う。全員の判定時刻が一つに揃い、再確認の呼び出し区間に入らない値
+    // （過去の証明書の再生や、別の判定の混在）は、資格を確認できなかったものとして扱う。
+    private fun List<EligibilityCertificate>.commonCheckedAt(startedAt: EpochMillis, finishedAt: EpochMillis): EpochMillis? {
+        val checkedAt = map { it.checkedAt }.distinct().singleOrNull() ?: return null
+        return checkedAt.takeIf { it >= startedAt && it <= finishedAt }
     }
 
     // 再確認で返った証明書が、下書きの参加者と必要資格に過不足なく対応することを確かめる。
@@ -322,9 +339,11 @@ class ReservationCore internal constructor(
 
     private fun CoreSnapshot.withReserved(reservation: ReservationId, booking: Booking) = copy(
         request = null,
-        reservations = reservations + ReservationRecord.Reserved(
-            reservation, booking, CancelTicket(reservation), null, admissionsFor(reservation, booking),
-        ),
+        reservations = (
+            reservations + ReservationRecord.Reserved(
+                reservation, booking, CancelTicket(reservation), null, admissionsFor(reservation, booking),
+            )
+        ).frozen(),
     )
 
     private fun admissionsFor(reservation: ReservationId, booking: Booking): List<ReservationAdmission> =
@@ -349,7 +368,7 @@ class ReservationCore internal constructor(
     private fun List<ReservationRecord>.replace(
         reservation: ReservationId,
         replacement: () -> ReservationRecord,
-    ): List<ReservationRecord> = map { if (it.reservation == reservation) replacement() else it }
+    ): List<ReservationRecord> = map { if (it.reservation == reservation) replacement() else it }.frozen()
 
     // 実行中の操作と同じ入力が再び届いたものは Busy、現在の状態に対応しないものは Stale として区別する。
     private fun CoreSnapshot.rejectionForUnmatched(trigger: Any): Rejection {

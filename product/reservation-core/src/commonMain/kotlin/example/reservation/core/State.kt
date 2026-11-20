@@ -2,10 +2,13 @@ package example.reservation.core
 
 import example.eligibility.core.QualificationKind
 import example.eligibility.core.ReverificationFailure
+import example.kernel.DecisionResult
 import example.kernel.ParticipantId
+import example.kernel.frozen
 import kotlin.jvm.JvmInline
 
 // 予約が成立した時点の条件。新しい予約の条件（NewBookingRequirement）が変わっても、成立済みの記録は書き換えない。
+@DecisionResult
 sealed interface BookedBasis {
     data object WithoutQualification : BookedBasis
     data class WithQualification(val kind: QualificationKind) : BookedBasis
@@ -15,6 +18,7 @@ data class Booking(val workshop: Workshop, val participants: List<ParticipantId>
 
 @JvmInline internal value class OperationId(val value: Long)
 
+@DecisionResult
 sealed interface Confirmation {
     data object Unconfirmed : Confirmation
     class Confirmed(val draft: ConfirmedDraft) : Confirmation
@@ -27,6 +31,7 @@ data class Draft(
 )
 
 // 外部要求の進行と、結果が確定していない操作を最大一つ保持する。確定した予約はここに残さない。
+@DecisionResult
 sealed class ActiveRequest {
     abstract val booking: Booking
     val workshop: Workshop get() = booking.workshop
@@ -98,13 +103,16 @@ sealed class ActiveRequest {
 }
 
 // 新規作成を許されなかった理由。再試行では、元の未成立と区別して保持する。
+@DecisionResult
 sealed interface CreateDenial {
     data object RegistrationClosed : CreateDenial
     class EligibilityLost(val reason: ReverificationFailure) : CreateDenial
 }
 
+@DecisionResult
 enum class CancelFailure { Declined, NoResponse }
 
+@DecisionResult
 sealed interface ReservationRecord {
     val reservation: ReservationId
     val booking: Booking
@@ -114,8 +122,10 @@ sealed interface ReservationRecord {
         override val booking: Booking,
         val cancel: CancelTicket,
         val lastCancelFailure: CancelFailure?,
-        val admissions: List<ReservationAdmission>,
-    ) : ReservationRecord
+        admissions: List<ReservationAdmission>,
+    ) : ReservationRecord {
+        val admissions: List<ReservationAdmission> = admissions.frozen()
+    }
 
     class Cancelled internal constructor(
         override val reservation: ReservationId,
@@ -129,6 +139,7 @@ data class CoreSnapshot(
     val reservations: List<ReservationRecord>,
 )
 
+@DecisionResult
 enum class Rejection {
     UnknownWorkshop,
     UnknownParticipant,
@@ -140,16 +151,20 @@ enum class Rejection {
     NoParticipants,
 }
 
+@DecisionResult
 sealed interface Acceptance {
     data object Accepted : Acceptance
     data class Rejected(val reason: Rejection) : Acceptance
 }
 
+@DecisionResult
 sealed interface ConfirmOutcome {
     class Confirmed(val draft: ConfirmedDraft) : ConfirmOutcome
     data object NoWorkshop : ConfirmOutcome
     data object EmptyParticipants : ConfirmOutcome
     data object QualificationRequired : ConfirmOutcome
     data object QualificationNotRequired : ConfirmOutcome
-    class EligibilityNotMet(val participants: List<ParticipantId>) : ConfirmOutcome
+    class EligibilityNotMet(participants: List<ParticipantId>) : ConfirmOutcome {
+        val participants: List<ParticipantId> = participants.frozen()
+    }
 }

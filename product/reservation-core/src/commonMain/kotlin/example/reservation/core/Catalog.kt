@@ -1,11 +1,13 @@
 package example.reservation.core
 
 import example.eligibility.core.QualificationKind
+import example.kernel.DecisionResult
 import example.kernel.EpochMillis
 import example.kernel.ParticipantId
 import example.kernel.SessionId
 
 // 新しい予約に必要な条件。成立済みの予約がどの条件で成立したかは BookedBasis が別に持つ。
+@DecisionResult
 sealed interface NewBookingRequirement {
     data object NotRequired : NewBookingRequirement
     data class Required(val kind: QualificationKind) : NewBookingRequirement

@@ -6,11 +6,14 @@ import example.kernel.ParticipantId
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
@@ -128,5 +131,24 @@ class EligibilityCoreTest {
         f.service.observations[alice] = QualificationObservation.Unavailable
         assertEquals(ReverificationFailure.Unconfirmed, assertIs<Reverification.Failed>(f.core.verify(listOf(certificate))).reason)
         assertEquals(ReverificationFailure.TargetMismatch, assertIs<Reverification.Failed>(f.core.verify(listOf(certificate, certificate))).reason)
+    }
+
+    @Test
+    fun `再確認が返す証明書は全員が同じ判定時刻で、公開する読み取り口と証明書の一覧は書き換えられない`() = runTest {
+        val f = Fixture(this)
+        f.service.observations[alice] = QualificationObservation.Held(EpochMillis(5_000))
+        f.service.observations[bob] = QualificationObservation.Held(EpochMillis(5_000))
+        f.core.request(alice, kind)
+        f.core.request(bob, kind)
+        runCurrent()
+        val issued = listOf(alice, bob).map { assertIs<EligibilityOutcome.Eligible>(f.outcome(it)).certificate }
+        f.now = 2_000
+        val verified = assertIs<Reverification.Verified>(f.core.verify(issued))
+        assertEquals(setOf(EpochMillis(2_000)), verified.certificates.map { it.checkedAt }.toSet())
+        @Suppress("UNCHECKED_CAST")
+        val attempt = runCatching { (verified.certificates as MutableList<EligibilityCertificate>).clear() }
+        assertTrue(attempt.isFailure)
+        assertEquals(2, verified.certificates.size)
+        assertNull(f.core.snapshot as? MutableStateFlow<*>)
     }
 }

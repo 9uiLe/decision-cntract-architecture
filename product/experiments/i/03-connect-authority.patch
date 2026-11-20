@@ -1,10 +1,8 @@
 --- a/shared/src/commonMain/kotlin/example/app/composition/AppContainer.kt
 +++ b/shared/src/commonMain/kotlin/example/app/composition/AppContainer.kt
-@@ -49,6 +49,7 @@
- 
+@@ -50,4 +50,5 @@
      val checkIn: CheckInCore = createCheckInCore(
          source = core,
 +        eligibility = eligibility,
          port = simulator.checkIn,
          clock = clock,
-         scope = scope,

@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/adapter-simulator/src/commonTest/kotlin/example/adapter/simulator/RequalifyOnArrivalExperimentTest.kt
-@@ -0,0 +1,139 @@
+@@ -0,0 +1,194 @@
 +package example.adapter.simulator
 +
 +import example.checkin.core.CheckInAttemptId
@@ -103,9 +103,10 @@
 +        f.now = EpochMillis(f.start.value - 20 * 60_000)
 +        f.checkIn.checkIn(first, secondCertificate)
 +        runCurrent()
-+        assertEquals(Denial.QualificationUnconfirmed, assertIs<ParticipantCheckIn.NotAdmitted>(f.checkIn.snapshot.value.entries[firstKey]).denial)
++        assertEquals(Denial.WrongTarget, assertIs<ParticipantCheckIn.NotAdmitted>(f.checkIn.snapshot.value.entries[firstKey]).denial)
 +        f.checkIn.checkIn(first, wrongKind)
 +        runCurrent()
++        assertEquals(Denial.WrongTarget, assertIs<ParticipantCheckIn.NotAdmitted>(f.checkIn.snapshot.value.entries[firstKey]).denial)
 +        assertEquals(0, f.simulator.controls.observations.value.checkInCreateRequests)
 +
 +        f.checkIn.checkIn(first, firstCertificate)
@@ -115,12 +116,66 @@
 +        f.checkIn.checkIn(second, secondCertificate)
 +        runCurrent()
 +        val denial = assertIs<ParticipantCheckIn.NotAdmitted>(f.checkIn.snapshot.value.entries[secondKey]).denial
-+        assertEquals(Denial.QualificationUnconfirmed, denial)
++        assertEquals(Denial.QualificationExpired, denial)
 +        val observed = f.simulator.controls.observations.value
 +        assertEquals(1, observed.createRequests)
 +        assertEquals(1, observed.activeReservations)
 +        assertEquals(1, observed.checkInCreateRequests)
 +        assertEquals(f.first, observed.checkInRecords.single().participant)
++    }
++
++    @Test
++    fun `来場時に資格を確認できない場合と未取得が確認できた場合を区別する`() = runTest {
++        val f = Fixture(this, NewBookingRequirement.Required(QualificationKind("pottery-advanced")))
++        f.selectParticipants()
++        f.reservation.requestEligibility()
++        runCurrent()
++        val certificate = f.certificate(f.first, f.pottery)
++        val confirmed = assertIs<ConfirmOutcome.Confirmed>(f.reservation.confirmQualified())
++        f.reservation.submit(confirmed.draft)
++        runCurrent()
++        val booking = f.record()
++        val first = assertIs<ReservationAdmission.Qualified>(booking.admissions.first { it.participant == f.first })
++        val key = CheckInKey(booking.reservation, f.first)
++        f.now = EpochMillis(f.start.value - 20 * 60_000)
++
++        f.simulator.controls.enqueueQualification(QualificationBehavior.NoResponse)
++        f.checkIn.checkIn(first, certificate)
++        runCurrent()
++        assertEquals(Denial.QualificationUnconfirmed, assertIs<ParticipantCheckIn.NotAdmitted>(f.checkIn.snapshot.value.entries[key]).denial)
++
++        f.simulator.controls.revokeQualification(f.first, f.pottery)
++        f.checkIn.checkIn(first, certificate)
++        runCurrent()
++        assertEquals(Denial.QualificationNotHeld, assertIs<ParticipantCheckIn.NotAdmitted>(f.checkIn.snapshot.value.entries[key]).denial)
++        assertEquals(0, f.simulator.controls.observations.value.checkInCreateRequests)
++        assertEquals(emptyList(), f.simulator.controls.observations.value.checkInRecords)
++    }
++
++    @Test
++    fun `資格の再確認中に受付時間が終わった場合は有効な資格でも受付要求を送らない`() = runTest {
++        val f = Fixture(this, NewBookingRequirement.Required(QualificationKind("pottery-advanced")))
++        f.selectParticipants()
++        f.reservation.requestEligibility()
++        runCurrent()
++        val certificate = f.certificate(f.first, f.pottery)
++        val confirmed = assertIs<ConfirmOutcome.Confirmed>(f.reservation.confirmQualified())
++        f.reservation.submit(confirmed.draft)
++        runCurrent()
++        val booking = f.record()
++        val first = assertIs<ReservationAdmission.Qualified>(booking.admissions.first { it.participant == f.first })
++        val key = CheckInKey(booking.reservation, f.first)
++        f.now = EpochMillis(f.start.value - 20 * 60_000)
++        f.simulator.controls.enqueueQualification(QualificationBehavior.Hold)
++
++        f.checkIn.checkIn(first, certificate)
++        runCurrent()
++        assertEquals(1, f.simulator.controls.observations.value.heldCalls)
++        f.now = EpochMillis(f.start.value + 15 * 60_000)
++        f.simulator.controls.releaseHeld()
++        runCurrent()
++        assertEquals(Denial.Closed, assertIs<ParticipantCheckIn.NotAdmitted>(f.checkIn.snapshot.value.entries[key]).denial)
++        assertEquals(0, f.simulator.controls.observations.value.checkInCreateRequests)
 +    }
 +
 +    @Test

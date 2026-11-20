@@ -1,5 +1,6 @@
 package example.checkin.core
 
+import example.kernel.DecisionResult
 import example.kernel.ParticipantId
 import example.reservation.core.ReservationId
 import kotlin.jvm.JvmInline
@@ -7,6 +8,7 @@ import kotlin.jvm.JvmInline
 // 受付の試行の識別子。予約作成の RequestId とは別の型で、照会に取り違えて渡せない。
 @JvmInline value class CheckInAttemptId(val value: String)
 
+@DecisionResult
 sealed interface CheckInCreateObservation {
     data object Recorded : CheckInCreateObservation
     data object AlreadyRecorded : CheckInCreateObservation
@@ -14,6 +16,7 @@ sealed interface CheckInCreateObservation {
     data object NoResponse : CheckInCreateObservation
 }
 
+@DecisionResult
 sealed interface CheckInLookupObservation {
     data object Found : CheckInLookupObservation
     data object NotCreated : CheckInLookupObservation

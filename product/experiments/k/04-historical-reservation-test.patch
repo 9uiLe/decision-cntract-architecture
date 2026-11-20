@@ -16,7 +16,7 @@
 +            reservations = initialReservations,
          )
      )
- 
+
 --- a/reservation-core/build.gradle.kts
 +++ b/reservation-core/build.gradle.kts
 @@ -19,6 +19,9 @@
@@ -34,7 +34,7 @@
 @@ -28,8 +28,8 @@
  private const val START = 100 * HOUR
  private const val CANCEL_DEADLINE = START - 24 * HOUR
- 
+
 -private val pottery = Workshop(SessionId("pottery"), "陶芸", EpochMillis(START), 4, NewBookingRequirement.NotRequired)
 -private val cooking = Workshop(SessionId("cooking"), "料理", EpochMillis(START + 10 * HOUR), 4, NewBookingRequirement.NotRequired)
 +private val pottery = Workshop(SessionId("pottery"), "陶芸", EpochMillis(START), 4, NewBookingRequirement(QualificationKind("basic-safety")))
@@ -45,14 +45,14 @@
 @@ -63,9 +63,9 @@
      override suspend fun usage(reservation: ReservationId): UsageObservation = UsageObservation.Active
  }
- 
+
 -private object NoQualificationService : EligibilityPort {
 +private object AvailableQualificationService : EligibilityPort {
      override suspend fun fetch(participant: ParticipantId, kind: QualificationKind): QualificationObservation =
 -        QualificationObservation.Unavailable
 +        QualificationObservation.Held(EpochMillis(START + 100 * HOUR))
  }
- 
+
  private class Fixture(private val scope: TestScope, var now: Long = START - HOUR, timeout: kotlin.time.Duration = 30.seconds) {
 @@ -74,7 +74,7 @@
      private val coroutines = CoroutineScope(SupervisorJob() + StandardTestDispatcher(scope.testScheduler))
@@ -76,7 +76,7 @@
 +        scope.runCurrent()
 +        return assertIs<ConfirmOutcome.Confirmed>(core.confirmQualified()).draft
      }
- 
+
      fun reserve(workshop: Workshop = pottery): ReservationRecord.Reserved {
 @@ -117,7 +123,7 @@
          val old = f.confirmed()
@@ -100,7 +100,7 @@
          assertTrue(f.port.createCalls.isEmpty())
      }
 @@ -194,7 +200,7 @@
- 
+
          f.core.selectWorkshop(pottery.id)
          f.core.toggleParticipant(bob)
 -        val draft = (f.core.confirmWithoutQualification() as ConfirmOutcome.Confirmed).draft
@@ -110,7 +110,7 @@
          assertEquals(unknown, f.snapshot.request)
 @@ -286,7 +292,7 @@
          val notCreated = assertIs<ActiveRequest.NotCreated>(f.snapshot.request)
- 
+
          f.now = START
 -        val again = (f.core.confirmWithoutQualification() as ConfirmOutcome.Confirmed).draft
 +        val again = f.confirmSelected()
@@ -136,7 +136,7 @@
 +    listOf(advanced, advancedRoasting),
      listOf(Participant(alice, "アリス"), Participant(bob, "ボブ"), Participant(carol, "キャロル")),
  )
- 
+
 @@ -128,29 +127,6 @@
  @OptIn(ExperimentalCoroutinesApi::class)
  class QualifiedReservationTest {
@@ -253,7 +253,7 @@
 +
 +        now = EpochMillis(start.value - 20 * 60_000)
 +        val before = simulator.controls.observations.value.qualificationRequests
-+        val admission = assertIs<AdmissionLookup.Valid>(reservation.admission(previousId, participant)).admission
++        val admission = assertIs<AdmissionLookup.Valid>(reservation.admission(previousId, participant)).admission.record
 +        checkIn.checkIn(assertIs<ReservationAdmission.Open>(admission))
 +        runCurrent()
 +        assertEquals(ParticipantCheckIn.CheckedIn, checkIn.snapshot.value.entries[CheckInKey(previousId, participant)])

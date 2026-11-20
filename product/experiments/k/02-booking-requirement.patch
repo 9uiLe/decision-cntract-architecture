@@ -1,6 +1,6 @@
 --- a/reservation-core/src/commonMain/kotlin/example/reservation/core/ReservationCore.kt
 +++ b/reservation-core/src/commonMain/kotlin/example/reservation/core/ReservationCore.kt
-@@ -83,10 +83,7 @@
+@@ -86,10 +86,7 @@
      fun requestEligibility(): Acceptance = synchronized(lock) {
          val draft = state.value.draft
          val workshop = draft.workshop ?: return@synchronized Acceptance.Rejected(Rejection.UnknownWorkshop)
@@ -12,7 +12,7 @@
          if (draft.participants.isEmpty()) return@synchronized Acceptance.Rejected(Rejection.NoParticipants)
          draft.participants
              .filterNot { readinessOf(eligibility.status(it, kind), it, kind) is Readiness.Ready }
-@@ -97,10 +94,7 @@
+@@ -111,10 +108,7 @@
      fun confirmQualified(): ConfirmOutcome = synchronized(lock) {
          val current = state.value
          val workshop = current.draft.workshop ?: return@synchronized ConfirmOutcome.NoWorkshop
@@ -24,8 +24,8 @@
          val participants = current.draft.participants
          if (participants.isEmpty()) return@synchronized ConfirmOutcome.EmptyParticipants
          val readiness = participants.map { it to readinessOf(eligibility.status(it, kind), it, kind) }
-@@ -233,7 +227,7 @@
- 
+@@ -261,7 +255,7 @@
+
      // 再確認で返った証明書が、下書きの参加者と必要資格に過不足なく対応することを確かめる。
      private fun List<EligibilityCertificate>.coverExactly(draft: ConfirmedDraft): Boolean {
 -        val kind = (draft.workshop.requirement as? NewBookingRequirement.Required)?.kind
@@ -35,52 +35,62 @@
              all { it.kind == kind }
 --- a/reservation-core/src/commonMain/kotlin/example/reservation/core/Catalog.kt
 +++ b/reservation-core/src/commonMain/kotlin/example/reservation/core/Catalog.kt
-@@ -6,10 +6,7 @@
+@@ -1,17 +1,12 @@
+ package example.reservation.core
+
+ import example.eligibility.core.QualificationKind
+-import example.kernel.DecisionResult
+ import example.kernel.EpochMillis
+ import example.kernel.ParticipantId
  import example.kernel.SessionId
- 
+
  // 新しい予約に必要な条件。成立済みの予約がどの条件で成立したかは BookedBasis が別に持つ。
+-@DecisionResult
 -sealed interface NewBookingRequirement {
 -    data object NotRequired : NewBookingRequirement
 -    data class Required(val kind: QualificationKind) : NewBookingRequirement
 -}
 +data class NewBookingRequirement(val kind: QualificationKind)
- 
+
  data class Workshop(
      val id: SessionId,
 --- a/reservation-core/src/commonMain/kotlin/example/reservation/core/Evidence.kt
 +++ b/reservation-core/src/commonMain/kotlin/example/reservation/core/Evidence.kt
-@@ -13,16 +13,7 @@
+@@ -17,18 +17,7 @@
      abstract val participants: List<ParticipantId>
      abstract val booking: Booking
- 
+
 -    // 作成直前の再確認で資格を確かめる対象。資格を要さない下書きは空で、送信処理は下書きの種類を分岐しない。
      internal abstract val certificates: List<EligibilityCertificate>
 -
+-    @IssuedEvidence
 -    class Open internal constructor(
 -        override val workshop: Workshop,
--        override val participants: List<ParticipantId>,
+-        participants: List<ParticipantId>,
 -    ) : ConfirmedDraft() {
+-        override val participants: List<ParticipantId> = participants.frozen()
 -        override val booking: Booking get() = Booking(workshop, participants, BookedBasis.WithoutQualification)
 -        internal override val certificates: List<EligibilityCertificate> get() = emptyList()
 -    }
- 
+
+     @IssuedEvidence
      class Qualified internal constructor(
-         override val workshop: Workshop,
 --- a/reservation-core/src/commonMain/kotlin/example/reservation/core/State.kt
 +++ b/reservation-core/src/commonMain/kotlin/example/reservation/core/State.kt
-@@ -136,7 +136,6 @@
+@@ -147,7 +147,6 @@
      Busy,
      RegistrationClosed,
      CancellationClosed,
 -    QualificationNotRequired,
      NoParticipants,
  }
- 
-@@ -149,7 +148,5 @@
+
+@@ -162,8 +161,6 @@
      class Confirmed(val draft: ConfirmedDraft) : ConfirmOutcome
      data object NoWorkshop : ConfirmOutcome
      data object EmptyParticipants : ConfirmOutcome
 -    data object QualificationRequired : ConfirmOutcome
 -    data object QualificationNotRequired : ConfirmOutcome
-     class EligibilityNotMet(val participants: List<ParticipantId>) : ConfirmOutcome
- }
+     class EligibilityNotMet(participants: List<ParticipantId>) : ConfirmOutcome {
+         val participants: List<ParticipantId> = participants.frozen()
+     }

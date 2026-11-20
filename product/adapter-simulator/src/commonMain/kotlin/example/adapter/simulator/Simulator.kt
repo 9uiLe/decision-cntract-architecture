@@ -22,6 +22,7 @@ import kotlinx.atomicfu.locks.synchronized
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class Simulator(
     val reservation: ReservationPort,
@@ -91,7 +92,7 @@ private class SimulatedService(
     }
 
     val controls: SimulatorControls = object : SimulatorControls {
-        override val observations: StateFlow<SimulatorObservations> get() = observed
+        override val observations: StateFlow<SimulatorObservations> = observed.asStateFlow()
 
         override fun enqueueCreate(behavior: CreateBehavior) = update { createScript.addLast(behavior) }
 

@@ -1,0 +1,10 @@
+--- a/checkin-core/src/commonMain/kotlin/example/checkin/core/CheckInCore.kt
++++ b/checkin-core/src/commonMain/kotlin/example/checkin/core/CheckInCore.kt
+@@ -44,4 +44,7 @@
+     val snapshot: StateFlow<CheckInSnapshot> = state.asStateFlow()
+
++    fun checkIn(admission: ReservationAdmission.Qualified): CheckInAcceptance =
++        CheckInAcceptance.Rejected(CheckInRejection.Stale)
++
+     fun checkIn(admission: ReservationAdmission.Open): CheckInAcceptance =
+         startCheckIn(admission, certificate = null)

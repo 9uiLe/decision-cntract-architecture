@@ -1,16 +1,13 @@
 --- a/ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel.kt
 +++ b/ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel.kt
-@@ -7,6 +7,8 @@
- import example.checkin.core.CheckInRetryTicket
+@@ -8,4 +8,6 @@
  import example.checkin.core.CheckInStatusTicket
  import example.eligibility.core.EligibilityAuthority
 +import example.eligibility.core.EligibilityOutcome
 +import example.eligibility.core.EligibilityStatus
  import example.kernel.ParticipantId
  import example.kernel.SessionId
- import example.reservation.core.Acceptance
-@@ -70,7 +72,22 @@
- 
+@@ -72,5 +74,25 @@
      fun cancel(ticket: CancelTicket): Acceptance = relay(core.cancel(ticket))
  
 -    fun checkInParticipant(admission: ReservationAdmission): CheckInAcceptance = relayCheckIn(checkIn.checkIn(admission))
@@ -22,24 +19,27 @@
 +                val outcome = (status as? EligibilityStatus.Settled)?.outcome
 +                when (outcome) {
 +                    is EligibilityOutcome.Eligible -> relayCheckIn(checkIn.checkIn(admission, outcome.certificate))
-+                    EligibilityOutcome.Expired, EligibilityOutcome.NotHeld, EligibilityOutcome.Unknown, null -> {
-+                        eligibility.request(admission.participant, admission.kind)
-+                        notify("資格の状況を確認します。確認後にもう一度受付をお試しください。")
-+                    }
++                    null -> refreshCheckInQualification(admission, "資格を確認しています。確認後にもう一度受付をお試しください。")
++                    EligibilityOutcome.Unknown -> refreshCheckInQualification(admission, "資格を確認できませんでした。もう一度照会します。")
++                    EligibilityOutcome.NotHeld -> refreshCheckInQualification(admission, "来場受付に必要な資格がありません。もう一度照会します。")
++                    EligibilityOutcome.Expired -> refreshCheckInQualification(admission, "確認済みの資格の期限が切れています。もう一度照会します。")
 +                }
 +            }
 +        }
 +    }
++
++    private fun refreshCheckInQualification(admission: ReservationAdmission.Qualified, message: String) {
++        eligibility.request(admission.participant, admission.kind)
++        notify(message)
++    }
  
      fun lookUpCheckIn(ticket: CheckInStatusTicket): CheckInAcceptance = relayCheckIn(checkIn.checkStatus(ticket))
- 
 --- a/ui/src/commonMain/kotlin/example/reservation/ui/Messages.kt
 +++ b/ui/src/commonMain/kotlin/example/reservation/ui/Messages.kt
-@@ -96,6 +96,7 @@
-     Denial.NotYetOpen -> "受付はまだ始まっていません。"
+@@ -97,3 +97,6 @@
      Denial.Closed -> "受付は終了しています。"
      Denial.WrongTarget -> "予約と参加者の組み合わせを確認できませんでした。"
-+    Denial.QualificationUnconfirmed -> "来場時の資格を確認できないため、受付していません。"
++    Denial.QualificationUnconfirmed -> "来場時の資格を確認できませんでした。"
++    Denial.QualificationNotHeld -> "来場受付に必要な資格を取得していません。"
++    Denial.QualificationExpired -> "来場受付に必要な資格の有効期限が切れています。"
  }
- 
- fun unavailableMessage(reason: AdmissionUnavailableReason): String = when (reason) {

@@ -4,9 +4,10 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.PrintStream
 import java.nio.file.Files
-import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import org.junit.jupiter.api.DynamicTest
+import org.junit.jupiter.api.TestFactory
 import org.jetbrains.kotlin.cli.common.ExitCode
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 
@@ -38,31 +39,36 @@ private fun compile(source: File): Compilation {
 private fun fixtureFiles(kind: String): List<File> =
     File(fixtures, kind).listFiles { file -> file.extension == "kt" }.orEmpty().sortedBy { it.name }
 
+// fixture ごとに別のテストにする。弱化で想定外にコンパイルできた fixture を、失敗したテスト名で特定するため。
 class CompileContractsTest {
-    @Test
-    fun `正規の公開契約だけを使う利用側は、Core ごとのジャーだけでコンパイルできる`() {
+    @TestFactory
+    fun `正規の公開契約だけを使う利用側は、Core ごとのジャーだけでコンパイルできる`(): List<DynamicTest> {
         val accepted = fixtureFiles("accept")
         assertTrue(accepted.isNotEmpty())
-        for (file in accepted) {
-            val result = compile(file)
-            assertEquals(ExitCode.OK, result.exit, "${file.name}\n${result.log}")
-            assertEquals(emptyList(), result.errors, file.name)
+        return accepted.map { file ->
+            DynamicTest.dynamicTest("accept/${file.name}") {
+                val result = compile(file)
+                assertEquals(ExitCode.OK, result.exit, "${file.name}\n${result.log}")
+                assertEquals(emptyList(), result.errors, file.name)
+            }
         }
     }
 
-    @Test
-    fun `確認済みの値・操作権限・券の偽造、未確認の入力、取り違えた試行は、期待した診断一件で拒否される`() {
+    @TestFactory
+    fun `確認済みの値・操作権限・券の偽造、未確認の入力、取り違えた試行は、期待した診断一件で拒否される`(): List<DynamicTest> {
         val rejected = fixtureFiles("reject")
         assertTrue(rejected.size >= 10)
-        for (file in rejected) {
-            val marked = file.readLines().withIndex().mapNotNull { (index, line) ->
-                Regex("// VIOLATION \\[(\\w+)]").find(line)?.let { index + 1 to it.groupValues[1] }
+        return rejected.map { file ->
+            DynamicTest.dynamicTest("reject/${file.name}") {
+                val marked = file.readLines().withIndex().mapNotNull { (index, line) ->
+                    Regex("// VIOLATION \\[(\\w+)]").find(line)?.let { index + 1 to it.groupValues[1] }
+                }
+                assertEquals(1, marked.size, "${file.name} には // VIOLATION [診断 ID] が一行だけ必要です")
+                val (line, id) = marked.single()
+                val result = compile(file)
+                assertEquals(ExitCode.COMPILATION_ERROR, result.exit, "${file.name}\n${result.log}")
+                assertEquals(listOf(Diagnostic(file.name, line, id)), result.errors, "${file.name}\n${result.log}")
             }
-            assertEquals(1, marked.size, "${file.name} には // VIOLATION [診断 ID] が一行だけ必要です")
-            val (line, id) = marked.single()
-            val result = compile(file)
-            assertEquals(ExitCode.COMPILATION_ERROR, result.exit, "${file.name}\n${result.log}")
-            assertEquals(listOf(Diagnostic(file.name, line, id)), result.errors, "${file.name}\n${result.log}")
         }
     }
 }

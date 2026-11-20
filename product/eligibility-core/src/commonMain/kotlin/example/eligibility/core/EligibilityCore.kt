@@ -10,6 +10,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
@@ -28,7 +29,7 @@ class EligibilityCore internal constructor(
     private val entries = LinkedHashMap<EligibilityKey, Entry>()
     private val state = MutableStateFlow(EligibilitySnapshot(emptyMap()))
 
-    override val snapshot: StateFlow<EligibilitySnapshot> get() = state
+    override val snapshot: StateFlow<EligibilitySnapshot> = state.asStateFlow()
 
     override fun status(participant: ParticipantId, kind: QualificationKind): EligibilityStatus =
         synchronized(lock) { entries[EligibilityKey(participant, kind)].toStatus() }

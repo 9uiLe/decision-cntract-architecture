@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="390" viewBox="0 0 860 390" role="img" aria-labelledby="title description">
+  <title id="title">来場受付で渡す値と呼び出す操作</title>
+  <desc id="description">成立時の参加者情報を画面が受け取る。来場受付 Core はその参加者の受付操作を受けると、予約 Core に現在の状態を照会する。予約 Core は照会の結果を返し、来場受付 Core が受付時間と重複を確認する。</desc>
+  <rect width="860" height="390" fill="#f5f8fb" rx="12"/>
+  <line x1="144" y1="65" x2="144" y2="340" stroke="#b9cada"/>
+  <line x1="430" y1="65" x2="430" y2="340" stroke="#b9cada"/>
+  <line x1="716" y1="65" x2="716" y2="340" stroke="#b9cada"/>
+  <g stroke="#8aa6bb" fill="#fff">
+    <rect x="40" y="24" width="208" height="42" rx="8"/>
+    <rect x="326" y="24" width="208" height="42" rx="8"/>
+    <rect x="612" y="24" width="208" height="42" rx="8"/>
+  </g>
+  <line x1="716" y1="115" x2="154" y2="115" stroke="#246b83" stroke-width="2"/>
+  <polygon points="144,115 155,110 155,120" fill="#246b83"/>
+  <line x1="716" y1="274" x2="440" y2="274" stroke="#246b83" stroke-width="2"/>
+  <polygon points="430,274 441,269 441,279" fill="#246b83"/>
+  <line x1="144" y1="170" x2="420" y2="170" stroke="#546575" stroke-width="2" stroke-dasharray="5 4"/>
+  <polygon points="430,170 419,165 419,175" fill="#546575"/>
+  <line x1="430" y1="222" x2="706" y2="222" stroke="#546575" stroke-width="2" stroke-dasharray="5 4"/>
+  <polygon points="716,222 705,217 705,227" fill="#546575"/>
+  <g font-family="system-ui, sans-serif" fill="#19334c" text-anchor="middle">
+    <g font-size="17" font-weight="700">
+      <text x="144" y="51">共通画面</text>
+      <text x="430" y="51">来場受付 Core</text>
+      <text x="716" y="51">予約 Core</text>
+    </g>
+    <g font-size="14">
+      <text x="430" y="104">成立時の予約と参加者</text>
+      <text x="287" y="159">参加者の受付を操作</text>
+      <text x="573" y="211">予約と参加者の現在状態を照会</text>
+      <text x="573" y="263">照会時点の結果</text>
+    </g>
+  </g>
+  <rect x="304" y="305" width="252" height="35" rx="6" fill="#e5eff7"/>
+  <g font-family="system-ui, sans-serif" fill="#19334c" text-anchor="middle">
+    <text x="430" y="328" font-size="14">受付時間と重複を確認する</text>
+    <text x="430" y="370" font-size="13">実線は結果の受け渡し、破線は実行時の呼び出し</text>
+  </g>
+</svg>

@@ -28,7 +28,7 @@
         ":reservation-core:compileKotlinJvm"
       ],
       "diagnostics": [
-        "e:\\ reservation\\-core/src/commonMain/kotlin/example/reservation/core/ReservationCore\\.kt:191:16\\ \\[NO_ELSE_IN_WHEN\\].*"
+        "e:\\ reservation\\-core/src/commonMain/kotlin/example/reservation/core/ReservationCore\\.kt:194:16\\ \\[NO_ELSE_IN_WHEN\\].*"
       ]
     },
     {

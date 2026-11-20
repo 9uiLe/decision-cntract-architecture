@@ -268,4 +268,59 @@ class ExhaustiveDecisionWhenTest {
         )
         assertTrue(findings.isEmpty())
     }
+
+    @Test
+    fun `注釈を付けた型は、関数を指定しなくても else を報告する`() {
+        val findings = ExhaustiveDecisionWhen(TestConfig("decisionAnnotations" to listOf("sample.core.Marked")))
+            .lintWithContext(
+                environment,
+                """
+                package sample.app
+                import sample.core.Marked
+                import sample.core.Judged
+                @Marked
+                sealed interface Local { data object One : Local }
+                fun anywhere(value: Local): String = when (value) {
+                    Local.One -> "one"
+                    else -> "other"
+                }
+                fun elsewhere(value: Judged): String = when (value) {
+                    Judged.Done -> "done"
+                    else -> "other"
+                }
+                fun external(code: String): Int = when (code) {
+                    "ok" -> 1
+                    else -> 0
+                }
+                """.trimIndent(),
+                MARKER_AND_JUDGED,
+            )
+        assertEquals(listOf(8, 12), findings.map { it.location.source.line })
+    }
+
+    @Test
+    fun `注釈を付けていない型の else は、指定のない設定では報告しない`() {
+        val findings = ExhaustiveDecisionWhen(TestConfig("decisionAnnotations" to listOf("sample.core.Marked")))
+            .lintWithContext(
+                environment,
+                """
+                package sample.app
+                import sample.core.Plain
+                fun anywhere(value: Plain): String = when (value) {
+                    Plain.One -> "one"
+                    else -> "other"
+                }
+                """.trimIndent(),
+                MARKER_AND_JUDGED,
+            )
+        assertTrue(findings.isEmpty())
+    }
 }
+
+private const val MARKER_AND_JUDGED = """
+package sample.core
+annotation class Marked
+@Marked
+sealed interface Judged { data object Done : Judged; data object Failed : Judged }
+sealed interface Plain { data object One : Plain; data object Two : Plain }
+"""

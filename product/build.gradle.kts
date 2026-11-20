@@ -13,6 +13,18 @@ plugins {
     alias(libs.plugins.detekt) apply false
 }
 
+tasks.register<Exec>("verifyComparisons") {
+    group = "verification"
+    description = "Run the three isolated decision contract comparisons."
+    workingDir(layout.projectDirectory)
+    commandLine(
+        "python3", "experiments/run.py", "comparisons",
+        "--evidence", layout.buildDirectory.dir("reports/contract-comparisons").get().asFile.absolutePath,
+        "--gradle-option=--no-daemon", "--gradle-option=--max-workers=2",
+        "--gradle-option=-Pkotlin.compiler.execution.strategy=in-process",
+    )
+}
+
 // 全 KMP module で同じ target を持たせる。iOS は実機とシミュレーターの両方を対象にする。
 // JVM は検証・コンパイル診断の実行手段で、製品の対象 OS は Android と iOS。
 subprojects {

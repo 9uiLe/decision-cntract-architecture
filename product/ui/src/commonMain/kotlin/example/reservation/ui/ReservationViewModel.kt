@@ -22,6 +22,7 @@ import example.reservation.core.StatusCheckTicket
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
@@ -41,7 +42,7 @@ class ReservationViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), currentState())
 
     private val pendingNotice = MutableStateFlow<Notice?>(null)
-    val notice: StateFlow<Notice?> get() = pendingNotice
+    val notice: StateFlow<Notice?> = pendingNotice.asStateFlow()
     private var noticeSequence = 0L
 
     fun selectWorkshop(session: SessionId): Acceptance = relay(core.selectWorkshop(session))

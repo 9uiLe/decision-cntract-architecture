@@ -1,16 +1,13 @@
 --- a/adapter-simulator/src/commonTest/kotlin/example/adapter/simulator/AcceptanceTest.kt
 +++ b/adapter-simulator/src/commonTest/kotlin/example/adapter/simulator/AcceptanceTest.kt
-@@ -73,7 +73,7 @@
-     val reservation = createReservationCore(
+@@ -74,5 +74,5 @@
          catalog, sim.reservation, eligibility, clock, coroutines, { RequestId("req-${++request}") }, 30.seconds,
      )
 -    val checkIn: CheckInCore = createCheckInCore(reservation, sim.checkIn, clock, coroutines, { CheckInAttemptId("att-${++attempt}") }, 30.seconds)
 +    val checkIn: CheckInCore = createCheckInCore(reservation, eligibility, sim.checkIn, clock, coroutines, { CheckInAttemptId("att-${++attempt}") }, 30.seconds)
      val observations get() = sim.controls.observations.value
  
-     fun reserveOpen(who: List<ParticipantId> = listOf(akari, kota)): ReservationRecord.Reserved {
-@@ -104,8 +104,8 @@
-         return reservation.snapshot.value.reservations.last() as ReservationRecord.Reserved
+@@ -105,6 +105,6 @@
      }
  
 -    fun admission(record: ReservationRecord.Reserved, who: ParticipantId): ReservationAdmission =
@@ -19,9 +16,7 @@
 +        assertIs<ReservationAdmission.Open>(record.admissions.single { it.participant == who })
  
      fun checkInState(record: ReservationRecord.Reserved, who: ParticipantId): ParticipantCheckIn? =
-         checkIn.snapshot.value.entries[CheckInKey(record.reservation, who)]
-@@ -267,22 +267,6 @@
-     }
+@@ -268,20 +268,4 @@
  
      @Test
 -    fun `MC-17 9-2 予約後に資格だけが失効しても、基準仕様では予約を維持して二人とも時間内に受付でき、来場時に資格を再確認しない`() = runTest {
@@ -42,11 +37,9 @@
 -    @Test
      fun `9-1 T-72時間に成立した予約を取り消した後、古い情報でのチェックインは受付作成要求も記録も増やさない`() = runTest {
          val h = Harness(this)
-         val record = h.reserveOpen()
 --- a/checkin-core/src/commonTest/kotlin/example/checkin/core/CheckInCoreTest.kt
 +++ b/checkin-core/src/commonTest/kotlin/example/checkin/core/CheckInCoreTest.kt
-@@ -91,16 +91,14 @@
-     val checkIns = CheckInService()
+@@ -93,14 +93,12 @@
      private val coroutines = CoroutineScope(SupervisorJob() + StandardTestDispatcher(scope.testScheduler))
      private val clock = Clock { EpochMillis(now) }
 +    private val eligibility = createEligibilityCore(
@@ -68,18 +61,14 @@
 +        catalog, reservations, eligibility, clock, coroutines, { RequestId("q") }, 30.seconds,
      )
      var sourceHook: suspend (ReservationId, ParticipantId) -> AdmissionLookup? = { _, _ -> null }
-     var sourceCalls = 0
-@@ -111,7 +109,7 @@
-         }
+@@ -113,5 +111,5 @@
      }
      private var attempt = 0
 -    val core = createCheckInCore(source, checkIns, clock, coroutines, { CheckInAttemptId("a-${++attempt}") }, 30.seconds)
 +    val core = createCheckInCore(source, eligibility, checkIns, clock, coroutines, { CheckInAttemptId("a-${++attempt}") }, 30.seconds)
  
      fun reserve(who: List<ParticipantId> = listOf(alice, bob)): ReservationRecord.Reserved {
-         reservation.selectWorkshop(session)
-@@ -122,8 +120,8 @@
-         return reservation.snapshot.value.reservations.last() as ReservationRecord.Reserved
+@@ -124,6 +122,6 @@
      }
  
 -    fun admission(record: ReservationRecord.Reserved, who: ParticipantId): ReservationAdmission =
@@ -88,4 +77,3 @@
 +        assertIs<ReservationAdmission.Open>(record.admissions.single { it.participant == who })
  
      fun status(record: ReservationRecord.Reserved, who: ParticipantId): ParticipantCheckIn? =
-         core.snapshot.value.entries[CheckInKey(record.reservation, who)]

@@ -49,3 +49,18 @@ interface RecoveryHandler {
 操作の前提、実行結果、復旧経路の変更が別々の所有者に影響する機能で効果を確かめられます。失敗時の扱いが一種類で、呼び出し側に再判断も求めない操作なら、通常の型と局所的な分岐で足ります。型を増やすかどうかは、拒否したい操作と、仕様変更時に判断を見直す必要がある利用側を基準に決めます。
 
 設計の基になった箇所は `usapo-type-driven-design` の `03-value-modeling.md`、`04-state-modeling.md`、`05-operation-preconditions.md`、`06-operation-outcomes.md`、`07-required-decisions.md`、`11-contract-generation.md` です。題材の要件は `dca-mobile-product-spec` の `product/requirements/reservation-confirmation.md`、`reservation-acceptance.md`、`reservation-results.md` にあります。
+
+## 必須の原則と任意の技法
+
+DCA では判断の所有者、公開する値の意味、発行できる箇所、仕様変更時に再判断する利用側を定めます。型検査が働くと説明する場合は、通常の利用側と同じコンパイル境界で正例と負例を確かめます。対象や時刻が一致するか、外部操作が重複しないかは、状態と操作を所有する Core が実行時に判断します。
+
+実際に判断を委ねる場合は Handler を使えます。独立した判断だけを小さな純粋関数に分けると、外部操作を伴わず境界値を確認できます。宣言から決まる接続が増えた場合には生成も選べます。生成した接続に業務判断を補う既定動作を持たせると、利用側の未対応を検出できなくなります。
+
+## 参考にした設計技法
+
+- 業務上成立する状態と操作を契約の型に表します。このリポジトリでは、予約内容の確認と予約の成立が異なる操作を許します。[Domain Modeling Made Functional](https://pragprog.com/titles/swdddf/domain-modeling-made-functional/)
+- 境界で入力を解釈し、判明した内容を値に持たせます。資格 Adapter は外部形式を解釈し、参加資格 Core が判定時点の証明書を発行します。[Parse, don’t validate](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/)
+- 結果にケースが増えたときは、網羅性の検査で見直す箇所を見つけます。検証アプリでは課題 H と J で診断を記録します。[Jane Street の網羅性チェック](https://blog.janestreet.com/what-do-haskellers-have-against-exhaustiveness/)
+- 判定と外部操作を分けると、境界時刻や判断の変換を単独で検証できます。検証アプリでは参加資格の観測を取得してから、期限の比較と画面への変換を行います。[Functional Core, Imperative Shell](https://www.destroyallsoftware.com/screencasts/catalog/functional-core-imperative-shell)
+
+Session Types や依存型は、より多くの前提を型で表す発展的な選択肢です。このサンプルで観測する保証は、Kotlin のコンパイル、ビルド時の規約、実行時の振る舞いに基づきます。各検証が受け持つ範囲は [仕様変更を使った検証](verification.md) を参照してください。

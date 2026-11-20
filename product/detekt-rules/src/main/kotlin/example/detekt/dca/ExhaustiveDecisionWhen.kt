@@ -20,11 +20,14 @@ class ExhaustiveDecisionWhen(config: Config) :
     ),
     RequiresAnalysisApi {
 
-    @Configuration("when の対象式が解決される型。ネストした型を含め、完全修飾名で指定する。")
+    @Configuration("when の対象式が解決される型に付いていれば判断型とする注釈。完全修飾名で指定する。関数の指定に関係なく検査する。")
+    private val decisionAnnotations: List<String> by config(emptyList<String>())
+
+    @Configuration("注釈を付けられない型を判断型にするときの、when の対象式が解決される型。ネストした型を含め、完全修飾名で指定する。")
     private val decisionTypes: List<String> by config(emptyList<String>())
 
     @Configuration(
-        "検査する関数。完全修飾名、または引数型を含むシグネチャで指定する。空のときはすべての関数を検査する。",
+        "decisionTypes の型にだけ適用する関数の絞り込み。完全修飾名、または引数型を含むシグネチャで指定する。空のときはすべての関数を検査する。",
     )
     private val decisionFunctions: List<FunctionMatcher> by config(emptyList<String>()) { signatures ->
         signatures.map(FunctionMatcher::fromFunctionSignature)
@@ -34,9 +37,14 @@ class ExhaustiveDecisionWhen(config: Config) :
         super.visitWhenExpression(expression)
         val fallback = expression.entries.firstOrNull { it.isElse } ?: return
         val subject = expression.subjectExpression ?: return
-        if (!isInDecisionFunction(expression)) return
-        val subjectType = analyze(subject) { subject.expressionType?.symbol?.classId?.asFqNameString() } ?: return
-        if (subjectType in decisionTypes) {
+        val (subjectType, annotated) = analyze(subject) {
+            val symbol = subject.expressionType?.symbol
+            val marked = symbol?.annotations?.any { it.classId?.asFqNameString() in decisionAnnotations } == true
+            symbol?.classId?.asFqNameString() to marked
+        }
+        subjectType ?: return
+        val decision = annotated || (subjectType in decisionTypes && isInDecisionFunction(expression))
+        if (decision) {
             report(
                 Finding(
                     Entity.from(fallback),

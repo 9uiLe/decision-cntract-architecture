@@ -1,120 +1,23 @@
---- a/ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel.kt
-+++ b/ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel.kt
-@@ -14,7 +14,6 @@
- import example.reservation.core.Catalog
- import example.reservation.core.ConfirmOutcome
- import example.reservation.core.ConfirmedDraft
--import example.reservation.core.NewBookingRequirement
- import example.reservation.core.ReservationAdmission
- import example.reservation.core.ReservationCore
- import example.reservation.core.RetryTicket
-@@ -50,14 +49,8 @@
- 
-     fun requestEligibility(): Acceptance = relay(core.requestEligibility())
- 
--    // どの確認の入口を使うかは開催回の要件に従う。条件を満たすかどうかは Core が判断する。
-     fun confirm(): ConfirmOutcome {
--        val requirement = core.snapshot.value.draft.workshop?.requirement
--        val outcome = when (requirement) {
--            null -> core.confirmWithoutQualification()
--            NewBookingRequirement.NotRequired -> core.confirmWithoutQualification()
--            is NewBookingRequirement.Required -> core.confirmQualified()
--        }
-+        val outcome = core.confirmQualified()
-         confirmFailureMessage(outcome)?.let(::notify)
-         return outcome
-     }
---- a/ui/src/commonMain/kotlin/example/reservation/ui/Projection.kt
-+++ b/ui/src/commonMain/kotlin/example/reservation/ui/Projection.kt
-@@ -29,7 +29,7 @@
-         reservations = snapshot.reservations.map { projectReservation(it, snapshot.request, names, checkIn) },
+--- a/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/QualificationWire.kt
++++ b/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/QualificationWire.kt
+@@ -10,6 +10,7 @@ internal data class QualificationWire(val held: Boolean, val code: String?, val
+
+ internal object ServiceCodes {
+     private val codes = mapOf(
++        "basic-safety" to "SAFETY-BASIC",
+         "pottery-advanced" to "POTTERY-ADV",
+         "roasting-advanced" to "ROASTING-ADV",
      )
-     val draft = snapshot.draft
--    val kind = (draft.workshop?.requirement as? NewBookingRequirement.Required)?.kind
-+    val kind = draft.workshop?.requirement?.kind
-     val rows = catalog.participants.map { participant ->
-         val badge = kind?.let { projectBadge(eligibility.statuses[EligibilityKey(participant.id, it)] ?: EligibilityStatus.NotChecked) }
-         ParticipantRow(participant.id, participant.name, participant.id in draft.participants, badge)
-@@ -54,10 +54,7 @@
-     is Confirmation.Confirmed -> DetailsStage.Confirmed(confirmation.draft)
- }
- 
--fun projectRequirement(requirement: NewBookingRequirement): RequirementView = when (requirement) {
--    NewBookingRequirement.NotRequired -> RequirementView.NotRequired
--    is NewBookingRequirement.Required -> RequirementView.Required(requirement.kind.name)
--}
-+fun projectRequirement(requirement: NewBookingRequirement): RequirementView = RequirementView.Required(requirement.kind.name)
- 
- fun projectBadge(status: EligibilityStatus): QualificationBadge = when (status) {
-     EligibilityStatus.NotChecked -> QualificationBadge.NotChecked
---- a/ui/src/commonMain/kotlin/example/reservation/ui/ScreenState.kt
-+++ b/ui/src/commonMain/kotlin/example/reservation/ui/ScreenState.kt
-@@ -17,7 +17,6 @@
- import example.reservation.core.StatusCheckTicket
- 
- sealed interface RequirementView {
--    data object NotRequired : RequirementView
-     data class Required(val qualificationName: String) : RequirementView
- }
- 
---- a/ui/src/commonMain/kotlin/example/reservation/ui/SessionDetailsScreen.kt
-+++ b/ui/src/commonMain/kotlin/example/reservation/ui/SessionDetailsScreen.kt
-@@ -105,7 +105,6 @@
- @Composable
- private fun RequirementText(requirement: RequirementView) {
-     val text = when (requirement) {
--        RequirementView.NotRequired -> "資格は必要ありません。"
-         is RequirementView.Required -> "参加には「${requirement.qualificationName}」の資格が必要です。参加者全員の確認が必要です。"
-     }
-     Text(
---- a/ui/src/commonMain/kotlin/example/reservation/ui/Messages.kt
-+++ b/ui/src/commonMain/kotlin/example/reservation/ui/Messages.kt
-@@ -17,7 +17,6 @@
-     Rejection.Busy -> "処理中、または結果を確認できていない予約操作があります。先にその状況を確認してください。"
-     Rejection.RegistrationClosed -> "この開催回は受付を終了しています。別の開催回を選んでください。"
-     Rejection.CancellationClosed -> "取消期限（開始の24時間前）を過ぎているため取り消せません。予約は維持されています。"
--    Rejection.QualificationNotRequired -> "この開催回では資格の確認は必要ありません。"
-     Rejection.NoParticipants -> "参加者を選んでください。"
- }
- 
-@@ -25,8 +24,6 @@
-     is ConfirmOutcome.Confirmed -> null
-     ConfirmOutcome.NoWorkshop -> "開催回を選択してください。"
-     ConfirmOutcome.EmptyParticipants -> "参加者を選んでください。"
--    ConfirmOutcome.QualificationRequired -> "この開催回は資格が必要です。資格を確認してください。"
--    ConfirmOutcome.QualificationNotRequired -> "この開催回では資格の確認は必要ありません。"
-     is ConfirmOutcome.EligibilityNotMet -> "資格を満たしていない、または確認できていない参加者がいます。"
- }
- 
---- a/shared/src/commonMain/kotlin/example/app/debug/DebugControlScreen.kt
-+++ b/shared/src/commonMain/kotlin/example/app/debug/DebugControlScreen.kt
-@@ -35,7 +35,6 @@
- import example.app.composition.ControllableClock
- import example.kernel.EpochMillis
- import example.reservation.core.Catalog
--import example.reservation.core.NewBookingRequirement
- import example.reservation.ui.exposeTestTags
- import example.reservation.ui.formatPrecise
- 
-@@ -117,7 +116,7 @@
-                     }
-                 }
-                 Section("資格の保有状況") {
--                    val kinds = catalog.workshops.mapNotNull { (it.requirement as? NewBookingRequirement.Required)?.kind }.distinct()
-+                    val kinds = catalog.workshops.map { it.requirement.kind }.distinct()
-                     catalog.participants.forEach { participant ->
-                         kinds.forEach { kind ->
-                             HorizontalDivider()
 --- a/shared/src/commonMain/kotlin/example/app/composition/DemoCatalog.kt
 +++ b/shared/src/commonMain/kotlin/example/app/composition/DemoCatalog.kt
-@@ -20,18 +20,19 @@
+@@ -20,18 +20,19 @@ val DemoStart: EpochMillis = EpochMillis(LocalDate(2026, 12, 1).atStartOfDayIn(T
  val PotteryAdvancedCourse = QualificationKind("pottery-advanced", "上級ろくろ修了")
  val RoastingAdvancedCourse = QualificationKind("roasting-advanced", "上級焙煎修了")
- 
+
 -private val Open = NewBookingRequirement.NotRequired
 +val SafetyOrientation = QualificationKind("basic-safety", "基礎安全講習修了")
 +private val SafetyRequired = NewBookingRequirement(SafetyOrientation)
- 
+
 -val Pottery = Workshop(SessionId("pottery"), "はじめてのろくろ陶芸", EpochMillis(DemoStart.value + 72 * HOUR), seatsHint = 4, Open)
 -val Cooking = Workshop(SessionId("cooking"), "季節の家庭料理教室", EpochMillis(DemoStart.value + 20 * HOUR), seatsHint = 6, Open)
 -val Coffee = Workshop(SessionId("coffee"), "コーヒー豆の選び方講座", EpochMillis(DemoStart.value + 2 * HOUR), seatsHint = 2, Open)
@@ -131,23 +34,120 @@
 -    NewBookingRequirement.Required(RoastingAdvancedCourse),
 +    NewBookingRequirement(RoastingAdvancedCourse),
  )
- 
+
  val Akari = ParticipantId("akari")
-@@ -45,6 +46,7 @@
- 
+@@ -45,6 +46,7 @@ val DemoCapacities: Map<SessionId, Int> = mapOf(
+
  // 資格の保有は初期状態。あかりは両方、こうたは上級ろくろだけ、みなみはどちらも持たない。
  val DemoHoldings: List<QualificationHolding> = listOf(
 +    QualificationHolding(Akari, SafetyOrientation, EpochMillis(DemoStart.value + 30 * 24 * HOUR)),
      QualificationHolding(Akari, PotteryAdvancedCourse, EpochMillis(DemoStart.value + 30 * 24 * HOUR)),
      QualificationHolding(Akari, RoastingAdvancedCourse, EpochMillis(DemoStart.value + 30 * 24 * HOUR)),
      QualificationHolding(Kota, PotteryAdvancedCourse, EpochMillis(DemoStart.value + 30 * 24 * HOUR)),
---- a/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/QualificationWire.kt
-+++ b/adapter-simulator/src/commonMain/kotlin/example/adapter/simulator/QualificationWire.kt
-@@ -10,6 +10,7 @@
- 
- internal object ServiceCodes {
-     private val codes = mapOf(
-+        "basic-safety" to "SAFETY-BASIC",
-         "pottery-advanced" to "POTTERY-ADV",
-         "roasting-advanced" to "ROASTING-ADV",
+--- a/shared/src/commonMain/kotlin/example/app/debug/DebugControlScreen.kt
++++ b/shared/src/commonMain/kotlin/example/app/debug/DebugControlScreen.kt
+@@ -35,7 +35,6 @@ import example.adapter.simulator.UsageBehavior
+ import example.app.composition.ControllableClock
+ import example.kernel.EpochMillis
+ import example.reservation.core.Catalog
+-import example.reservation.core.NewBookingRequirement
+ import example.reservation.ui.exposeTestTags
+ import example.reservation.ui.formatPrecise
+
+@@ -117,7 +116,7 @@ fun DebugControlScreen(controls: SimulatorControls, clock: ControllableClock, ca
+                     }
+                 }
+                 Section("資格の保有状況") {
+-                    val kinds = catalog.workshops.mapNotNull { (it.requirement as? NewBookingRequirement.Required)?.kind }.distinct()
++                    val kinds = catalog.workshops.map { it.requirement.kind }.distinct()
+                     catalog.participants.forEach { participant ->
+                         kinds.forEach { kind ->
+                             HorizontalDivider()
+--- a/ui/src/commonMain/kotlin/example/reservation/ui/Messages.kt
++++ b/ui/src/commonMain/kotlin/example/reservation/ui/Messages.kt
+@@ -17,7 +17,6 @@ fun rejectionMessage(rejection: Rejection): String = when (rejection) {
+     Rejection.Busy -> "処理中、または結果を確認できていない予約操作があります。先にその状況を確認してください。"
+     Rejection.RegistrationClosed -> "この開催回は受付を終了しています。別の開催回を選んでください。"
+     Rejection.CancellationClosed -> "取消期限（開始の24時間前）を過ぎているため取り消せません。予約は維持されています。"
+-    Rejection.QualificationNotRequired -> "この開催回では資格の確認は必要ありません。"
+     Rejection.NoParticipants -> "参加者を選んでください。"
+ }
+
+@@ -25,8 +24,6 @@ fun confirmFailureMessage(outcome: ConfirmOutcome): String? = when (outcome) {
+     is ConfirmOutcome.Confirmed -> null
+     ConfirmOutcome.NoWorkshop -> "開催回を選択してください。"
+     ConfirmOutcome.EmptyParticipants -> "参加者を選んでください。"
+-    ConfirmOutcome.QualificationRequired -> "この開催回は資格が必要です。資格を確認してください。"
+-    ConfirmOutcome.QualificationNotRequired -> "この開催回では資格の確認は必要ありません。"
+     is ConfirmOutcome.EligibilityNotMet -> "資格を満たしていない、または確認できていない参加者がいます。"
+ }
+
+--- a/ui/src/commonMain/kotlin/example/reservation/ui/Projection.kt
++++ b/ui/src/commonMain/kotlin/example/reservation/ui/Projection.kt
+@@ -29,7 +29,7 @@ fun project(
+         reservations = snapshot.reservations.map { projectReservation(it, snapshot.request, names, checkIn) },
      )
+     val draft = snapshot.draft
+-    val kind = (draft.workshop?.requirement as? NewBookingRequirement.Required)?.kind
++    val kind = draft.workshop?.requirement?.kind
+     val rows = catalog.participants.map { participant ->
+         val badge = kind?.let { projectBadge(eligibility.statuses[EligibilityKey(participant.id, it)] ?: EligibilityStatus.NotChecked) }
+         ParticipantRow(participant.id, participant.name, participant.id in draft.participants, badge)
+@@ -54,10 +54,7 @@ fun projectStage(confirmation: Confirmation): DetailsStage = when (confirmation)
+     is Confirmation.Confirmed -> DetailsStage.Confirmed(confirmation.draft)
+ }
+
+-fun projectRequirement(requirement: NewBookingRequirement): RequirementView = when (requirement) {
+-    NewBookingRequirement.NotRequired -> RequirementView.NotRequired
+-    is NewBookingRequirement.Required -> RequirementView.Required(requirement.kind.name)
+-}
++fun projectRequirement(requirement: NewBookingRequirement): RequirementView = RequirementView.Required(requirement.kind.name)
+
+ fun projectBadge(status: EligibilityStatus): QualificationBadge = when (status) {
+     EligibilityStatus.NotChecked -> QualificationBadge.NotChecked
+--- a/ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel.kt
++++ b/ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel.kt
+@@ -14,7 +14,6 @@ import example.reservation.core.CancelTicket
+ import example.reservation.core.Catalog
+ import example.reservation.core.ConfirmOutcome
+ import example.reservation.core.ConfirmedDraft
+-import example.reservation.core.NewBookingRequirement
+ import example.reservation.core.ReservationAdmission
+ import example.reservation.core.ReservationCore
+ import example.reservation.core.RetryTicket
+@@ -51,14 +50,8 @@ class ReservationViewModel(
+
+     fun requestEligibility(): Acceptance = relay(core.requestEligibility())
+
+-    // どの確認の入口を使うかは開催回の要件に従う。条件を満たすかどうかは Core が判断する。
+     fun confirm(): ConfirmOutcome {
+-        val requirement = core.snapshot.value.draft.workshop?.requirement
+-        val outcome = when (requirement) {
+-            null -> core.confirmWithoutQualification()
+-            NewBookingRequirement.NotRequired -> core.confirmWithoutQualification()
+-            is NewBookingRequirement.Required -> core.confirmQualified()
+-        }
++        val outcome = core.confirmQualified()
+         confirmFailureMessage(outcome)?.let(::notify)
+         return outcome
+     }
+--- a/ui/src/commonMain/kotlin/example/reservation/ui/ScreenState.kt
++++ b/ui/src/commonMain/kotlin/example/reservation/ui/ScreenState.kt
+@@ -19,7 +19,6 @@ import example.reservation.core.StatusCheckTicket
+
+ @DecisionResult
+ sealed interface RequirementView {
+-    data object NotRequired : RequirementView
+     data class Required(val qualificationName: String) : RequirementView
+ }
+
+--- a/ui/src/commonMain/kotlin/example/reservation/ui/SessionDetailsScreen.kt
++++ b/ui/src/commonMain/kotlin/example/reservation/ui/SessionDetailsScreen.kt
+@@ -105,7 +105,6 @@ fun SessionDetailsScreen(
+ @Composable
+ private fun RequirementText(requirement: RequirementView) {
+     val text = when (requirement) {
+-        RequirementView.NotRequired -> "資格は必要ありません。"
+         is RequirementView.Required -> "参加には「${requirement.qualificationName}」の資格が必要です。参加者全員の確認が必要です。"
+     }
+     Text(

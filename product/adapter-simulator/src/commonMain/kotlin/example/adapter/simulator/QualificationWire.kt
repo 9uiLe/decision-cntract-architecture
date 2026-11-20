@@ -26,10 +26,13 @@ internal object QualificationWireFormat {
 
     // 解釈できない文字列は null。有効な資格とは推測しない。
     fun parse(text: String): QualificationWire? {
-        val fields = text.split('&').associate { pair ->
+        val fields = mutableMapOf<String, String>()
+        for (pair in text.split('&')) {
             val separator = pair.indexOf('=')
             if (separator < 0) return null
-            pair.substring(0, separator) to pair.substring(separator + 1)
+            val key = pair.substring(0, separator)
+            if (key in fields) return null
+            fields[key] = pair.substring(separator + 1)
         }
         val held = when (fields["held"]) {
             "true" -> true

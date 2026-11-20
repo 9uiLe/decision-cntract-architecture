@@ -12,6 +12,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.cancellation.CancellationException
@@ -35,7 +36,7 @@ class CheckInCore internal constructor(
     private val entries = LinkedHashMap<CheckInKey, Entry>()
     private val state = MutableStateFlow(CheckInSnapshot(emptyMap()))
 
-    val snapshot: StateFlow<CheckInSnapshot> get() = state
+    val snapshot: StateFlow<CheckInSnapshot> = state.asStateFlow()
 
     fun checkIn(admission: ReservationAdmission): CheckInAcceptance {
         val key = CheckInKey(admission.reservation, admission.participant)
@@ -110,6 +111,7 @@ class CheckInCore internal constructor(
 
     // 処理中を確保した後で予約の現在の状態を確かめる。戻ったら、対象と時刻を取り直してから受付を要求する。
     private suspend fun proceed(key: CheckInKey, operation: Long, requested: ReservationAdmission) {
+        val askedAt = clock.now()
         val lookup = try {
             source.admission(key.reservation, key.participant)
         } catch (e: CancellationException) {
@@ -118,13 +120,18 @@ class CheckInCore internal constructor(
         } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
             AdmissionLookup.Unconfirmed
         }
-        val admission = when (lookup) {
+        val answeredAt = clock.now()
+        val current = when (lookup) {
             is AdmissionLookup.Valid -> lookup.admission
             is AdmissionLookup.Unavailable ->
                 return deny(key, operation, requested, Denial.ReservationUnavailable(lookup.reason))
             AdmissionLookup.Unconfirmed -> return deny(key, operation, requested, Denial.ReservationUnconfirmed)
         }
+        val admission = current.record
         if (!admission.isFor(key, requested)) return deny(key, operation, requested, Denial.WrongTarget)
+        if (current.observedAt < askedAt || current.observedAt > answeredAt) {
+            return deny(key, operation, requested, Denial.ReservationUnconfirmed)
+        }
         when (windowAt(admission.start)) {
             Window.NotYetOpen -> return deny(key, operation, admission, Denial.NotYetOpen)
             Window.Closed -> return deny(key, operation, admission, Denial.Closed)

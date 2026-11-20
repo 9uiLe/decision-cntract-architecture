@@ -29,7 +29,7 @@
         ":reservation-core:compileKotlinJvm"
       ],
       "diagnostics": [
-        "e:\\ reservation\\-core/src/commonMain/kotlin/example/reservation/core/ReservationCore\\.kt:410:9\\ \\[NO_ELSE_IN_WHEN\\].*"
+        "e:\\ reservation\\-core/src/commonMain/kotlin/example/reservation/core/ReservationCore\\.kt:429:9\\ \\[NO_ELSE_IN_WHEN\\].*"
       ]
     },
     {
@@ -45,7 +45,33 @@
       ]
     },
     {
-      "name": "03-fixed",
+      "name": "03-observation-types",
+      "patches": [
+        "03-observation-types.patch"
+      ],
+      "gradle": [
+        ":eligibility-core:compileKotlinJvm"
+      ],
+      "diagnostics": [
+        "e:\\ eligibility\\-core/src/commonMain/kotlin/example/eligibility/core/EligibilityCore\\.kt:73:13\\ \\[NO_ELSE_IN_WHEN\\].*",
+        "e:\\ eligibility\\-core/src/commonMain/kotlin/example/eligibility/core/EligibilityCore\\.kt:99:9\\ \\[NO_ELSE_IN_WHEN\\].*"
+      ]
+    },
+    {
+      "name": "04-eligibility-decisions",
+      "patches": [
+        "04-eligibility-decisions.patch"
+      ],
+      "gradle": [
+        ":ui:compileKotlinJvm"
+      ],
+      "diagnostics": [
+        "e:\\ ui/src/commonMain/kotlin/example/reservation/ui/Messages\\.kt:56:69\\ \\[NO_ELSE_IN_WHEN\\].*",
+        "e:\\ ui/src/commonMain/kotlin/example/reservation/ui/Projection\\.kt:68:71\\ \\[NO_ELSE_IN_WHEN\\].*"
+      ]
+    },
+    {
+      "name": "05-fixed",
       "gradle": [
         ":shared:compileKotlinJvm",
         ":adapter-simulator:jvmTest",
@@ -54,9 +80,9 @@
         ":checkin-core:jvmTest"
       ],
       "patches": [
-        "03-qualification-state.patch",
-        "04-qualification-display.patch",
-        "05-runtime-scenarios.patch"
+        "05-simulator-suspension.patch",
+        "06-qualification-display.patch",
+        "07-runtime-scenarios.patch"
       ],
       "requiredTests": {
         "adapter-simulator:example.adapter.simulator.SuspendedQualificationExperimentTest": 2,

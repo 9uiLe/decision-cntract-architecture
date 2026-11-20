@@ -26,6 +26,44 @@ private fun mainSourceRoots(module: File): List<File> =
     File(module, "src").listFiles { dir -> dir.isDirectory && (dir.name == "main" || dir.name.endsWith("Main")) }.orEmpty()
         .map { File(it, "kotlin") }
 
+// 手書きの型リストを注釈へ置き換えたとき、検査の対象を減らしていないことを確認する基準。新しい判断型は注釈だけで足りる。
+private val coveredDecisionTypes = listOf(
+    "example.reservation.core.ActiveRequest",
+    "example.reservation.core.ReservationRecord",
+    "example.reservation.core.Confirmation",
+    "example.reservation.core.Rejection",
+    "example.reservation.core.Acceptance",
+    "example.reservation.core.ConfirmOutcome",
+    "example.reservation.core.CancelFailure",
+    "example.reservation.core.NewBookingRequirement",
+    "example.reservation.core.BookedBasis",
+    "example.reservation.core.CreateDenial",
+    "example.reservation.core.AdmissionLookup",
+    "example.reservation.core.AdmissionUnavailableReason",
+    "example.reservation.core.CreateObservation",
+    "example.reservation.core.LookupObservation",
+    "example.reservation.core.CancelObservation",
+    "example.reservation.core.UsageObservation",
+    "example.eligibility.core.EligibilityOutcome",
+    "example.eligibility.core.EligibilityStatus",
+    "example.eligibility.core.QualificationObservation",
+    "example.eligibility.core.Reverification",
+    "example.eligibility.core.ReverificationFailure",
+    "example.checkin.core.ParticipantCheckIn",
+    "example.checkin.core.Denial",
+    "example.checkin.core.CheckInRejection",
+    "example.checkin.core.ProcessingStage",
+    "example.checkin.core.CheckInAcceptance",
+    "example.checkin.core.CheckInCreateObservation",
+    "example.checkin.core.CheckInLookupObservation",
+    "example.reservation.ui.RequestCard",
+    "example.reservation.ui.ReservationCard",
+    "example.reservation.ui.DetailsStage",
+    "example.reservation.ui.RequirementView",
+    "example.reservation.ui.QualificationBadge",
+    "example.reservation.ui.CheckInView",
+)
+
 private val coreOwnerPackages = setOf("example.reservation.core", "example.eligibility.core", "example.checkin.core")
 
 private fun policyLists(): Map<String, List<String>> {
@@ -83,8 +121,8 @@ class ConformanceTest {
     fun `設定が参照する型・関数・呼び出し先は実コードに存在する`() {
         val lists = policyLists()
         val missing = buildList {
-            lists.getValue("decisionTypes").filterNot { resolves(it, asFunction = false) }.let(::addAll)
-            lists.getValue("decisionFunctions").filterNot { resolves(it, asFunction = true) }.let(::addAll)
+            (lists.getValue("decisionAnnotations") + lists.getValue("issuedAnnotations"))
+                .filterNot { resolves(it, asFunction = false) }.let(::addAll)
             lists.getValue("restrictedCallables").filterNot { resolves(it, asFunction = true) }.let(::addAll)
             reservationRuleDefaults()
                 .filter { name -> sources.none { it.packageName == name } }
@@ -92,6 +130,17 @@ class ConformanceTest {
                 .let(::addAll)
         }
         assertEquals(emptyList(), missing)
+    }
+
+    @Test
+    fun `判断型の注釈は、従来の設定が指定していた型のすべてに付いている`() {
+        val unmarked = coveredDecisionTypes.filterNot { fqn ->
+            val pkg = fqn.substringBeforeLast('.')
+            val name = fqn.substringAfterLast('.')
+            val declaration = Regex("@DecisionResult\\s+(?:\\w+\\s+)*?(?:class|interface)\\s+$name\\b")
+            sources.any { it.packageName == pkg && declaration.containsMatchIn(it.text) }
+        }
+        assertEquals(emptyList(), unmarked)
     }
 
     @Test

@@ -49,4 +49,22 @@ class QualificationWireTest {
         val wire = heldWire(pottery, EpochMillis(POTTERY_ADV_UNTIL_MILLIS))
         assertEquals(wire, QualificationWireFormat.parse(QualificationWireFormat.render(wire)))
     }
+
+    @Test
+    fun `同じキーが重複した外部データは、後の値で上書きせず解釈しない`() {
+        val contradictory = "held=false&held=true&code=POTTERY-ADV&valid_until=$POTTERY_ADV_UNTIL"
+        assertNull(QualificationWireFormat.parse(contradictory))
+        assertEquals(QualificationObservation.Unavailable, QualificationDecoder.decode(contradictory, pottery))
+        val reversed = "held=true&held=false"
+        assertNull(QualificationWireFormat.parse(reversed))
+        assertEquals(QualificationObservation.Unavailable, QualificationDecoder.decode(reversed, pottery))
+        assertNull(QualificationWireFormat.parse("held=true&code=POTTERY-ADV&code=ROASTING-ADV&valid_until=$POTTERY_ADV_UNTIL"))
+        assertNull(QualificationWireFormat.parse("held=true&code=POTTERY-ADV&valid_until=$POTTERY_ADV_UNTIL&valid_until=2999-01-01T00:00:00Z"))
+    }
+
+    @Test
+    fun `未知のキーは従来どおり無視し、重複していない入力の解釈は変えない`() {
+        val wire = heldWire(pottery, EpochMillis(POTTERY_ADV_UNTIL_MILLIS))
+        assertEquals(wire, QualificationWireFormat.parse(QualificationWireFormat.render(wire) + "&note=x"))
+    }
 }

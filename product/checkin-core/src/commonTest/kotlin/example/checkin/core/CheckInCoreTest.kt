@@ -36,6 +36,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
@@ -311,8 +312,8 @@ class CheckInCoreTest {
     fun `予約の確認が別の参加者や別の予約の前提を返しても、対象が一致しなければ受付を要求しない`() = runTest {
         val w = World(this, START - 10 * MINUTE)
         val record = w.reserve()
-        val other = w.admission(record, bob)
-        w.sourceHook = { _, _ -> AdmissionLookup.Valid(other) }
+        val other = w.reservation.admission(record.reservation, bob)
+        w.sourceHook = { _, _ -> other }
         w.core.checkIn(w.admission(record, alice))
         runCurrent()
         assertEquals(Denial.WrongTarget, assertIs<ParticipantCheckIn.NotAdmitted>(w.status(record, alice)).denial)
@@ -328,5 +329,41 @@ class CheckInCoreTest {
             assertIs<AdmissionLookup.Unavailable>(w.source.admission(record.reservation, bob)).reason,
         )
         assertEquals(0, w.checkIns.creates.size)
+    }
+
+    @Test
+    fun `過去に得た現時の確認を再生しても、今回の照会の区間に入らないので受付作成要求を送らない`() = runTest {
+        val w = World(this, START - 10 * MINUTE)
+        val record = w.reserve()
+        val stale = w.reservation.admission(record.reservation, alice)
+        w.now += 1
+        w.sourceHook = { _, _ -> stale }
+        w.core.checkIn(w.admission(record, alice))
+        runCurrent()
+        assertEquals(Denial.ReservationUnconfirmed, assertIs<ParticipantCheckIn.NotAdmitted>(w.status(record, alice)).denial)
+        assertEquals(0, w.checkIns.creates.size)
+    }
+
+    @Test
+    fun `T-72時間の現時の確認を取消後のT-20分に再生しても、受付作成要求も受付記録も増やさない`() = runTest {
+        val w = World(this)
+        val record = w.reserve()
+        val stale = w.reservation.admission(record.reservation, alice)
+        w.now = START - 48 * HOUR
+        w.reservation.cancel(record.cancel)
+        runCurrent()
+        w.now = START - 20 * MINUTE
+        w.sourceHook = { _, _ -> stale }
+        w.core.checkIn(w.admission(record, alice))
+        runCurrent()
+        assertEquals(Denial.ReservationUnconfirmed, assertIs<ParticipantCheckIn.NotAdmitted>(w.status(record, alice)).denial)
+        assertEquals(0, w.checkIns.creates.size)
+        assertNull(w.core.snapshot.value.entries.values.firstOrNull { it == ParticipantCheckIn.CheckedIn })
+    }
+
+    @Test
+    fun `公開する受付状態の読み取り口は書き換えられない`() = runTest {
+        val w = World(this, START - 10 * MINUTE)
+        assertNull(w.core.snapshot as? MutableStateFlow<*>)
     }
 }

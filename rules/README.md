@@ -8,7 +8,9 @@
 
 | ルール | 検出条件 | 許可するコード |
 | --- | --- | --- |
-| `ExhaustiveDecisionWhen` | 指定した関数の `when` が指定した型を対象とし、`else` を持つ | 全ケースを列挙した判断。外部サービスの未定義コードを扱う分岐 |
+| `ExhaustiveDecisionWhen` | 指定した注釈の付いた型を対象とする `when` が `else` を持つ | 全ケースを列挙した判断。外部サービスの未定義コードを扱う分岐 |
+| `IssuedEvidenceConstruction` | 発行の対象として指定した型に、公開コンストラクタ、公開の派生経路、または `data class` の生成する `copy` がある | 発行元のモジュール内で構築する通常のクラス。派生型が閉じた階層 |
+| `RequiredEvidenceParameter` | 発行の対象として指定した型を受け取る公開操作で、その引数が既定値や `null` を許す | 呼び出し時に確認済みの値を要求する公開操作。内部状態で保持する任意の値 |
 | `RestrictedCompositionCall` | 許可したパッケージの外で、指定の組み立て関数を呼び出すか、呼び出し可能参照を取得する | 組み立てを担当するコードからの呼び出し。別の同名関数の呼び出し |
 
 シンボル解決によって、指定の型や関数を参照しているかを判定します。型エイリアスや import の別名があっても、参照先が同じなら検査対象です。許可パッケージは名前が一致するパッケージとその配下です。`example.app.composition` の許可は `example.app.compositionExtra` に及びません。[detekt の型解決](https://detekt.dev/docs/gettingstarted/type-resolution/)
@@ -23,9 +25,11 @@
 | `ReservationPortCall` | 予約の作成、照会、取消、現在状態の照会 | 予約 Core |
 | `CheckInPortCall` | 受付の作成と照会 | 来場受付 Core |
 
-[dca.yml](../product/config/detekt/dca.yml) の `decisionFunctions` と `decisionTypes` は、見直しが必要な判断箇所と型を指定します。たとえば、資格結果から予約に進めるかを決める処理と、資格の状態を画面へ変換する処理を登録します。`restrictedCallables` と `allowedCallerPackages` は、Core の組み立て関数と呼び出し元を指定します。
+[dca.yml](../product/config/detekt/dca.yml) では、網羅性が必要な型に使う `@DecisionResult` と、発行を制限する型に使う `@IssuedEvidence` を指定します。宣言に付けた印を型解決で読むため、資格に基づく予約判断や画面への変換の関数名を登録する作業が不要になります。組み立ての呼び出し元は `restrictedCallables` と `allowedCallerPackages` で指定します。
 
-`./gradlew check` は、Android・JVM・KMP の型解決付きタスクを実行します。KMP の `detektMainJvm` と `detektMainAndroid` は `commonMain` も検査します。`:conformance` の診断には検査用の違反が含まれ、テストはルール名と診断行を照合します。許可した組み立てパッケージの所有モジュール、Gradle の依存宣言、Core と UI の import を同じ検査で確認します。特に基準仕様では、来場受付 Core から参加資格 Core への参照を禁止します。
+網羅性の規約が調べるのは、対象式を持つ `when` の `else` です。課題 H・J では、処理の実際の変更漏れを Kotlin の診断でも確かめます。構築規約はクラスの宣言を調べます。公開 API から資格の再確認を省ける互換操作が増えた場合は、実際の利用コードのコンパイルを使う比較 C3 が検出します。このプロダクトの業務判断は Core が持つため、必須 Handler の検査対象はありません。
+
+`./gradlew check` は、Android と JVM の型解決付きタスクを実行します。KMP の `detektMainJvm` と `detektMainAndroid` は `commonMain` も検査します。iOS の固有コードは iOS ビルドで確認します。`:conformance` の診断には検査用の違反が含まれ、テストはルール名と診断行を照合します。許可した組み立てパッケージの所有モジュール、Gradle の依存宣言、Core と UI の import を同じ検査で確認します。特に基準仕様では、来場受付 Core から参加資格 Core への参照を禁止します。
 
 ## 型・ビルド・実行時の確認
 

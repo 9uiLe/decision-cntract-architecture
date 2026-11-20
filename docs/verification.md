@@ -44,3 +44,5 @@ python3 product/experiments/run.py all --evidence runs/multicore/experiments
 ```
 
 実際に確認した結果は [検証記録](product/verification-results.md) を参照してください。
+
+制約ごとの検出力を確かめるには、[比較 C1〜C3](experiments/contract-comparisons.md) を実行します。たとえば、網羅性を `else` で弱める比較では、Kotlin のコンパイルが成功してから detekt の診断を確認します。

@@ -1,8 +1,10 @@
 package example.reservation.core
 
+import example.kernel.DecisionResult
 import example.kernel.ParticipantId
 import example.kernel.SessionId
 
+@DecisionResult
 sealed interface CreateObservation {
     data class Created(val reservation: ReservationId) : CreateObservation
     data object Full : CreateObservation
@@ -10,6 +12,7 @@ sealed interface CreateObservation {
     data object NoResponse : CreateObservation
 }
 
+@DecisionResult
 sealed interface LookupObservation {
     data class Found(val reservation: ReservationId) : LookupObservation
     data object NotCreated : LookupObservation
@@ -17,6 +20,7 @@ sealed interface LookupObservation {
     data object Failed : LookupObservation
 }
 
+@DecisionResult
 sealed interface CancelObservation {
     data object Cancelled : CancelObservation
     data object Declined : CancelObservation
@@ -24,6 +28,7 @@ sealed interface CancelObservation {
 }
 
 // 予約の現在の利用可否は、取消の応答が失われた後でも記録だけでは分からない。サービスに現在の状態を尋ねる。
+@DecisionResult
 sealed interface UsageObservation {
     data object Active : UsageObservation
     data object Cancelled : UsageObservation

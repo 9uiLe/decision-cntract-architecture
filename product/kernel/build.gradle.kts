@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.detekt)
 }
 
-// 業務判断・Port・権限を持たない。複数の Core が共有する識別子と時刻だけを置く。
+// 業務判断・Port・権限を持たない。複数の Core が共有する識別子・時刻と、規約の対象を示す注釈・読み取り専用リストの補助だけを置く。
 kotlin {
     android {
         namespace = "example.kernel"

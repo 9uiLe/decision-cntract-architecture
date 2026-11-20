@@ -5,6 +5,8 @@ import example.checkin.core.CheckInCore
 import example.checkin.core.ParticipantCheckIn
 import example.eligibility.core.EligibilityOutcome
 import example.reservation.core.Acceptance
+import example.reservation.core.AdmissionLookup
+import example.reservation.core.AdmissionUnavailableReason
 import example.reservation.core.ConfirmOutcome
 import example.reservation.core.ReservationAdmission
 import example.reservation.core.ReservationCore
@@ -25,3 +27,15 @@ fun describe(outcome: EligibilityOutcome): String = when (outcome) {
 }
 
 fun isDone(state: ParticipantCheckIn?): Boolean = state == ParticipantCheckIn.CheckedIn
+
+fun recordOfCurrentAdmission(lookup: AdmissionLookup): ReservationAdmission? = when (lookup) {
+    is AdmissionLookup.Valid -> lookup.admission.record
+    is AdmissionLookup.Unavailable -> null
+    AdmissionLookup.Unconfirmed -> null
+}
+
+fun describe(reason: AdmissionUnavailableReason): String = when (reason) {
+    AdmissionUnavailableReason.NotIncluded -> "not included"
+    AdmissionUnavailableReason.NotReserved -> "not reserved"
+    AdmissionUnavailableReason.Cancelled -> "cancelled"
+}
