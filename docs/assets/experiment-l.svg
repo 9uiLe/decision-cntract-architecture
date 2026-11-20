@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="230" viewBox="0 0 800 230" role="img" aria-labelledby="title description">
+  <title id="title">L　資格サービスの応答形式変更</title>
+  <desc id="description">応答のフィールド名を変更する。型付きデータの組み立てを見直し、Adapter のテストで同じ資格と期限を得ることを確かめる。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
+    .title { font-size: 31px; font-weight: 700; }
+    .label { font-size: 23px; font-weight: 700; }
+    .body { font-size: 19px; }
+    .small { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="230" rx="20" fill="#f8fafc"/>
+  <text x="40" y="57" class="title" text-anchor="start">L　資格サービスの応答形式変更</text>
+  <rect x="40" y="93" width="220" height="108" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="55" y="126" class="body" text-anchor="start">仕様変更</text>
+  <text x="55" y="158" class="small" text-anchor="start">資格コードと期限のキー</text>
+  <text x="55" y="183" class="small" text-anchor="start">外部データの型を更新</text>
+  <path d="M260 147H285" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="290" y="93" width="220" height="108" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="305" y="126" class="body" text-anchor="start">見直す箇所</text>
+  <text x="305" y="158" class="small" text-anchor="start">Adapter の組み立て</text>
+  <text x="305" y="183" class="small" text-anchor="start">旧フィールド名に診断</text>
+  <path d="M510 147H535" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="540" y="93" width="220" height="108" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="555" y="126" class="body" text-anchor="start">対応後のテスト</text>
+  <text x="555" y="158" class="small" text-anchor="start">旧形式と新形式の入力</text>
+  <text x="555" y="183" class="small" text-anchor="start">同じ資格・期限へ変換</text>
+</svg>

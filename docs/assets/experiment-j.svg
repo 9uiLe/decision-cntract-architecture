@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="230" viewBox="0 0 800 230" role="img" aria-labelledby="title description">
+  <title id="title">J　予約の利用停止</title>
+  <desc id="description">現在の予約状態の分岐に利用停止を追加する。停止後の受付を拒否し、既存の予約履歴と受付記録を保持する。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
+    .title { font-size: 31px; font-weight: 700; }
+    .label { font-size: 23px; font-weight: 700; }
+    .body { font-size: 19px; }
+    .small { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="230" rx="20" fill="#f8fafc"/>
+  <text x="40" y="57" class="title" text-anchor="start">J　予約の利用停止</text>
+  <rect x="40" y="93" width="220" height="108" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="55" y="126" class="body" text-anchor="start">仕様変更</text>
+  <text x="55" y="158" class="small" text-anchor="start">予約に利用停止を追加</text>
+  <text x="55" y="183" class="small" text-anchor="start">停止中は新規受付不可</text>
+  <path d="M260 147H285" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="290" y="93" width="220" height="108" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="305" y="126" class="body" text-anchor="start">見直す判断</text>
+  <text x="305" y="158" class="small" text-anchor="start">予約の現在状態の照会</text>
+  <text x="305" y="183" class="small" text-anchor="start">画面に出す拒否理由</text>
+  <path d="M510 147H535" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="540" y="93" width="220" height="108" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="555" y="126" class="body" text-anchor="start">対応後のテスト</text>
+  <text x="555" y="158" class="small" text-anchor="start">新規受付の要求は0回</text>
+  <text x="555" y="183" class="small" text-anchor="start">受付済みの記録を読める</text>
+</svg>

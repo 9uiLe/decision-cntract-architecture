@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="494" viewBox="0 0 800 494" role="img" aria-labelledby="title description">
+  <title id="title">どの検査で何を確かめるか</title>
+  <desc id="description">同じ予約フローを、コンパイル、ビルド時の構造検査、実行テスト、画面操作の四つの観点で確かめる。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
+    .title { font-size: 31px; font-weight: 700; }
+    .label { font-size: 23px; font-weight: 700; }
+    .body { font-size: 19px; }
+    .small { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="494" rx="20" fill="#f8fafc"/>
+  <text x="40" y="57" class="title" text-anchor="start">どの検査で何を確かめるか</text>
+  <text x="53" y="105" class="small" text-anchor="start">確かめたいこと</text>
+  <text x="298" y="105" class="small" text-anchor="start">使う検査</text>
+  <text x="543" y="105" class="small" text-anchor="start">観測する結果</text>
+  <rect x="40" y="130" width="230" height="68" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="53" y="157" class="body" text-anchor="start">確認前の予約を送る</text>
+  <text x="53" y="182" class="small" text-anchor="start">前提の型と可視性</text>
+  <path d="M270 164H282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="285" y="130" width="230" height="68" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="298" y="157" class="body" text-anchor="start">Kotlin コンパイラ</text>
+  <text x="298" y="182" class="small" text-anchor="start">正例と負例をビルド</text>
+  <path d="M515 164H527" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="530" y="130" width="230" height="68" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="543" y="157" class="body" text-anchor="start">誤用が拒否される</text>
+  <text x="543" y="182" class="small" text-anchor="start">ファイルと診断 ID が一致</text>
+  <rect x="40" y="221" width="230" height="68" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="53" y="248" class="body" text-anchor="start">禁止した依存を追加</text>
+  <text x="53" y="273" class="small" text-anchor="start">モジュールや呼び出し</text>
+  <path d="M270 255H282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="285" y="221" width="230" height="68" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="298" y="248" class="body" text-anchor="start">ビルド時の検査</text>
+  <text x="298" y="273" class="small" text-anchor="start">依存テスト・detekt</text>
+  <path d="M515 255H527" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="530" y="221" width="230" height="68" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="543" y="248" class="body" text-anchor="start">違反を報告</text>
+  <text x="543" y="273" class="small" text-anchor="start">診断箇所・ルールを確認</text>
+  <rect x="40" y="312" width="230" height="68" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="53" y="339" class="body" text-anchor="start">開始時刻ちょうど</text>
+  <text x="53" y="364" class="small" text-anchor="start">時刻や外部応答を制御</text>
+  <path d="M270 346H282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="285" y="312" width="230" height="68" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="298" y="339" class="body" text-anchor="start">実行テスト</text>
+  <text x="298" y="364" class="small" text-anchor="start">状態と外部要求を観測</text>
+  <path d="M515 346H527" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="530" y="312" width="230" height="68" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="543" y="339" class="body" text-anchor="start">新規作成は0回</text>
+  <text x="543" y="364" class="small" text-anchor="start">照会には元の要求 ID</text>
+  <rect x="40" y="403" width="230" height="68" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="53" y="430" class="body" text-anchor="start">アプリを再表示する</text>
+  <text x="53" y="455" class="small" text-anchor="start">OS のライフサイクル</text>
+  <path d="M270 437H282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="285" y="403" width="230" height="68" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="298" y="430" class="body" text-anchor="start">実際の画面を操作</text>
+  <text x="298" y="455" class="small" text-anchor="start">復帰後の画面と要求を確認</text>
+  <path d="M515 437H527" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="530" y="403" width="230" height="68" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="543" y="430" class="body" text-anchor="start">状態に応じた操作を表示</text>
+  <text x="543" y="455" class="small" text-anchor="start">復帰による再送は0回</text>
+</svg>

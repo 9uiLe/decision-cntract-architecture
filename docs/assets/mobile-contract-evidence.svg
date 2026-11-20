@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560" role="img" aria-labelledby="title description">
+  <title id="title">判断済みの値が使える時点</title>
+  <desc id="description">値は4つの時点で発行される。資格の確認では EligibilityCertificate、内容の確認では ConfirmedDraft、予約の成立では Reserved と ReservationAdmission、受付の試行では CurrentAdmission。それぞれ送信前の再照会、変更時の再発行、現在状態の照会で使える時点を確かめる。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; font-size: 18px; }
+    .title { font-size: 26px; font-weight: 700; }
+    .sec { font-size: 18px; font-weight: 700; fill: #0f766e; }
+    .b { font-weight: 700; }
+    .s { font-size: 16px; fill: #3d5266; }
+    .m { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 16px; }
+    .mb { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 17px; font-weight: 700; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="560" rx="20" fill="#f8fafc"/>
+  <text x="40" y="52" class="title" text-anchor="start">判断済みの値が使える時点</text>
+  <text x="114" y="90" class="sec" text-anchor="middle">時点</text>
+  <text x="384" y="90" class="sec" text-anchor="middle">発行される値</text>
+  <text x="670" y="90" class="sec" text-anchor="middle">使う前の再確認</text>
+  <rect x="24" y="106" width="180" height="88" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="114.0" y="143.5" class="b" text-anchor="middle">① 資格の確認</text>
+  <text x="114.0" y="168.5" class="s" text-anchor="middle">参加資格 Core</text>
+  <rect x="224" y="106" width="320" height="88" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="384.0" y="143.5" class="mb" text-anchor="middle">EligibilityCertificate</text>
+  <text x="384.0" y="168.5" text-anchor="middle">対象と checkedAt を記録</text>
+  <rect x="564" y="106" width="212" height="88" rx="10" fill="#ffffff" stroke="#6b7f93" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <text x="670.0" y="143.5" class="s" text-anchor="middle">送信・再試行の前に</text>
+  <text x="670.0" y="168.5" class="s" text-anchor="middle">全員分を再照会</text>
+  <path d="M204 150H224" fill="none" stroke="#0f766e" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="544" y1="150" x2="564" y2="150" stroke="#6b7f93" stroke-width="2" stroke-dasharray="6 5"/>
+  <path d="M384 194V218" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="24" y="218" width="180" height="88" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="114.0" y="255.5" class="b" text-anchor="middle">② 内容の確認</text>
+  <text x="114.0" y="280.5" class="s" text-anchor="middle">予約 Core</text>
+  <rect x="224" y="218" width="320" height="88" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="384.0" y="255.5" class="mb" text-anchor="middle">ConfirmedDraft</text>
+  <text x="384.0" y="280.5" text-anchor="middle">利用者が確認した内容</text>
+  <rect x="564" y="218" width="212" height="88" rx="10" fill="#ffffff" stroke="#6b7f93" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <text x="670.0" y="255.5" class="s" text-anchor="middle">変更したら新しい値</text>
+  <text x="670.0" y="280.5" class="s" text-anchor="middle">送信時に現在の確認と照合</text>
+  <path d="M204 262H224" fill="none" stroke="#0f766e" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="544" y1="262" x2="564" y2="262" stroke="#6b7f93" stroke-width="2" stroke-dasharray="6 5"/>
+  <path d="M384 306V330" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="24" y="330" width="180" height="88" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="114.0" y="367.5" class="b" text-anchor="middle">③ 予約の成立</text>
+  <text x="114.0" y="392.5" class="s" text-anchor="middle">予約 Core</text>
+  <rect x="224" y="330" width="320" height="88" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="384.0" y="367.5" class="mb" style="font-size:15px" text-anchor="middle">Reserved / ReservationAdmission</text>
+  <text x="384.0" y="392.5" text-anchor="middle">成立した履歴と参加者の組</text>
+  <rect x="564" y="330" width="212" height="88" rx="10" fill="#ffffff" stroke="#6b7f93" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <text x="670.0" y="367.5" class="s" text-anchor="middle">資格が失効しても</text>
+  <text x="670.0" y="392.5" class="s" text-anchor="middle">履歴は変えない</text>
+  <path d="M204 374H224" fill="none" stroke="#0f766e" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="544" y1="374" x2="564" y2="374" stroke="#6b7f93" stroke-width="2" stroke-dasharray="6 5"/>
+  <path d="M384 418V442" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="24" y="442" width="180" height="88" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="114.0" y="479.5" class="b" text-anchor="middle">④ 受付の試行</text>
+  <text x="114.0" y="504.5" class="s" text-anchor="middle">予約 Core</text>
+  <rect x="224" y="442" width="320" height="88" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="384.0" y="479.5" class="mb" text-anchor="middle">CurrentAdmission</text>
+  <text x="384.0" y="504.5" text-anchor="middle">observedAt に有効と確認</text>
+  <rect x="564" y="442" width="212" height="88" rx="10" fill="#ffffff" stroke="#6b7f93" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <text x="670.0" y="479.5" class="s" text-anchor="middle">受付のたびに</text>
+  <text x="670.0" y="504.5" class="s" text-anchor="middle">予約 Core へ照会</text>
+  <path d="M204 486H224" fill="none" stroke="#0f766e" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="544" y1="486" x2="564" y2="486" stroke="#6b7f93" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="40" y="548" class="s" text-anchor="start">受付の可否は、来場受付 Core が ④ の値の対象と観測時刻を照合して判断する</text>
+</svg>

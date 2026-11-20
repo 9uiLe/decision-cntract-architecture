@@ -1,5 +1,7 @@
 # ワークショップ予約の検証アプリ
 
+![Android と iOS の起動口から shared を経由し、画面、シミュレーター、3つの Core に接続する。](docs/assets/module-dependencies.svg)
+
 Android・iOS の共通画面で、参加資格の確認、ワークショップの予約、来場受付を操作できます。検証用画面では外部サービスの応答と時刻を変えられます。
 
 [依存関係と検査の図解](docs/README.md)

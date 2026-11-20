@@ -2,6 +2,8 @@
 
 ワークショップ予約の検証用アプリの Gradle ルートは `examples/reservation-mobile/` です。開催回の選択、参加資格の確認、予約、来場受付を Compose Multiplatform の共通画面で操作できます。検証画面では、外部サービスの応答や時刻を変えて境界条件を再現できます。[ソースコードの構成](../../examples/reservation-mobile/README.md)
 
+![Android と iOS それぞれのビルドから起動まで、検証シナリオと gradlew check へ続く経路。](../assets/mobile-setup-route.svg)
+
 ## Android で実行する
 
 Apple Silicon の macOS では、リポジトリのルートから Android 用の Nix シェルを起動してください。このシェルは、Nixpkgs の Android SDK ライセンス同意設定を使い、JDK 21 と Android SDK を用意します。

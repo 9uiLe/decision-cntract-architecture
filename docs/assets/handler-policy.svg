@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="312" viewBox="0 0 800 312" role="img" aria-labelledby="title description">
+  <title id="title">結果ごとに委ねる復旧方針</title>
+  <desc id="description">別の業務の例。結果不明と未成立で Handler のメソッドと戻り値型を分け、それぞれに許された方針を選ぶ。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
+    .title { font-size: 31px; font-weight: 700; }
+    .label { font-size: 23px; font-weight: 700; }
+    .body { font-size: 19px; }
+    .small { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="312" rx="20" fill="#f8fafc"/>
+  <text x="40" y="57" class="title" text-anchor="start">結果ごとに委ねる復旧方針</text>
+  <text x="53" y="105" class="small" text-anchor="start">Core が渡す結果</text>
+  <text x="298" y="105" class="small" text-anchor="start">Handler のメソッド</text>
+  <text x="543" y="105" class="small" text-anchor="start">実装が返せる方針</text>
+  <rect x="40" y="130" width="230" height="68" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="53" y="157" class="body" text-anchor="start">結果不明</text>
+  <text x="53" y="182" class="small" text-anchor="start">成立したか分からない</text>
+  <path d="M270 164H282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="285" y="130" width="230" height="68" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="298" y="157" class="body" text-anchor="start">onUnknown()</text>
+  <text x="298" y="182" class="small" text-anchor="start">UnknownNext</text>
+  <path d="M515 164H527" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="530" y="130" width="230" height="68" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="543" y="157" class="body" text-anchor="start">待つ・照会する</text>
+  <text x="543" y="182" class="small" text-anchor="start">Wait / LookUp</text>
+  <rect x="40" y="221" width="230" height="68" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="53" y="248" class="body" text-anchor="start">未成立</text>
+  <text x="53" y="273" class="small" text-anchor="start">成立しなかったと確定</text>
+  <path d="M270 255H282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="285" y="221" width="230" height="68" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="298" y="248" class="body" text-anchor="start">onNotCreated()</text>
+  <text x="298" y="273" class="small" text-anchor="start">NotCreatedNext</text>
+  <path d="M515 255H527" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="530" y="221" width="230" height="68" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="543" y="248" class="body" text-anchor="start">再試行を案内・終了</text>
+  <text x="543" y="273" class="small" text-anchor="start">OfferRetry / End</text>
+</svg>

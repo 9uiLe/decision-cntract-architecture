@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="470" viewBox="0 0 800 470" role="img" aria-labelledby="title description">
+  <title id="title">検証記録の構成</title>
+  <desc id="description">検証記録は、基準仕様、OS ごとの操作、変更実験 H から L、比較 C1 から C3 の4種類。実機での操作と Compose の自動 UI テストは未実施。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; font-size: 18px; }
+    .title { font-size: 26px; font-weight: 700; }
+    .sec { font-size: 18px; font-weight: 700; fill: #0f766e; }
+    .b { font-weight: 700; }
+    .s { font-size: 16px; fill: #3d5266; }
+    .m { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 16px; }
+    .mb { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 17px; font-weight: 700; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="470" rx="20" fill="#f8fafc"/>
+  <text x="40" y="52" class="title" text-anchor="start">検証記録の構成</text>
+  <rect x="30" y="80" width="360" height="130" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="210.0" y="113.5" class="b" text-anchor="middle">基準仕様</text>
+  <text x="210.0" y="138.5" class="s" text-anchor="middle">コンパイル負例 15件</text>
+  <text x="210.0" y="163.5" class="s" text-anchor="middle">detekt ルールのテスト 49件</text>
+  <text x="210.0" y="188.5" class="s" text-anchor="middle">Core・画面状態 JVM と iOS で各102件</text>
+  <rect x="410" y="80" width="360" height="130" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="590.0" y="113.5" class="b" text-anchor="middle">OS ごとの操作</text>
+  <text x="590.0" y="138.5" class="s" text-anchor="middle">Android: API 36 エミュレーター</text>
+  <text x="590.0" y="163.5" class="s" text-anchor="middle">iOS: Xcode 27.0 / Simulator</text>
+  <text x="590.0" y="188.5" class="s" text-anchor="middle">照会後は佐藤さんだけ受付済み</text>
+  <rect x="30" y="232" width="360" height="130" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="210.0" y="278.0" class="b" text-anchor="middle">変更実験 H〜L</text>
+  <text x="210.0" y="303.0" class="s" text-anchor="middle">同じ基準ソースから個別に実行</text>
+  <text x="210.0" y="328.0" class="s" text-anchor="middle">診断・テスト・変更範囲を照合</text>
+  <rect x="410" y="232" width="360" height="130" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="590.0" y="278.0" class="b" text-anchor="middle">比較 C1〜C3</text>
+  <text x="590.0" y="303.0" class="s" text-anchor="middle">通常構成と制約を弱めた構成</text>
+  <text x="590.0" y="328.0" class="s" text-anchor="middle">期待する失敗だけが起きたか照合</text>
+  <rect x="30" y="392" width="740" height="50" rx="10" fill="#ffffff" stroke="#6b7f93" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <text x="400.0" y="423.0" class="b" text-anchor="middle">未実施: 実機での操作 · Compose の自動 UI テスト</text>
+</svg>

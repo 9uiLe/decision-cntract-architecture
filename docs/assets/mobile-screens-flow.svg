@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-labelledby="title description">
+  <title id="title">予約から来場受付までの画面遷移</title>
+  <desc id="description">開催回一覧から、要資格回では資格の確認、内容の確認、予約の送信へ進む。送信の結果は予約確定、結果不明、未成立が確定、満席・受付終了、資格の再確認の5つに分かれ、それぞれ次の操作が決まる。予約詳細では参加者ごとに受付し、結果不明なら元の要求を照会する。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; font-size: 18px; }
+    .title { font-size: 26px; font-weight: 700; }
+    .sec { font-size: 18px; font-weight: 700; fill: #0f766e; }
+    .b { font-weight: 700; }
+    .s { font-size: 16px; fill: #3d5266; }
+    .m { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 16px; }
+    .mb { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 17px; font-weight: 700; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="600" rx="20" fill="#f8fafc"/>
+  <text x="40" y="52" class="title" text-anchor="start">予約から来場受付までの画面遷移</text>
+  <text x="40" y="90" class="sec" text-anchor="start">1. 予約の作成</text>
+  <rect x="28" y="104" width="165" height="66" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="110.5" y="130.5" class="b" text-anchor="middle">開催回一覧</text>
+  <text x="110.5" y="155.5" class="s" text-anchor="middle">参加者を選ぶ</text>
+  <path d="M193 137H221" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="221" y="104" width="165" height="66" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="303.5" y="130.5" class="b" text-anchor="middle">資格の確認</text>
+  <text x="303.5" y="155.5" class="s" text-anchor="middle">要資格回のみ</text>
+  <path d="M386 137H414" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="414" y="104" width="165" height="66" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="496.5" y="130.5" class="b" text-anchor="middle">内容を確認する</text>
+  <text x="496.5" y="155.5" class="s" text-anchor="middle">送信前の確認</text>
+  <path d="M579 137H607" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="607" y="104" width="165" height="66" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="689.5" y="130.5" class="b" text-anchor="middle">予約を送信</text>
+  <text x="689.5" y="155.5" class="s" text-anchor="middle">開始時刻より前</text>
+  <text x="40" y="184" class="sec" text-anchor="start">2. 送信の結果と次の操作</text>
+  <path d="M689 170V190H92V228" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="20" y="228" width="144" height="48" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="92.0" y="258.0" class="b" text-anchor="middle">予約確定</text>
+  <path d="M92 276V298" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="20" y="298" width="144" height="94" rx="10" fill="#ffffff" stroke="#8aa6bb" stroke-width="1.6"/>
+  <text x="92.0" y="326.0" class="s" text-anchor="middle">予約番号を確認</text>
+  <text x="92.0" y="351.0" class="s" text-anchor="middle">取消は開始の</text>
+  <text x="92.0" y="376.0" class="s" text-anchor="middle">24時間前より前</text>
+  <path d="M689 170V190H244V228" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="172" y="228" width="144" height="48" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="244.0" y="258.0" class="b" text-anchor="middle">結果不明</text>
+  <path d="M244 276V298" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="172" y="298" width="144" height="94" rx="10" fill="#ffffff" stroke="#8aa6bb" stroke-width="1.6"/>
+  <text x="244.0" y="326.0" class="s" text-anchor="middle">状況を照会する</text>
+  <text x="244.0" y="351.0" class="s" text-anchor="middle">記録なし・失敗は</text>
+  <text x="244.0" y="376.0" class="s" text-anchor="middle">結果不明のまま</text>
+  <path d="M689 170V190H396V228" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="324" y="228" width="144" height="48" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="396.0" y="258.0" class="b" text-anchor="middle">未成立が確定</text>
+  <path d="M396 276V298" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="324" y="298" width="144" height="94" rx="10" fill="#ffffff" stroke="#8aa6bb" stroke-width="1.6"/>
+  <text x="396.0" y="326.0" class="s" text-anchor="middle">送信期限内のみ</text>
+  <text x="396.0" y="351.0" class="s" text-anchor="middle">同じ内容を再試行</text>
+  <text x="396.0" y="376.0" class="s" text-anchor="middle">新しい要求 ID</text>
+  <path d="M689 170V190H548V228" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="476" y="228" width="144" height="48" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="548.0" y="258.0" class="b" text-anchor="middle">満席・受付終了</text>
+  <path d="M548 276V298" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="476" y="298" width="144" height="94" rx="10" fill="#ffffff" stroke="#8aa6bb" stroke-width="1.6"/>
+  <text x="548.0" y="326.0" class="s" text-anchor="middle">一覧に戻り</text>
+  <text x="548.0" y="351.0" class="s" text-anchor="middle">開催回を</text>
+  <text x="548.0" y="376.0" class="s" text-anchor="middle">選び直す</text>
+  <path d="M689 170V190H700V228" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="628" y="228" width="144" height="48" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="700.0" y="258.0" class="b" text-anchor="middle">資格の再確認</text>
+  <path d="M700 276V298" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="628" y="298" width="144" height="94" rx="10" fill="#ffffff" stroke="#8aa6bb" stroke-width="1.6"/>
+  <text x="700.0" y="326.0" class="s" text-anchor="middle">要求は未送信</text>
+  <text x="700.0" y="351.0" class="s" text-anchor="middle">一覧に戻り</text>
+  <text x="700.0" y="376.0" class="s" text-anchor="middle">資格を確認</text>
+  <text x="40" y="436" class="sec" text-anchor="start">3. 予約詳細からの受付</text>
+  <rect x="28" y="452" width="200" height="70" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="128.0" y="480.5" class="b" text-anchor="middle">予約詳細</text>
+  <text x="128.0" y="505.5" class="s" text-anchor="middle">参加者と受付状態</text>
+  <path d="M228 487H280" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="280" y="452" width="220" height="70" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="390.0" y="480.5" class="b" text-anchor="middle">一人ずつ受け付ける</text>
+  <text x="390.0" y="505.5" class="s" text-anchor="middle">受付条件を満たす未受付</text>
+  <path d="M500 487H552" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="552" y="452" width="220" height="70" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="662.0" y="480.5" class="b" text-anchor="middle">受付結果不明</text>
+  <text x="662.0" y="505.5" class="s" text-anchor="middle">元の受付要求を照会</text>
+  <text x="40" y="568" class="s" text-anchor="start">結果不明の予約は、一覧に戻っても「予約の状況を開く」から確認できる</text>
+</svg>

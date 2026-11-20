@@ -1,6 +1,8 @@
 # 判断済みの値が使える時点
 
-同じ参加者や予約 ID を持つ値でも、表す事実と使える操作は異なります。各型と操作の宣言は Kotlin のコードを参照してください。[資格の証明書](../../examples/reservation-mobile/core/eligibility-core/src/commonMain/kotlin/example/eligibility/core/Certificate.kt) · [予約の受付対象と操作券](../../examples/reservation-mobile/core/reservation-core/src/commonMain/kotlin/example/reservation/core/Evidence.kt) · [受付の操作券](../../examples/reservation-mobile/core/checkin-core/src/commonMain/kotlin/example/checkin/core/State.kt)
+![資格の確認、内容の確認、予約の成立、受付の試行の4時点で発行される値と、使う前の再確認。](../assets/mobile-contract-evidence.svg)
+
+同じ参加者や予約 ID を持つ値でも、表す事実と使える操作は異なります。 [資格の証明書](../../examples/reservation-mobile/core/eligibility-core/src/commonMain/kotlin/example/eligibility/core/Certificate.kt) · [予約の受付対象と操作券](../../examples/reservation-mobile/core/reservation-core/src/commonMain/kotlin/example/reservation/core/Evidence.kt) · [受付の操作券](../../examples/reservation-mobile/core/checkin-core/src/commonMain/kotlin/example/checkin/core/State.kt)
 
 | 契約 | 発行者と対象 | 意味と利用先 | 再確認と再利用 |
 | --- | --- | --- | --- |
@@ -30,6 +32,8 @@
 資格 Adapter は外部データから資格の保有と期限を読み取ります。フィールドが重複する応答や、保有を示していても資格コードや期限を解釈できない応答は、確認不能として扱います。未取得を示す応答を読み取れた場合は、未取得の観測を返します。判定時刻が期限より前かは参加資格 Core が確認します。
 
 ## 判定時刻
+
+![再確認の開始から応答までの区間に checkedAt が入ることと、送信直前・開催開始 T との前後関係。](../assets/mobile-judgment-time.svg)
 
 要資格予約では、参加資格 Core が全員分を再照会し、一つの時刻で資格を判定します。予約 Core は、新しく発行された証明書の `checkedAt` が全員分で一致し、再確認の開始から応答までに入ることを確かめます。その時刻と送信直前の両方で、開催開始時刻より前であることを確認します。課題 I の来場受付では、対象参加者の再確認時刻も受付時間の判定に使います。
 

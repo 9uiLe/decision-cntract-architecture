@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="403" viewBox="0 0 800 403" role="img" aria-labelledby="title description">
+  <title id="title">制約を弱めると、どこで検出できるか</title>
+  <desc id="description">C1 は else で網羅性が弱まり detekt が指摘する。C2 と C3 では誤用がコンパイルでき、コンパイル契約テストが失敗する。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
+    .title { font-size: 31px; font-weight: 700; }
+    .label { font-size: 23px; font-weight: 700; }
+    .body { font-size: 19px; }
+    .small { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="403" rx="20" fill="#f8fafc"/>
+  <text x="40" y="57" class="title" text-anchor="start">制約を弱めると、どこで検出できるか</text>
+  <text x="53" y="105" class="small" text-anchor="start">比較で加える変更</text>
+  <text x="298" y="105" class="small" text-anchor="start">弱めた後のコンパイル</text>
+  <text x="543" y="105" class="small" text-anchor="start">検出する仕組み</text>
+  <rect x="40" y="130" width="230" height="68" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="53" y="157" class="body" text-anchor="start">C1　else を追加</text>
+  <text x="53" y="182" class="small" text-anchor="start">資格状態を画面へ変換</text>
+  <path d="M270 164H282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="285" y="130" width="230" height="68" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="298" y="157" class="body" text-anchor="start">新しい結果を吸収</text>
+  <text x="298" y="182" class="small" text-anchor="start">Kotlin コンパイルが通る</text>
+  <path d="M515 164H527" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="530" y="130" width="230" height="68" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="543" y="157" class="body" text-anchor="start">detekt</text>
+  <text x="543" y="182" class="small" text-anchor="start">ExhaustiveDecisionWhen</text>
+  <rect x="40" y="221" width="230" height="68" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="53" y="248" class="body" text-anchor="start">C2　生成を公開</text>
+  <text x="53" y="273" class="small" text-anchor="start">資格証明書の生成</text>
+  <path d="M270 255H282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="285" y="221" width="230" height="68" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="298" y="248" class="body" text-anchor="start">外から直接生成できる</text>
+  <text x="298" y="273" class="small" text-anchor="start">Kotlin コンパイルが通る</text>
+  <path d="M515 255H527" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="530" y="221" width="230" height="68" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="543" y="248" class="body" text-anchor="start">コンパイル契約テスト</text>
+  <text x="543" y="273" class="small" text-anchor="start">偽造コードがコンパイル</text>
+  <rect x="40" y="312" width="230" height="68" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="53" y="339" class="body" text-anchor="start">C3　受付の互換操作</text>
+  <text x="53" y="364" class="small" text-anchor="start">資格確認を省略できる</text>
+  <path d="M270 346H282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="285" y="312" width="230" height="68" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="298" y="339" class="body" text-anchor="start">証明書なしで呼べる</text>
+  <text x="298" y="364" class="small" text-anchor="start">Kotlin コンパイルが通る</text>
+  <path d="M515 346H527" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="530" y="312" width="230" height="68" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="543" y="339" class="body" text-anchor="start">コンパイル契約テスト</text>
+  <text x="543" y="364" class="small" text-anchor="start">省略したコードが通る</text>
+</svg>

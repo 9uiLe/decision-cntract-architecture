@@ -4,7 +4,9 @@
 
 ## 責務と依存方向
 
-Core、Port、Adapter、画面状態の関係は [3つの Core の判断契約](core-contracts.md) を参照してください。
+![3つの Core、各 Port とシミュレーター、プレゼンテーション、組み立ての依存方向](../assets/core-contracts.svg)
+
+各 Core の役割は [3つの Core の判断契約](core-contracts.md) を参照してください。
 
 Core は結果の意味と、次に許される操作を公開します。ViewModel はその結果から画面状態を作り、Compose は文言やボタンを選びます。たとえば取消操作が渡された画面には、Compose が取消ボタンを表示します。利用者がボタンを押した時点の取消期限は Core が確認します。
 

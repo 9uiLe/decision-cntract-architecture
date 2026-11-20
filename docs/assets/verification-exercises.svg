@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="403" viewBox="0 0 800 403" role="img" aria-labelledby="title description">
+  <title id="title">変更課題 A〜G で確認する箇所</title>
+  <desc id="description">AからCでは公開契約や利用側の分岐への影響、DとEでは変更を留める場所、FとGでは実行時の振る舞いを見る。課題ごとの実施範囲は本文を参照。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
+    .title { font-size: 31px; font-weight: 700; }
+    .label { font-size: 23px; font-weight: 700; }
+    .body { font-size: 19px; }
+    .small { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="403" rx="20" fill="#f8fafc"/>
+  <text x="40" y="57" class="title" text-anchor="start">変更課題 A〜G で確認する箇所</text>
+  <text x="53" y="105" class="small" text-anchor="start">主に変えるもの</text>
+  <text x="298" y="105" class="small" text-anchor="start">課題</text>
+  <text x="543" y="105" class="small" text-anchor="start">確認する箇所</text>
+  <rect x="40" y="130" width="230" height="68" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="53" y="157" class="body" text-anchor="start">公開する型と操作</text>
+  <text x="53" y="182" class="small" text-anchor="start">結果・前提・操作の廃止</text>
+  <path d="M270 164H282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="285" y="130" width="230" height="68" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="298" y="157" class="body" text-anchor="start">A・B・C</text>
+  <text x="298" y="182" class="small" text-anchor="start">承認・アンケート・取消</text>
+  <path d="M515 164H527" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="530" y="130" width="230" height="68" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="543" y="157" class="body" text-anchor="start">型を使う側</text>
+  <text x="543" y="182" class="small" text-anchor="start">結果分岐と旧呼び出し</text>
+  <rect x="40" y="221" width="230" height="68" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="53" y="248" class="body" text-anchor="start">外部形式と表示</text>
+  <text x="53" y="273" class="small" text-anchor="start">業務上の意味を保持</text>
+  <path d="M270 255H282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="285" y="221" width="230" height="68" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="298" y="248" class="body" text-anchor="start">D・E</text>
+  <text x="298" y="273" class="small" text-anchor="start">外部応答・表示文言</text>
+  <path d="M515 255H527" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="530" y="221" width="230" height="68" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="543" y="248" class="body" text-anchor="start">変更を留める場所</text>
+  <text x="543" y="273" class="small" text-anchor="start">Adapter または UI</text>
+  <rect x="40" y="312" width="230" height="68" rx="12" fill="#eff6ff" stroke="#cbd5e1"/>
+  <text x="53" y="339" class="body" text-anchor="start">境界値と復元</text>
+  <text x="53" y="364" class="small" text-anchor="start">時間条件・プロセス終了</text>
+  <path d="M270 346H282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="285" y="312" width="230" height="68" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="298" y="339" class="body" text-anchor="start">F・G</text>
+  <text x="298" y="364" class="small" text-anchor="start">取消期限・再起動</text>
+  <path d="M515 346H527" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="530" y="312" width="230" height="68" rx="12" fill="#ecfdf5" stroke="#cbd5e1"/>
+  <text x="543" y="339" class="body" text-anchor="start">実行時の確認</text>
+  <text x="543" y="364" class="small" text-anchor="start">境界値・照会・要求回数</text>
+</svg>

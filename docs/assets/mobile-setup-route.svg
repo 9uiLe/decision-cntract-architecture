@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="700" viewBox="0 0 800 700" role="img" aria-labelledby="title description">
+  <title id="title">検証アプリを動かすまでの経路</title>
+  <desc id="description">Android は Nix シェル、APK のビルド、端末へのインストール、ランチャーからの起動の順に進む。iOS は Nix シェル、Xcode プロジェクトの生成、シミュレーター向けビルド、インストールと起動の順に進む。どちらも検証用の操作で応答と時刻を設定し、2つのシナリオを試し、最後に gradlew check を実行する。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; font-size: 18px; }
+    .title { font-size: 26px; font-weight: 700; }
+    .sec { font-size: 18px; font-weight: 700; fill: #0f766e; }
+    .b { font-weight: 700; }
+    .s { font-size: 16px; fill: #3d5266; }
+    .m { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 16px; }
+    .mb { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 17px; font-weight: 700; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="700" rx="20" fill="#f8fafc"/>
+  <text x="40" y="52" class="title" text-anchor="start">検証アプリを動かすまでの経路</text>
+  <text x="205" y="92" class="sec" text-anchor="middle">Android</text>
+  <text x="595" y="92" class="sec" text-anchor="middle">iOS</text>
+  <rect x="30" y="106" width="350" height="66" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="205.0" y="132.5" class="b" text-anchor="middle">Nix シェルを起動</text>
+  <text x="205.0" y="157.5" class="m" text-anchor="middle">nix develop .#android</text>
+  <path d="M205 172V194" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="420" y="106" width="350" height="66" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="595.0" y="132.5" class="b" text-anchor="middle">Nix シェルを起動</text>
+  <text x="595.0" y="157.5" class="m" text-anchor="middle">nix develop .#ios</text>
+  <path d="M595 172V194" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="30" y="194" width="350" height="66" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="205.0" y="220.5" class="b" text-anchor="middle">APK をビルド</text>
+  <text x="205.0" y="245.5" class="m" text-anchor="middle">./gradlew :app:assembleDebug</text>
+  <path d="M205 260V282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="420" y="194" width="350" height="66" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="595.0" y="220.5" class="b" text-anchor="middle">Xcode プロジェクトを生成</text>
+  <text x="595.0" y="245.5" class="m" text-anchor="middle">xcodegen generate</text>
+  <path d="M595 260V282" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="30" y="282" width="350" height="66" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="205.0" y="308.5" class="b" text-anchor="middle">端末へインストール</text>
+  <text x="205.0" y="333.5" class="m" text-anchor="middle">adb install</text>
+  <path d="M205 348V370" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="420" y="282" width="350" height="66" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="595.0" y="308.5" class="b" text-anchor="middle">Nix の CC 等を外してビルド</text>
+  <text x="595.0" y="333.5" class="m" text-anchor="middle">xcodebuild</text>
+  <path d="M595 348V370" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="30" y="370" width="350" height="66" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="205.0" y="396.5" class="b" text-anchor="middle">ランチャーから起動</text>
+  <text x="205.0" y="421.5" class="s" text-anchor="middle">予約 / DCA 検証用の操作</text>
+  <rect x="420" y="370" width="350" height="66" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="595.0" y="396.5" class="b" text-anchor="middle">インストールして起動</text>
+  <text x="595.0" y="421.5" class="m" text-anchor="middle">xcrun simctl</text>
+  <path d="M205 458V480H400V496" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M595 458V480H400V496" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="60" y="496" width="680" height="52" rx="10" fill="#ffffff" stroke="#8aa6bb" stroke-width="1.6"/>
+  <text x="400.0" y="528.0" class="b" text-anchor="middle">検証用の操作で、応答と時刻を設定する</text>
+  <path d="M230 548V572" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M570 548V572" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="30" y="572" width="370" height="58" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="215.0" y="594.5" class="b" text-anchor="middle">応答が失われた予約を照会</text>
+  <text x="215.0" y="619.5" class="s" text-anchor="middle">作成1回・照会1回・予約1件</text>
+  <rect x="420" y="572" width="350" height="58" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="595.0" y="594.5" class="b" text-anchor="middle">資格を確認して来場を受け付ける</text>
+  <text x="595.0" y="619.5" class="s" text-anchor="middle">受付作成1回・照会1回・記録1件</text>
+  <rect x="30" y="646" width="740" height="40" rx="10" fill="#ffffff" stroke="#6b7f93" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <text x="400.0" y="672.0" class="mb" text-anchor="middle">ビルド時の検査: ./gradlew check</text>
+</svg>

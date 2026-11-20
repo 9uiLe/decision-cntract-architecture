@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400" role="img" aria-labelledby="title description">
+  <title id="title">資格の判定時刻と送信期限</title>
+  <desc id="description">予約の送信や再試行の前に、参加資格 Core が全員分を再照会する。全員分の checkedAt は再確認の開始から応答までの区間に入る必要がある。判定時刻と送信直前はどちらも開催開始時刻より前でなければならず、開催開始以降は予約を送信しない。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; font-size: 18px; }
+    .title { font-size: 26px; font-weight: 700; }
+    .sec { font-size: 18px; font-weight: 700; fill: #0f766e; }
+    .b { font-weight: 700; }
+    .s { font-size: 16px; fill: #3d5266; }
+    .m { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 16px; }
+    .mb { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 17px; font-weight: 700; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="400" rx="20" fill="#f8fafc"/>
+  <text x="40" y="52" class="title" text-anchor="start">資格の判定時刻と送信期限</text>
+  <line x1="50" y1="190" x2="760" y2="190" stroke="#47647b" stroke-width="3"/>
+  <rect x="100" y="172" width="250" height="36" rx="8" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="225" y="196" class="b" text-anchor="middle">再確認の区間</text>
+  <line x1="100" y1="160" x2="100" y2="220" stroke="#47647b" stroke-width="2"/>
+  <text x="100" y="150" class="b" text-anchor="middle">再確認の開始</text>
+  <line x1="350" y1="160" x2="350" y2="220" stroke="#47647b" stroke-width="2"/>
+  <text x="350" y="150" class="b" text-anchor="middle">応答</text>
+  <line x1="520" y1="160" x2="520" y2="220" stroke="#47647b" stroke-width="2"/>
+  <text x="520" y="150" class="b" text-anchor="middle">送信直前</text>
+  <line x1="700" y1="160" x2="700" y2="220" stroke="#47647b" stroke-width="2"/>
+  <text x="700" y="150" class="b" text-anchor="middle">開催開始 T</text>
+  <circle cx="225" cy="190" r="8" fill="#0f766e"/>
+  <text x="225" y="246" class="mb" text-anchor="middle">checkedAt</text>
+  <text x="225" y="270" class="s" text-anchor="middle">全員分で一致</text>
+  <text x="520" y="246" class="s" text-anchor="middle">開始時刻より前か</text>
+  <text x="520" y="268" class="s" text-anchor="middle">再確認する</text>
+  <text x="700" y="246" class="s" text-anchor="middle">以降は送信しない</text>
+  <rect x="30" y="300" width="350" height="70" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="205.0" y="328.5" class="b" text-anchor="middle">区間外の checkedAt は拒否</text>
+  <text x="205.0" y="353.5" class="s" text-anchor="middle">古い確認の再利用を防ぐ</text>
+  <rect x="410" y="300" width="360" height="70" rx="10" fill="#ffffff" stroke="#6b7f93" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <text x="590.0" y="328.5" class="s" text-anchor="middle">同じミリ秒に発行された値は</text>
+  <text x="590.0" y="353.5" class="s" text-anchor="middle">時刻が一致する</text>
+</svg>

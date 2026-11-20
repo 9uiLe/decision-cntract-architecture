@@ -2,6 +2,8 @@
 
 アプリは Android と iOS を対象とします。画面と画面状態の管理は Compose Multiplatform、業務 Core と検証用シミュレーターは Kotlin Multiplatform の共通コードに置きます。各 OS の入口は起動、ライフサイクル、戻る操作の接続を担当します。
 
+![OS ごとの入口、共通 UI、Core とシミュレーターの層と、ビルド・検査に使う技術。](../assets/mobile-technology-layers.svg)
+
 | 技術 | 用途 |
 | --- | --- |
 | Kotlin Multiplatform 2.3.21 | 参加資格、予約、来場受付の Core を別モジュールでコンパイルする |
@@ -12,6 +14,6 @@
 
 JVM ターゲットは、コンパイル負例、detekt、共通コードの振る舞いの検証に使います。OS ごとの起動、画面操作、ライフサイクル接続の結果は [検証記録](verification-results.md) に記録します。
 
-外部サービスへの接続はシミュレーターで代替します。資格、予約、来場受付の応答や時刻を独立に操作すると、応答喪失や資格の期限切れを再現できます。
+Core 間の依存と Port の関係は [3つの Core の判断契約](core-contracts.md) の図にあります。外部サービスへの接続はシミュレーターで代替します。資格、予約、来場受付の応答や時刻を独立に操作すると、応答喪失や資格の期限切れを再現できます。
 
 バージョンは [Gradle のバージョンカタログ](../../examples/reservation-mobile/gradle/libs.versions.toml) と [Gradle Wrapper](../../examples/reservation-mobile/gradle/wrapper/gradle-wrapper.properties) で管理します。

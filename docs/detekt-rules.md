@@ -1,5 +1,7 @@
 # 運用ルールと detekt の検査仕様
 
+![汎用ルールは判断型、発行対象の型、組み立て関数を検査する。予約固有ルールは各 Port を呼べる Core を制限する。](../examples/reservation-mobile/docs/assets/detekt-rules.svg)
+
 型と可視性で、業務操作に渡せる引数と生成経路を制限します。モジュールの依存宣言と import は `:conformance` のテストが照合します。detekt は、型検査を通っても必要な分岐や組み立ての制約を迂回するコードを検出します。
 
 ## DCA の汎用ルール

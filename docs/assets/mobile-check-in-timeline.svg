@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-labelledby="title description">
+  <title id="title">来場受付の受付時間と判断</title>
+  <desc id="description">開催開始時刻を T とすると、受付時間は T の30分前を含み、T の15分後を含まない区間。T の72時間前に作った予約を48時間前に取り消した場合、20分前に取消前の情報を渡しても受付要求を送信しない。受付のたびに予約 Core へ照会し、有効で参加者を含む場合だけ受付時間と重複を確認して受付を作成する。結果不明の受付は受付終了後も照会できる。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; font-size: 18px; }
+    .title { font-size: 26px; font-weight: 700; }
+    .sec { font-size: 18px; font-weight: 700; fill: #0f766e; }
+    .b { font-weight: 700; }
+    .s { font-size: 16px; fill: #3d5266; }
+    .m { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 16px; }
+    .mb { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 17px; font-weight: 700; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="600" rx="20" fill="#f8fafc"/>
+  <text x="40" y="52" class="title" text-anchor="start">来場受付の受付時間と判断</text>
+  <line x1="40" y1="190" x2="770" y2="190" stroke="#47647b" stroke-width="3"/>
+  <rect x="330" y="174" width="370" height="32" rx="8" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="515" y="196" class="b" text-anchor="middle">受付時間</text>
+  <line x1="70" y1="160" x2="70" y2="220" stroke="#47647b" stroke-width="2"/>
+  <text x="70" y="244" class="b" text-anchor="middle">T-72時間</text>
+  <text x="70" y="150" class="s" text-anchor="middle">予約を作成</text>
+  <line x1="190" y1="160" x2="190" y2="220" stroke="#47647b" stroke-width="2"/>
+  <text x="190" y="244" class="b" text-anchor="middle">T-48時間</text>
+  <text x="190" y="150" class="s" text-anchor="middle">予約を取消</text>
+  <line x1="330" y1="160" x2="330" y2="220" stroke="#47647b" stroke-width="2"/>
+  <text x="330" y="244" class="b" text-anchor="middle">T-30分</text>
+  <text x="330" y="150" class="s" text-anchor="middle">受付開始</text>
+  <line x1="410" y1="160" x2="410" y2="220" stroke="#47647b" stroke-width="2"/>
+  <text x="410" y="244" class="b" text-anchor="middle">T-20分</text>
+  <text x="410" y="128" class="s" text-anchor="middle">取消前の情報で</text>
+  <text x="410" y="150" class="s" text-anchor="middle">受付を試みる</text>
+  <line x1="560" y1="160" x2="560" y2="220" stroke="#47647b" stroke-width="2"/>
+  <text x="560" y="244" class="b" text-anchor="middle">T</text>
+  <text x="560" y="150" class="s" text-anchor="middle">開催開始</text>
+  <line x1="700" y1="160" x2="700" y2="220" stroke="#47647b" stroke-width="2"/>
+  <text x="700" y="244" class="b" text-anchor="middle">T+15分</text>
+  <text x="700" y="150" class="s" text-anchor="middle">受付終了</text>
+  <circle cx="330" cy="190" r="6" fill="#0f766e"/>
+  <circle cx="700" cy="190" r="6" fill="#ffffff" stroke="#0f766e" stroke-width="2.5"/>
+  <text x="515" y="270" class="mb" text-anchor="middle">T-30分 ≤ now &lt; T+15分</text>
+  <text x="40" y="318" class="sec" text-anchor="start">受付を試みるたびの判断</text>
+  <rect x="30" y="334" width="250" height="78" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="155.0" y="366.5" text-anchor="middle">受付のたびに予約 Core へ</text>
+  <text x="155.0" y="391.5" text-anchor="middle">現在の状態を照会</text>
+  <path d="M280 373H300V366H320" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M280 373H300V420H320" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="320" y="334" width="230" height="64" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="435.0" y="359.5" text-anchor="middle">予約が有効で</text>
+  <text x="435.0" y="384.5" text-anchor="middle">参加者を含む</text>
+  <path d="M550 366H580" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="580" y="334" width="190" height="64" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="675.0" y="359.5" class="s" text-anchor="middle">時間・重複を確認</text>
+  <text x="675.0" y="384.5" class="b" text-anchor="middle">受付を作成</text>
+  <rect x="320" y="410" width="230" height="64" rx="10" fill="#ffffff" stroke="#6b7f93" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <text x="435.0" y="435.5" text-anchor="middle">取消済み・</text>
+  <text x="435.0" y="460.5" text-anchor="middle">確認できない</text>
+  <path d="M550 442H580" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="580" y="410" width="190" height="64" rx="10" fill="#ffffff" stroke="#6b7f93" stroke-width="1.6" stroke-dasharray="6 5"/>
+  <text x="675.0" y="435.5" class="b" text-anchor="middle">理由を表示</text>
+  <text x="675.0" y="460.5" class="s" text-anchor="middle">要求は送らない</text>
+  <text x="40" y="520" class="sec" text-anchor="start">受付結果が不明なとき</text>
+  <rect x="30" y="534" width="190" height="50" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="125.0" y="565.0" class="b" text-anchor="middle">受付結果不明</text>
+  <path d="M220 559H250" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="250" y="534" width="250" height="50" rx="10" fill="#eff6ff" stroke="#93b5f2" stroke-width="1.6"/>
+  <text x="375.0" y="552.5" class="b" text-anchor="middle">元の要求を照会</text>
+  <text x="375.0" y="577.5" class="s" text-anchor="middle">受付終了後も可能</text>
+  <path d="M500 559H530" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="530" y="534" width="240" height="50" rx="10" fill="#e6f6f3" stroke="#4fa396" stroke-width="1.6"/>
+  <text x="650.0" y="565.0" class="s" text-anchor="middle">受付済み: 該当者だけ更新</text>
+</svg>
