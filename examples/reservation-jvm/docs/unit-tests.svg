@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="502" viewBox="0 0 800 502" role="img" aria-labelledby="title description">
+  <title id="title">予約結果を確認するテスト</title>
+  <desc id="description">開始時刻での送信拒否、結果不明から同じ要求を照会する経路、未成立から新しい要求を送る経路をテストします。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
+    .title { font-size: 31px; font-weight: 700; }
+    .label { font-size: 23px; font-weight: 700; }
+    .body { font-size: 19px; }
+    .small { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="502" rx="20" fill="#f8fafc"/>
+  <text x="40" y="57" class="title" text-anchor="start">予約結果を確認するテスト</text>
+  <text x="40" y="91" class="small" text-anchor="start">テストは時計、外部応答、要求 ID を制御し、結果と要求の記録を照合</text>
+  <rect x="40" y="122" width="720" height="78" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="62" y="155" class="label" text-anchor="start">初回送信</text>
+  <text x="236" y="155" class="body" text-anchor="start">開始の直前 → 作成1回</text>
+  <text x="236" y="182" class="body" text-anchor="start">開始時刻ちょうど → 作成0回</text>
+  <rect x="40" y="230" width="326" height="178" rx="12" fill="#eff6ff" stroke="#93b5f2"/>
+  <text x="62" y="266" class="label blue" text-anchor="start">結果不明</text>
+  <text x="62" y="302" class="body" text-anchor="start">照会  →  元の要求 ID</text>
+  <text x="62" y="335" class="body" text-anchor="start">記録なし・照会失敗 → 不明</text>
+  <text x="62" y="368" class="body" text-anchor="start">成立を確認 → 予約確定</text>
+  <rect x="434" y="230" width="326" height="178" rx="12" fill="#ecfdf5" stroke="#88cbbd"/>
+  <text x="456" y="266" class="label teal" text-anchor="start">未成立が確定</text>
+  <text x="456" y="302" class="body" text-anchor="start">再試行  →  新しい要求 ID</text>
+  <text x="456" y="335" class="body" text-anchor="start">期限に到達 → 作成を見送る</text>
+  <text x="456" y="368" class="body" text-anchor="start">未成立の結果を保持</text>
+  <path d="M366 319H429" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="400" y="306" class="small" text-anchor="middle">照会で</text>
+  <text x="400" y="351" class="small" text-anchor="middle">未成立</text>
+  <text x="40" y="449" class="small" text-anchor="start">古い確認済みの値や再試行券を渡した場合も、作成要求の回数を照合します。</text>
+  <text x="40" y="478" class="small" text-anchor="start">画面状態への変換では、結果に対応する操作券が引き継がれます。</text>
+</svg>

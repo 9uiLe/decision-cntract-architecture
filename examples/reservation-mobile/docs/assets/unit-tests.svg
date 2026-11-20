@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="652" viewBox="0 0 800 652" role="img" aria-labelledby="title description">
+  <title id="title">ユニットテストで確かめる振る舞い</title>
+  <desc id="description">テストは時刻や外部応答を制御し、Core が返す結果や状態と Port への要求を観測します。資格、予約、来場受付に加え、シミュレーターと画面への変換のテストがあります。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
+    .title { font-size: 31px; font-weight: 700; }
+    .label { font-size: 23px; font-weight: 700; }
+    .body { font-size: 19px; }
+    .small { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="652" rx="20" fill="#f8fafc"/>
+  <text x="40" y="57" class="title" text-anchor="start">ユニットテストで確かめる振る舞い</text>
+  <text x="40" y="92" class="small" text-anchor="start">時計と Port を制御し、結果・状態・要求の記録を照合します。</text>
+  <text x="40" y="138" class="small" text-anchor="start">入力・条件</text>
+  <text x="310" y="138" class="small blue" text-anchor="start">判断する Core</text>
+  <text x="515" y="138" class="small teal" text-anchor="start">テストが観測する結果</text>
+  <rect x="40" y="157" width="216" height="84" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <path d="M256 199H285" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="290" y="157" width="191" height="84" rx="12" fill="#eff6ff" stroke="#93b5f2"/>
+  <path d="M481 199H510" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="515" y="157" width="245" height="84" rx="12" fill="#ecfdf5" stroke="#88cbbd"/>
+  <text x="59" y="189" class="small" text-anchor="start">期限ちょうど</text>
+  <text x="59" y="218" class="small" text-anchor="start">照会の失敗と再確認</text>
+  <text x="308" y="189" class="small blue" text-anchor="start">参加資格 Core</text>
+  <text x="308" y="218" class="small" text-anchor="start">eligibility-core</text>
+  <text x="532" y="189" class="small teal" text-anchor="start">期限ちょうどは無効</text>
+  <text x="532" y="218" class="small" text-anchor="start">未取得と確認不能を区別</text>
+  <rect x="40" y="265" width="216" height="84" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <path d="M256 307H285" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="290" y="265" width="191" height="84" rx="12" fill="#eff6ff" stroke="#93b5f2"/>
+  <path d="M481 307H510" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="515" y="265" width="245" height="84" rx="12" fill="#ecfdf5" stroke="#88cbbd"/>
+  <text x="59" y="297" class="small" text-anchor="start">予約・取消の期限</text>
+  <text x="59" y="326" class="small" text-anchor="start">連打と作成の応答喪失</text>
+  <text x="308" y="297" class="small blue" text-anchor="start">予約 Core</text>
+  <text x="308" y="326" class="small" text-anchor="start">reservation-core</text>
+  <text x="532" y="297" class="small teal" text-anchor="start">締切に達したら要求0回</text>
+  <text x="532" y="326" class="small" text-anchor="start">結果不明なら元のIDで照会</text>
+  <rect x="40" y="373" width="216" height="84" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <path d="M256 415H285" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="290" y="373" width="191" height="84" rx="12" fill="#eff6ff" stroke="#93b5f2"/>
+  <path d="M481 415H510" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="515" y="373" width="245" height="84" rx="12" fill="#ecfdf5" stroke="#88cbbd"/>
+  <text x="59" y="405" class="small" text-anchor="start">受付時間・取消済み予約</text>
+  <text x="59" y="434" class="small" text-anchor="start">受付の応答喪失</text>
+  <text x="308" y="405" class="small blue" text-anchor="start">来場受付 Core</text>
+  <text x="308" y="434" class="small" text-anchor="start">checkin-core</text>
+  <text x="532" y="405" class="small teal" text-anchor="start">受付不可なら作成0回</text>
+  <text x="532" y="434" class="small" text-anchor="start">参加者ごとに結果を照会</text>
+  <rect x="40" y="491" width="720" height="116" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="59" y="525" class="body" text-anchor="start">シミュレーター</text>
+  <text x="240" y="525" class="small" text-anchor="start">3つの Core をつないだ要求・記録と外部応答の変換</text>
+  <text x="59" y="569" class="body" text-anchor="start">UI</text>
+  <text x="240" y="569" class="small" text-anchor="start">Core の結果から画面状態や文言への変換</text>
+  <text x="40" y="632" class="small" text-anchor="start">シミュレーターには、個別の単体テストに加えて結合シナリオがあります。</text>
+</svg>

@@ -16,24 +16,7 @@ Adapter は外部の応答を検証し、Port が定義する観測結果に変�
 
 応答を受け取れなかった場合、ViewModel は結果不明を表す画面状態を作ります。図は、利用者が元の要求を照会して予約の成立を確認できた場合の呼び出しと応答を示します。
 
-```mermaid
-sequenceDiagram
-    participant V as ViewModel
-    participant C as 業務 Core
-    participant A as Adapter
-    participant S as 予約サービス
-    V->>C: 確認済みの内容で送信
-    C->>A: 予約作成を要求
-    A->>S: 要求 ID と予約内容を送信
-    A-->>C: 応答を受信できなかった
-    C-->>V: 結果不明・元の要求を照会可能
-    V->>C: 利用者の操作で照会
-    C->>A: 元の要求 ID で照会
-    A->>S: 予約結果を取得
-    S-->>A: 元の予約の成立を確認
-    A-->>C: 予約確定の観測
-    C-->>V: 予約確定
-```
+![モバイル版では予約作成の応答を失ったあと、利用者の操作を受けて元の要求 ID で照会し、成立を確認する。](../assets/reservation-lookup.svg)
 
 ## 再生成と操作の有効性
 

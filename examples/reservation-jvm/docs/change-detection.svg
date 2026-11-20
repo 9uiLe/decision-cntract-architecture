@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="554" viewBox="0 0 800 554" role="img" aria-labelledby="title description">
+  <title id="title">仕様を変えたときの検知箇所</title>
+  <desc id="description">Outcome 追加で Projection の網羅性診断が出ます。引数の型や可視性への違反は負例の診断と照合し、締切や照会 ID の回帰は実行テストで検出します。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
+    .title { font-size: 31px; font-weight: 700; }
+    .label { font-size: 23px; font-weight: 700; }
+    .body { font-size: 19px; }
+    .small { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="554" rx="20" fill="#f8fafc"/>
+  <text x="40" y="57" class="title" text-anchor="start">仕様を変えたときの検知箇所</text>
+  <text x="40" y="91" class="small" text-anchor="start">変更または誤用</text>
+  <text x="425" y="91" class="small" text-anchor="start">検知する検査と箇所</text>
+  <rect x="40" y="111" width="328" height="84" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <path d="M368 153H416" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="422" y="111" width="338" height="84" rx="12" fill="#eff6ff" stroke="#abc1ea"/>
+  <rect x="40" y="211" width="328" height="84" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <path d="M368 253H416" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="422" y="211" width="338" height="84" rx="12" fill="#eff6ff" stroke="#abc1ea"/>
+  <rect x="40" y="311" width="328" height="84" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <path d="M368 353H416" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="422" y="311" width="338" height="84" rx="12" fill="#eff6ff" stroke="#abc1ea"/>
+  <rect x="40" y="411" width="328" height="84" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <path d="M368 453H416" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="422" y="411" width="338" height="84" rx="12" fill="#ecfdf5" stroke="#88cbbd"/>
+  <text x="61" y="146" class="body" text-anchor="start">予約結果に承認待ちを追加</text>
+  <text x="61" y="174" class="code" text-anchor="start">Outcome.ApprovalPending</text>
+  <text x="444" y="146" class="body blue" text-anchor="start">コンパイラ  ·  Projection.kt</text>
+  <text x="444" y="174" class="code" text-anchor="start">NO_ELSE_IN_WHEN</text>
+  <text x="61" y="246" class="body" text-anchor="start">確認前に送信する</text>
+  <text x="61" y="274" class="body" text-anchor="start">結果不明から再試行する</text>
+  <text x="444" y="246" class="body blue" text-anchor="start">コンパイル負例  ·  reject/</text>
+  <text x="444" y="274" class="code" text-anchor="start">ARGUMENT_TYPE_MISMATCH</text>
+  <text x="61" y="346" class="body" text-anchor="start">モジュール外で確認済みの</text>
+  <text x="61" y="374" class="body" text-anchor="start">下書きや再試行券を直接作る</text>
+  <text x="444" y="346" class="body blue" text-anchor="start">コンパイル負例  ·  reject/</text>
+  <text x="444" y="374" class="code" text-anchor="start">INVISIBLE_REFERENCE</text>
+  <text x="61" y="446" class="body" text-anchor="start">締切の比較や照会先の</text>
+  <text x="61" y="474" class="body" text-anchor="start">要求 ID を誤って変更する</text>
+  <text x="444" y="446" class="body teal" text-anchor="start">実行テスト  ·  tests/Main.kt</text>
+  <text x="444" y="474" class="body" text-anchor="start">結果、要求 ID、要求回数を照合</text>
+  <text x="40" y="530" class="small" text-anchor="start">JVM 版の verify.sh は Kotlin のコンパイルと実行で検査します。</text>
+</svg>

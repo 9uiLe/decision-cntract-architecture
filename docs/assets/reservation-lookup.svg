@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="592" viewBox="0 0 800 592" role="img" aria-labelledby="title description">
+  <title id="title">予約要求の応答が失われたとき</title>
+  <desc id="description">ViewModel から送信後、予約作成の応答が失われます。利用者が照会を選ぶと、Core は元の要求 ID を使い、予約の成立を受け取ります。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
+    .title { font-size: 31px; font-weight: 700; }
+    .label { font-size: 23px; font-weight: 700; }
+    .body { font-size: 19px; }
+    .small { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="592" rx="20" fill="#f8fafc"/>
+  <text x="40" y="57" class="title" text-anchor="start">予約要求の応答が失われたとき</text>
+  <rect x="34" y="86" width="152" height="45" rx="12" fill="#eff6ff" stroke="#93b5f2"/>
+  <text x="110" y="115" class="body" text-anchor="middle">ViewModel</text>
+  <path d="M110 131V557" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 6"/>
+  <rect x="224" y="86" width="152" height="45" rx="12" fill="#eff6ff" stroke="#93b5f2"/>
+  <text x="300" y="115" class="body" text-anchor="middle">予約 Core</text>
+  <path d="M300 131V557" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 6"/>
+  <rect x="424" y="86" width="152" height="45" rx="12" fill="#eff6ff" stroke="#93b5f2"/>
+  <text x="500" y="115" class="body" text-anchor="middle">Adapter</text>
+  <path d="M500 131V557" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 6"/>
+  <rect x="614" y="86" width="152" height="45" rx="12" fill="#eff6ff" stroke="#93b5f2"/>
+  <text x="690" y="115" class="body" text-anchor="middle">予約サービス</text>
+  <path d="M690 131V557" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 6"/>
+  <path d="M110 169H296" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="205.0" y="161" class="small" text-anchor="middle">確認済みの内容で送信</text>
+  <path d="M300 204H496" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="400.0" y="196" class="small" text-anchor="middle">予約作成を要求</text>
+  <path d="M500 239H686" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="595.0" y="231" class="small" text-anchor="middle">要求 ID と予約内容</text>
+  <path d="M500 274H304" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+  <text x="400.0" y="266" class="small" text-anchor="middle">予約作成の応答喪失</text>
+  <path d="M300 309H114" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+  <text x="205.0" y="301" class="small" text-anchor="middle">結果不明・照会可能</text>
+  <path d="M110 372H296" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="205.0" y="364" class="small" text-anchor="middle">利用者が照会を選ぶ</text>
+  <path d="M300 407H496" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="400.0" y="399" class="small" text-anchor="middle">元の要求 ID で照会</text>
+  <path d="M500 442H686" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="595.0" y="434" class="small" text-anchor="middle">予約結果を取得</text>
+  <path d="M690 477H504" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+  <text x="595.0" y="469" class="small" text-anchor="middle">元の予約が成立</text>
+  <path d="M500 512H304" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+  <text x="400.0" y="504" class="small" text-anchor="middle">成立を観測</text>
+  <path d="M300 547H114" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+  <text x="205.0" y="539" class="small" text-anchor="middle">予約確定</text>
+  <text x="40" y="578" class="small" text-anchor="start">実線は操作・要求、破線は結果・観測の通知を表します。</text>
+</svg>

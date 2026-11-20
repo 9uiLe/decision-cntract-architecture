@@ -2,6 +2,13 @@
 
 判断契約は、業務操作に必要な前提、その操作が返す結果、結果ごとに許される操作を定めます。定員制ワークショップを例に、判断を誰が担い、結果を受け取る側の対応漏れをどこで検出するかを説明します。
 
+## サンプルを図で読む
+
+| サンプル | 図解 | 実行手順 |
+| --- | --- | --- |
+| Kotlin/JVM | [一つの予約フローの依存関係と検査](../examples/reservation-jvm/docs/README.md) | [JVM 版のセットアップ](../examples/reservation-jvm/README.md) |
+| Android・iOS | [3つの Core の依存関係と検査](../examples/reservation-mobile/docs/README.md) | [モバイル版のセットアップ](mobile-app/setup.md) |
+
 ## 設計と基準仕様
 
 - [設計思想と判断契約](architecture.md)
@@ -13,7 +20,6 @@
 - [予約の作成・照会・取消](mobile-app/screens.md#予約の作成照会取消)
 - [来場受付](mobile-app/check-in.md)
 - [画面と操作](mobile-app/screens.md)
-- [Android・iOS の実行手順](mobile-app/setup.md)
 
 ## 仕様変更の検証
 
@@ -25,5 +31,6 @@
 - [L. 資格サービスの形式を変更する](experiments/l-qualification-wire-format.md)
 - [比較 C1〜C3. 判断契約の制約を弱める](experiments/contract-comparisons.md)
 - [検証記録](mobile-app/verification-results.md)
+- [detekt の運用ルール](detekt-rules.md)
 
 設計の由来は `usapo-type-driven-design`、ワークショップ予約の題材と変更課題の由来は `dca-mobile-product-spec` です。上の文書に、このリポジトリのアプリを理解して実行するための仕様と確認手順を記載しています。

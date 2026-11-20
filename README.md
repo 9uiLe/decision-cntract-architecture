@@ -8,7 +8,7 @@ Decision Contract Architecture（DCA）は、仕様を変更したときに見�
 
 | 読む場所 | 内容 |
 | --- | --- |
-| [設計と検証](docs/README.md) | 判断契約、3つの Core、仕様変更の検証 |
-| [運用ルール](docs/detekt-rules.md) | 汎用の detekt ルールと予約アプリ固有の検査 |
-| [検証アプリを実行](docs/mobile-app/setup.md) | Android・iOS の予約・来場受付アプリのビルド、実行、検査 |
-| [サンプルコード](examples/README.md) | Kotlin/JVM の最小例と Android・iOS の検証アプリのソース |
+| [JVM 版の図解](examples/reservation-jvm/docs/README.md) | 一つの予約フローで、前提の型とテストが検知する違いを見る |
+| [モバイル版の図解](examples/reservation-mobile/docs/README.md) | 3つの Core の依存関係と、仕様変更を検知する箇所を見る |
+| [サンプルを実行する](examples/README.md) | JVM 版と Android・iOS 版のセットアップを選ぶ |
+| [ドキュメント索引](docs/README.md) | DCA の設計、モバイル版の仕様、変更実験、detekt のルールを探す |

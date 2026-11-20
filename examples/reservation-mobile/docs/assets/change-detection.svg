@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="630" viewBox="0 0 800 630" role="img" aria-labelledby="title description">
+  <title id="title">仕様変更を検知した箇所</title>
+  <desc id="description">HからLは同じ基準仕様から個別に行った変更実験です。各行は変更、Kotlinコンパイラが停止した箇所、対応後テストの順です。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
+    .title { font-size: 31px; font-weight: 700; }
+    .label { font-size: 23px; font-weight: 700; }
+    .body { font-size: 19px; }
+    .small { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="630" rx="20" fill="#f8fafc"/>
+  <text x="40" y="57" class="title" text-anchor="start">仕様変更を検知した箇所</text>
+  <text x="40" y="91" class="small" text-anchor="start">各実験は同じ基準仕様から始めます。</text>
+  <text x="48" y="129" class="small" text-anchor="start">仕様変更</text>
+  <text x="220" y="129" class="small blue" text-anchor="start">コンパイルが止まる箇所</text>
+  <text x="514" y="129" class="small teal" text-anchor="start">対応後にテストする振る舞い</text>
+  <rect x="40" y="145" width="720" height="78" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="49" y="176" class="body" text-anchor="start">H　参加資格</text>
+  <text x="49" y="204" class="small" text-anchor="start">一時停止を追加</text>
+  <text x="222" y="176" class="small blue" text-anchor="start">予約前の判断・資格の解釈</text>
+  <text x="222" y="204" class="small" text-anchor="start">画面への変換・拒否理由の表示</text>
+  <text x="515" y="176" class="small teal" text-anchor="start">一時停止中の予約作成は0回</text>
+  <text x="515" y="204" class="small" text-anchor="start">成立済み予約は受付可能</text>
+  <path d="M209 160V208" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M502 160V208" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="40" y="238" width="720" height="78" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="49" y="269" class="body" text-anchor="start">I　来場受付</text>
+  <text x="49" y="297" class="small" text-anchor="start">来場時の資格再確認</text>
+  <text x="222" y="269" class="small blue" text-anchor="start">ViewModel の受付呼び出し</text>
+  <text x="222" y="297" class="small" text-anchor="start">拒否理由を選ぶ Messages</text>
+  <text x="515" y="269" class="small teal" text-anchor="start">要資格の予約は有資格者のみ</text>
+  <text x="515" y="297" class="small" text-anchor="start">資格不要の成立予約も受付</text>
+  <path d="M209 253V301" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M502 253V301" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="40" y="331" width="720" height="78" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="49" y="362" class="body" text-anchor="start">J　予約</text>
+  <text x="49" y="390" class="small" text-anchor="start">利用停止を追加</text>
+  <text x="222" y="362" class="small blue" text-anchor="start">現在の予約を調べる admission</text>
+  <text x="222" y="390" class="small" text-anchor="start">利用停止の説明を選ぶ処理</text>
+  <text x="515" y="362" class="small teal" text-anchor="start">停止後の新規受付は0回</text>
+  <text x="515" y="390" class="small" text-anchor="start">停止前の受付と予約履歴を保持</text>
+  <path d="M209 346V394" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M502 346V394" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="40" y="424" width="720" height="78" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="49" y="455" class="body" text-anchor="start">K　予約</text>
+  <text x="49" y="483" class="small" text-anchor="start">新規予約に資格必須</text>
+  <text x="222" y="455" class="small blue" text-anchor="start">ViewModel の確認操作に残った</text>
+  <text x="222" y="483" class="small" text-anchor="start">廃止した呼び出し2箇所</text>
+  <text x="515" y="455" class="small teal" text-anchor="start">通常回にも資格が必要</text>
+  <text x="515" y="483" class="small" text-anchor="start">成立済み予約は受付可能</text>
+  <path d="M209 439V487" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M502 439V487" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="40" y="517" width="720" height="78" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="49" y="548" class="body" text-anchor="start">L　資格サービス</text>
+  <text x="49" y="576" class="small" text-anchor="start">応答形式を変更</text>
+  <text x="222" y="548" class="small blue" text-anchor="start">Adapter 内の旧フィールドを</text>
+  <text x="222" y="576" class="small" text-anchor="start">引数で指定する箇所</text>
+  <text x="515" y="548" class="small teal" text-anchor="start">旧・新形式を同じ観測へ</text>
+  <text x="515" y="576" class="small" text-anchor="start">不正な期限は有効にしない</text>
+  <path d="M209 532V580" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M502 532V580" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+</svg>

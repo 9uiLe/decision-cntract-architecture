@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="469" viewBox="0 0 800 469" role="img" aria-labelledby="title description">
+  <title id="title">JVM 版のモジュール依存</title>
+  <desc id="description">Core は予約結果と Port を定義。UI は Core を参照し、テストは両方を参照して FakePort を注入します。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
+    .title { font-size: 31px; font-weight: 700; }
+    .label { font-size: 23px; font-weight: 700; }
+    .body { font-size: 19px; }
+    .small { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="469" rx="20" fill="#f8fafc"/>
+  <text x="40" y="57" class="title" text-anchor="start">JVM 版のモジュール依存</text>
+  <text x="40" y="90" class="small" text-anchor="start">矢印の先がコンパイル時の依存先</text>
+  <rect x="40" y="121" width="300" height="100" rx="12" fill="#eff6ff" stroke="#93b5f2"/>
+  <text x="62" y="156" class="code blue" text-anchor="start">dca-tests</text>
+  <text x="62" y="191" class="body" text-anchor="start">Core を組み立てて実行</text>
+  <rect x="460" y="121" width="300" height="100" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="482" y="156" class="code" text-anchor="start">dca-ui</text>
+  <text x="482" y="191" class="body" text-anchor="start">予約結果を画面状態に変換</text>
+  <rect x="40" y="298" width="720" height="124" rx="12" fill="#ecfdf5" stroke="#88cbbd"/>
+  <text x="62" y="338" class="code teal" text-anchor="start">dca-core</text>
+  <text x="62" y="377" class="body" text-anchor="start">前提の発行、送信、照会、再試行</text>
+  <rect x="497" y="325" width="240" height="71" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="617" y="356" class="code" text-anchor="middle">ReservationPort</text>
+  <text x="617" y="381" class="small" text-anchor="middle">外部サービスとの契約</text>
+  <path d="M340 172H455" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M190 221V293" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M610 221V293" fill="none" stroke="#47647b" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="40" y="450" class="small" text-anchor="start">dca-tests の FakePort が ReservationPort を実装します。</text>
+</svg>

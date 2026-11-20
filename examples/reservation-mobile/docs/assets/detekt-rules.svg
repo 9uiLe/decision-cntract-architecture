@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="652" viewBox="0 0 800 652" role="img" aria-labelledby="title description">
+  <title id="title">detekt が制限するコード</title>
+  <desc id="description">汎用ルールは網羅性、発行を制限する型の作り方と必須引数、組み立て関数の呼び出し元を検査します。予約固有ルールは各 Port の呼び出し元を所有 Core に限定します。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#47647b"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans CJK JP", "Yu Gothic", Meiryo, sans-serif; fill: #142638; }
+    .title { font-size: 31px; font-weight: 700; }
+    .label { font-size: 23px; font-weight: 700; }
+    .body { font-size: 19px; }
+    .small { font-size: 17px; fill: #475569; }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 19px; }
+    .blue { fill: #1d4ed8; }
+    .teal { fill: #0f766e; }
+  </style>
+  <rect width="800" height="652" rx="20" fill="#f8fafc"/>
+  <text x="40" y="57" class="title" text-anchor="start">detekt が制限するコード</text>
+  <text x="40" y="91" class="small" text-anchor="start">型解決付きの detekt タスクで dca.yml の設定を読みます。</text>
+  <rect x="40" y="121" width="720" height="302" rx="12" fill="#eff6ff" stroke="#93b5f2"/>
+  <text x="62" y="162" class="label blue" text-anchor="start">汎用ルール</text>
+  <text x="62" y="211" class="code" text-anchor="start">ExhaustiveDecisionWhen</text>
+  <text x="411" y="211" class="small" text-anchor="start">判断型を分岐する when の else</text>
+  <path d="M62 229H737" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="62" y="266" class="code" text-anchor="start">IssuedEvidenceConstruction</text>
+  <text x="411" y="266" class="small" text-anchor="start">発行対象の型の公開コンストラクタなど</text>
+  <path d="M62 284H737" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="62" y="321" class="code" text-anchor="start">RequiredEvidenceParameter</text>
+  <text x="411" y="321" class="small" text-anchor="start">発行対象の公開引数の省略や null</text>
+  <path d="M62 339H737" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="62" y="376" class="code" text-anchor="start">RestrictedCompositionCall</text>
+  <text x="411" y="376" class="small" text-anchor="start">許可範囲外からの組み立て関数の利用</text>
+  <rect x="40" y="448" width="720" height="164" rx="12" fill="#ecfdf5" stroke="#88cbbd"/>
+  <text x="62" y="489" class="label teal" text-anchor="start">予約固有ルール</text>
+  <text x="62" y="537" class="body" text-anchor="start">参加資格 Core</text>
+  <text x="62" y="583" class="small" text-anchor="start">EligibilityPortCall</text>
+  <text x="300" y="537" class="body" text-anchor="start">予約 Core</text>
+  <text x="300" y="583" class="small" text-anchor="start">ReservationPortCall</text>
+  <text x="532" y="537" class="body" text-anchor="start">来場受付 Core</text>
+  <text x="532" y="583" class="small" text-anchor="start">CheckInPortCall</text>
+  <path d="M273 519V590" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <path d="M505 519V590" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="40" y="636" class="small" text-anchor="start">予約固有ルールは、各 Port の操作を呼べる Core を検査します。</text>
+</svg>

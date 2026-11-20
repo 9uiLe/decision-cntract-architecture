@@ -2,6 +2,8 @@
 
 定員制ワークショップ予約を題材に、結果の違いが次の操作にどう反映されるかを JVM で確かめます。
 
+[依存関係と検査の図解](docs/README.md)
+
 画面を操作して予約を検証する場合は、[Android・iOS の検証アプリ](../../docs/mobile-app/setup.md)を使ってください。
 
 開発シェルの対象は Apple Silicon の macOS、および arm64 と x86-64 の Linux です。
