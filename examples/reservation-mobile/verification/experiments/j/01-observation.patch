@@ -1,0 +1,10 @@
+--- a/core/reservation-core/src/commonMain/kotlin/example/reservation/core/Port.kt
++++ b/core/reservation-core/src/commonMain/kotlin/example/reservation/core/Port.kt
+@@ -28,6 +28,7 @@
+ sealed interface UsageObservation {
+     data object Active : UsageObservation
+     data object Cancelled : UsageObservation
++    data object Suspended : UsageObservation
+     data object NotFound : UsageObservation
+     data object Failed : UsageObservation
+ }

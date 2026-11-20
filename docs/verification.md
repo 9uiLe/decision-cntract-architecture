@@ -15,7 +15,7 @@
 
 ## 予約アプリで評価する変更
 
-課題ごとに基準仕様を起点として、変更後に見直す箇所を確認します。付属の Kotlin/JVM サンプルでは、課題 A のうち画面状態への変換を検証できます。課題 F の実行結果は検証記録にあり、B〜E と G は表に確認項目を示します。[サンプルの実行手順](../examples/README.md) · [検証記録](product/verification-results.md)
+課題ごとに基準仕様を起点として、変更後に見直す箇所を確認します。付属の Kotlin/JVM サンプルでは、課題 A のうち画面状態への変換を検証できます。課題 F の実行結果は検証記録にあり、B〜E と G は表に確認項目を示します。[サンプルの実行手順](../examples/reservation-jvm/README.md) · [検証記録](mobile-app/verification-results.md)
 
 | 課題 | 見直しを求める場所と確認方法 |
 | --- | --- |
@@ -31,14 +31,14 @@
 
 ## 3つの Core を使う変更実験
 
-[課題 H〜L](README.md#仕様変更の検証)は、それぞれ同じ基準仕様に適用します。[実行スクリプト](../product/experiments/run.py)は作業ツリーのアプリをコピーし、実験ごとに別の一時ディレクトリで差分を適用します。各段階でコンパイル診断やテスト結果を記録します。
+[課題 H〜L](README.md#仕様変更の検証)は、それぞれ同じ基準仕様に適用します。[実行スクリプト](../examples/reservation-mobile/verification/experiments/run.py)は作業ツリーのアプリをコピーし、実験ごとに別の一時ディレクトリで差分を適用します。各段階でコンパイル診断やテスト結果を記録します。
 
 Android 用の Nix シェルを使い、リポジトリのルートから実行します。`all` を `h`、`i`、`j`、`k`、`l` のいずれかに変えると、その課題だけを実行できます。
 
 ```sh
-python3 product/experiments/run.py all --evidence runs/experiments
+python3 examples/reservation-mobile/verification/experiments/run.py all --evidence runs/experiments
 ```
 
-実際に確認した結果は [検証記録](product/verification-results.md) を参照してください。
+実際に確認した結果は [検証記録](mobile-app/verification-results.md) を参照してください。
 
 制約ごとの検出力を確かめるには、[比較 C1〜C3](experiments/contract-comparisons.md) を実行します。たとえば、網羅性を `else` で弱める比較では、Kotlin のコンパイルが成功してから detekt の診断を確認します。

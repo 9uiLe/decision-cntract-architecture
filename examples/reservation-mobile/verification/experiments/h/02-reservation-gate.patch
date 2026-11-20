@@ -1,0 +1,10 @@
+--- a/core/reservation-core/src/commonMain/kotlin/example/reservation/core/ReservationCore.kt
++++ b/core/reservation-core/src/commonMain/kotlin/example/reservation/core/ReservationCore.kt
+@@ -395,6 +395,7 @@
+                 } else {
+                     Readiness.NotReady
+                 }
++            EligibilityOutcome.Suspended -> Readiness.NotReady
+             EligibilityOutcome.NotHeld, EligibilityOutcome.Expired, EligibilityOutcome.Unknown -> Readiness.NotReady
+         }
+ 

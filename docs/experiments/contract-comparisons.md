@@ -12,7 +12,7 @@ C1 は H の資格結果を追加して上流の予約判断に対応した状�
 
 ## 実行
 
-Android 用 Nix シェルで `product/` に移動し、次を実行します。
+Android 用 Nix シェルで `examples/reservation-mobile/` に移動し、次を実行します。
 
 ```sh
 ./gradlew verifyComparisons
@@ -21,7 +21,7 @@ Android 用 Nix シェルで `product/` に移動し、次を実行します。
 一つだけ実行する場合は、リポジトリのルートで実験 ID を指定します。
 
 ```sh
-python3 product/experiments/run.py c1 --evidence runs/contract-comparisons/c1
+python3 examples/reservation-mobile/verification/experiments/run.py c1 --evidence runs/contract-comparisons/c1
 ```
 
-各実験の `steps.json` に対象、ステップと期待診断を記載しています。Gradle タスクは `product/build/reports/contract-comparisons/` に実行時のソース識別情報、ログ、診断を保存します。[実験の定義](../../product/experiments/) · [検証記録](../product/verification-results.md)
+各実験の `steps.json` に対象、ステップと期待診断を記載しています。Gradle タスクは `examples/reservation-mobile/build/reports/contract-comparisons/` に実行時のソース識別情報、ログ、診断を保存します。[実験の定義](../../examples/reservation-mobile/verification/experiments/) · [検証記録](../mobile-app/verification-results.md)

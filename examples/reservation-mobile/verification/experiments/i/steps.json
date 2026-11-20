@@ -1,0 +1,69 @@
+{
+  "changes": [
+    "core/checkin-core",
+    "ui",
+    "shared",
+    "adapter-simulator/src/commonTest",
+    "verification/conformance/src/test/kotlin/example/reservation/conformance/ModuleBoundaryTest.kt",
+    "verification/compile-contracts/src/test/fixtures/accept/LegitimateUsage.kt",
+    "verification/compile-contracts/src/test/fixtures/reject/ForgeCheckInTicket.kt",
+    "verification/conformance/src/main/kotlin/example/reservation/conformance/violations/CompositionViolations.kt",
+    "verification/compile-contracts/src/test/fixtures/reject/CheckInWithCurrentAdmission.kt",
+    "verification/compile-contracts/src/test/fixtures/reject/RawIdentifiersToCheckIn.kt"
+  ],
+  "steps": [
+    {
+      "name": "00-baseline",
+      "gradle": [
+        ":ui:compileKotlinJvm",
+        ":adapter-simulator:jvmTest",
+        ":reservation-core:jvmTest",
+        ":eligibility-core:jvmTest",
+        ":checkin-core:jvmTest"
+      ],
+      "requiredTests": {
+        "adapter-simulator:example.adapter.simulator.AcceptanceTest": 1,
+        "reservation-core:example.reservation.core.ReservationCoreTest": 24
+      }
+    },
+    {
+      "name": "01-old-check-in-call",
+      "patches": [
+        "01-check-in-contract.patch"
+      ],
+      "gradle": [
+        ":ui:compileKotlinJvm"
+      ],
+      "diagnostics": [
+        "e:\\ ui/src/commonMain/kotlin/example/reservation/ui/Messages\\.kt:93:45\\ \\[NO_ELSE_IN_WHEN\\].*",
+        "e:\\ ui/src/commonMain/kotlin/example/reservation/ui/ReservationViewModel\\.kt:74:111\\ \\[ARGUMENT_TYPE_MISMATCH\\].*"
+      ]
+    },
+    {
+      "name": "02-fixed",
+      "gradle": [
+        ":shared:compileKotlinJvm",
+        ":adapter-simulator:jvmTest",
+        ":reservation-core:jvmTest",
+        ":eligibility-core:jvmTest",
+        ":checkin-core:jvmTest",
+        ":compile-contracts:test",
+        ":conformance:testDebugUnitTest",
+        ":ui:detektMainJvm",
+        ":checkin-core:detektMainJvm"
+      ],
+      "patches": [
+        "02-check-in-ui.patch",
+        "03-connect-authority.patch",
+        "04-runtime-scenarios.patch",
+        "05-adapt-existing-callers.patch",
+        "06-architecture-contract.patch"
+      ],
+      "requiredTests": {
+        "adapter-simulator:example.adapter.simulator.RequalifyOnArrivalExperimentTest": 4,
+        "reservation-core:example.reservation.core.ReservationCoreTest": 24,
+        "checkin-core:example.checkin.core.CheckInCoreTest": 1
+      }
+    }
+  ]
+}

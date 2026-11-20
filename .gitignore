@@ -1,8 +1,10 @@
 .DS_Store
-/product/.gradle/
-/product/.kotlin/
-/product/**/build/
-/product/local.properties
-/product/iosApp/DcaApp.xcodeproj/
-/product/iosApp/DcaApp/Info.plist
+/examples/reservation-mobile/.gradle/
+/examples/reservation-mobile/.kotlin/
+/examples/reservation-mobile/**/build/
+/examples/reservation-mobile/local.properties
+/examples/reservation-mobile/iosApp/DcaApp.xcodeproj/
+/examples/reservation-mobile/iosApp/DcaApp/Info.plist
 /runs/
+# 移動前のローカルビルドの生成物
+/product/

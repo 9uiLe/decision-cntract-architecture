@@ -5,15 +5,15 @@
 ## 設計と基準仕様
 
 - [設計思想と判断契約](architecture.md)
-- [モバイルアプリへの適用](android.md)
-- [3つの Core の判断契約と依存関係](product/core-contracts.md)
-- [判断済みの値が使える時点](product/contract-evidence.md)
-- [検証アプリの技術選定](product/technology.md)
-- [参加資格](product/qualification.md)
-- [予約の作成・照会・取消](product/screens.md#予約の作成照会取消)
-- [来場受付](product/check-in.md)
-- [画面と操作](product/screens.md)
-- [Android・iOS の実行手順](android-product.md)
+- [モバイルアプリへの適用](mobile-app/architecture.md)
+- [3つの Core の判断契約と依存関係](mobile-app/core-contracts.md)
+- [判断済みの値が使える時点](mobile-app/contract-evidence.md)
+- [検証アプリの技術選定](mobile-app/technology.md)
+- [参加資格](mobile-app/qualification.md)
+- [予約の作成・照会・取消](mobile-app/screens.md#予約の作成照会取消)
+- [来場受付](mobile-app/check-in.md)
+- [画面と操作](mobile-app/screens.md)
+- [Android・iOS の実行手順](mobile-app/setup.md)
 
 ## 仕様変更の検証
 
@@ -24,6 +24,6 @@
 - [K. 資格不要の新規予約を廃止する](experiments/k-required-qualification.md)
 - [L. 資格サービスの形式を変更する](experiments/l-qualification-wire-format.md)
 - [比較 C1〜C3. 判断契約の制約を弱める](experiments/contract-comparisons.md)
-- [検証記録](product/verification-results.md)
+- [検証記録](mobile-app/verification-results.md)
 
 設計の由来は `usapo-type-driven-design`、ワークショップ予約の題材と変更課題の由来は `dca-mobile-product-spec` です。上の文書に、このリポジトリのアプリを理解して実行するための仕様と確認手順を記載しています。
