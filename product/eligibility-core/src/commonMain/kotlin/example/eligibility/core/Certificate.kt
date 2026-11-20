@@ -5,7 +5,7 @@ import example.kernel.IssuedEvidence
 import example.kernel.ParticipantId
 
 // 構築は eligibility-core だけが行う。確認した時点は記録として公開するが、期限は公開しない。
-// 利用側は期限や確認時刻から有効性を判断せず、鮮度の再確認を EligibilityAuthority.verify に委ねる。
+// 期限は eligibility-core が判定する。利用側は checkedAt を再確認の呼び出し区間と照合する。
 @IssuedEvidence
 class EligibilityCertificate internal constructor(
     val participant: ParticipantId,

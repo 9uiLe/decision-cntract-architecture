@@ -10,6 +10,7 @@
 - [判断済みの値が使える時点](product/contract-evidence.md)
 - [検証アプリの技術選定](product/technology.md)
 - [参加資格](product/qualification.md)
+- [予約の作成・照会・取消](product/screens.md#予約の作成照会取消)
 - [来場受付](product/check-in.md)
 - [画面と操作](product/screens.md)
 - [Android・iOS の実行手順](android-product.md)
@@ -25,4 +26,4 @@
 - [比較 C1〜C3. 判断契約の制約を弱める](experiments/contract-comparisons.md)
 - [検証記録](product/verification-results.md)
 
-設計の出典は隣接する `usapo-type-driven-design` の `01-design-intent.md` から `13-verification.md` です。予約の詳細要件と変更課題の出典は、隣接する `dca-mobile-product-spec` の `product/requirements/`、`experiments/`、`dca-multi-core-implementation-prompt.md` です。
+設計の由来は `usapo-type-driven-design`、ワークショップ予約の題材と変更課題の由来は `dca-mobile-product-spec` です。上の文書に、このリポジトリのアプリを理解して実行するための仕様と確認手順を記載しています。

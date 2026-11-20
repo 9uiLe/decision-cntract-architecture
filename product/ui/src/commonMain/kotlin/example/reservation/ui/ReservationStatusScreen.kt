@@ -76,7 +76,7 @@ fun RequestCardContent(
         }
         is RequestCard.NotCreated -> StatusCard(
             tag = "request-not-created", label = "未成立が確定", card.summary,
-            description = "予約は作成されていません。受付時間内であれば、同じ内容でもう一度送信できます。" +
+            description = "予約は作成されていません。開催回の開始前なら、同じ内容でもう一度送信できます。" +
                 (card.denial?.let { "\n${createDenialMessage(it)}" } ?: ""),
         ) {
             Button(
@@ -103,14 +103,14 @@ fun RequestCardContent(
             ) { Text("別の開催回を選ぶ") }
         }
         is RequestCard.EligibilityLost -> StatusCard(
-            tag = "request-eligibility-lost", label = "資格を満たしていません", card.summary,
-            description = "${eligibilityLostMessage(card.reason)}予約要求は送信していません。資格を確認し直してください。",
+            tag = "request-eligibility-lost", label = "資格の再確認が必要です", card.summary,
+            description = "${eligibilityLostMessage(card.reason)}予約要求は送信していません。開催回を選んで、資格を確認し直してください。",
             emphasis = Emphasis.Caution,
         ) {
             OutlinedButton(
                 onClick = onChooseAgain,
                 modifier = Modifier.fillMaxWidth().testTag("choose-again-button"),
-            ) { Text("資格を確認し直す") }
+            ) { Text("開催回の一覧に戻る") }
         }
     }
 }

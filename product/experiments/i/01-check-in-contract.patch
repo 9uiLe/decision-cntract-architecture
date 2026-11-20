@@ -81,7 +81,7 @@
          return CheckInAcceptance.Accepted
      }
  
-     // 処理中を確保した後で予約の現在の状態を確かめる。戻ったら、対象と時刻を取り直してから受付を要求する。
+     // 照会中に受付時間が終わる場合があるため、受付作成前に時刻を確認し直す。
 -    private suspend fun proceed(key: CheckInKey, operation: Long, requested: ReservationAdmission) {
 +    private suspend fun proceed(
 +        key: CheckInKey,

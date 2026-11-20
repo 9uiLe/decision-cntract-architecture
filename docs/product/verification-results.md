@@ -1,6 +1,6 @@
 # 検証記録
 
-[基準仕様](core-contracts.md)は、参加資格、予約、来場受付の3つの Core を使います。課題 H〜L は基準仕様のコピーに個別に適用します。通常のアプリは基準仕様で動作します。
+コミット `30f5e84` の[基準仕様](core-contracts.md)と、そこから個別に実行した変更実験・比較実験の結果です。
 
 ## 基準仕様
 
@@ -15,7 +15,7 @@
 
 受付では、別の予約にしか含まれない参加者と、予約が結果不明の参加者について作成要求が発生しないことを確認しました。開催72時間前に成立して48時間前に取り消した予約は、開催20分前の受付時間内に古い参加者情報を渡しても、受付要求と記録が増えません。取消の応答を失った場合も、サービスの現在状態を使います。予約時に2人とも資格があり、来場時には一方が失効している場合、基準仕様では2人とも受け付けられます。
 
-初版からの [課題 A〜G](../verification.md#予約アプリで評価する変更) のうち、独立した Kotlin/JVM サンプルで A の投影の診断を再確認しました。正例9件、誤用4件、結果を追加した場合の `NO_ELSE_IN_WHEN` です。B〜E と G はリンク先に受入条件を記載しています。G はプロセス終了をまたぐ復元を追加する独立課題です。
+[Kotlin/JVM サンプル](../../examples/README.md)では、正例9件、誤用4件、課題 A の画面状態への変換で `NO_ELSE_IN_WHEN` を確認しました。F の結果は上の表にあります。[課題 A〜G の確認項目](../verification.md#予約アプリで評価する変更)
 
 ## OS ごとの操作
 
@@ -48,9 +48,9 @@
 
 比較の外側では、期待する失敗だけが起きたことを照合します。各比較の実行方法は [判断契約の制約を弱める比較](../experiments/contract-comparisons.md) にあります。
 
-## 再実行と証拠
+## 再現手順
 
-Android 用の Nix シェルで基準仕様を検査します。iOS のビルドは Xcode とシミュレーターがある macOS で行います。[実行手順](../android-product.md)
+Android 用の Nix シェルで基準仕様を検査します。iOS のビルドは Xcode とシミュレーターがある macOS で行います。Nix シェル内の `DEVELOPER_DIR` は実行手順に沿って設定してください。[実行手順](../android-product.md#ビルド時の検査を実行する)
 
 ```sh
 cd product
@@ -58,12 +58,6 @@ cd product
   :shared:linkDebugFrameworkIosSimulatorArm64 :shared:linkDebugFrameworkIosArm64
 ```
 
-[変更実験の段階と期待診断](../../product/experiments/run.py) は `product/experiments/{h,i,j,k,l}/steps.json` に記録しています。リポジトリのルートから次のコマンドを実行すると、診断、成功したテスト、許容した変更範囲を再確認できます。
-
-```sh
-python3 product/experiments/run.py all --evidence runs/dca-improvement/experiments
-```
-
-今回のローカル実行結果は `runs/dca-improvement/` にあります。基準版の検査は `final-baseline-check.log`、H〜L は `experiments/`、C1〜C3 は `verifyComparisons.log`、両 OS の画面と要求回数は `ui/` に記録しました。構成図は [Core の判断契約](core-contracts.md) にあります。
+H〜L の段階と期待する診断は、[変更実験の各 `steps.json`](../../product/experiments/) に記載しています。実行すると、診断、成功したテスト、変更範囲が指定した出力先に保存されます。[変更実験の実行手順](../verification.md#3つの-core-を使う変更実験) · [比較実験の実行手順](../experiments/contract-comparisons.md#実行)
 
 端末での検証はエミュレーターとシミュレーターでの操作です。実機での操作と Compose の自動 UI テストは未実施です。外部サービスの観測はシミュレーターの記録に基づきます。

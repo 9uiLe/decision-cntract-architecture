@@ -2,7 +2,7 @@
 
 定員制ワークショップ予約を題材に、結果の違いが次の操作にどう反映されるかを JVM で確かめます。
 
-画面を操作して予約を検証する場合は、[Android の検証用アプリ](../docs/android-product.md)を使ってください。
+画面を操作して予約を検証する場合は、[Android・iOS の検証アプリ](../docs/android-product.md)を使ってください。
 
 開発シェルの対象は Apple Silicon の macOS、および arm64 と x86-64 の Linux です。
 
@@ -14,8 +14,6 @@
    kotlinc -version
    java -version
    ```
-
-`flake.nix` をまだ Git に追加していない場合は、`develop` の引数に `path:.` を指定してください。[Nix の Flake の扱い](https://nix.dev/concepts/flakes.html)
 
 ## 予約の判断契約を検証する
 
@@ -39,4 +37,4 @@ bash examples/reservation/verify.sh
 | 結果を画面状態に変換する網羅的な分岐 | [Projection.kt](reservation/ui/Projection.kt) |
 | 正規の呼び出しと、拒否されることを確かめる呼び出し | [試験シナリオ](reservation/tests/Main.kt)、[コンパイル負例](reservation/reject/) |
 
-サンプルは外部サービスをテスト用の実装に置き換え、開催回を選んだ後の一つの予約フローを Kotlin/JVM で同期的に実行します。再試行は同じフローの操作です。開催回や参加内容を選び直す場合は、別のフローを開始する想定です。実アプリで確認する項目は[予約プロダクトの検証計画](../docs/verification.md)を参照してください。対象には Android の画面とライフサイクル、同時操作や再入、取消、永続化が含まれます。
+サンプルはテスト用の外部サービスを使い、開催回を選んだ後の一つの予約フローを Kotlin/JVM で同期的に実行します。再試行は同じフローの操作です。開催回や参加内容を選び直す場合は、別のフローを開始する想定です。検証アプリで扱う範囲と、プロセス終了後の復元を含む変更課題は[仕様変更を使った検証](../docs/verification.md)を参照してください。

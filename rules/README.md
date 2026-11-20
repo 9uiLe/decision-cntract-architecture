@@ -9,11 +9,13 @@
 | ルール | 検出条件 | 許可するコード |
 | --- | --- | --- |
 | `ExhaustiveDecisionWhen` | 指定した注釈の付いた型を対象とする `when` が `else` を持つ | 全ケースを列挙した判断。外部サービスの未定義コードを扱う分岐 |
-| `IssuedEvidenceConstruction` | 発行の対象として指定した型に、公開コンストラクタ、公開の派生経路、または `data class` の生成する `copy` がある | 発行元のモジュール内で構築する通常のクラス。派生型が閉じた階層 |
+| `IssuedEvidenceConstruction` | 指定した注釈が付いた `data class`、または同じ注釈が付いた非 `sealed` クラスの `open`・`abstract` 宣言や公開コンストラクタ | `internal` または `private` コンストラクタを持つ通常のクラス。派生型が閉じた `sealed` 階層 |
 | `RequiredEvidenceParameter` | 発行の対象として指定した型を受け取る公開操作で、その引数が既定値や `null` を許す | 呼び出し時に確認済みの値を要求する公開操作。内部状態で保持する任意の値 |
 | `RestrictedCompositionCall` | 許可したパッケージの外で、指定の組み立て関数を呼び出すか、呼び出し可能参照を取得する | 組み立てを担当するコードからの呼び出し。別の同名関数の呼び出し |
 
 シンボル解決によって、指定の型や関数を参照しているかを判定します。型エイリアスや import の別名があっても、参照先が同じなら検査対象です。許可パッケージは名前が一致するパッケージとその配下です。`example.app.composition` の許可は `example.app.compositionExtra` に及びません。[detekt の型解決](https://detekt.dev/docs/gettingstarted/type-resolution/)
+
+注釈を付けられない型は、`ExhaustiveDecisionWhen` の `decisionTypes` に完全修飾名を指定できます。`decisionFunctions` で絞り込めるのは、`decisionTypes` で指定した型を扱う関数です。指定した注釈を持つ型は、関数の設定に関係なく検査します。
 
 ## 検証アプリ固有の検査
 
@@ -27,7 +29,7 @@
 
 [dca.yml](../product/config/detekt/dca.yml) では、網羅性が必要な型に使う `@DecisionResult` と、発行を制限する型に使う `@IssuedEvidence` を指定します。宣言に付けた印を型解決で読むため、資格に基づく予約判断や画面への変換の関数名を登録する作業が不要になります。組み立ての呼び出し元は `restrictedCallables` と `allowedCallerPackages` で指定します。
 
-網羅性の規約が調べるのは、対象式を持つ `when` の `else` です。課題 H・J では、処理の実際の変更漏れを Kotlin の診断でも確かめます。構築規約はクラスの宣言を調べます。公開 API から資格の再確認を省ける互換操作が増えた場合は、実際の利用コードのコンパイルを使う比較 C3 が検出します。このプロダクトの業務判断は Core が持つため、必須 Handler の検査対象はありません。
+網羅性の規約が調べるのは、対象式を持つ `when` の `else` です。課題 H・J では、対応漏れを Kotlin の診断でも確かめます。構築の規約はクラスの宣言を検査します。比較 C3 では、課題 I の要資格受付で証明書を省略できる互換操作を加え、利用コードのコンパイル結果から制約が崩れたことを確かめます。[比較 C1〜C3](../docs/experiments/contract-comparisons.md)
 
 `./gradlew check` は、Android と JVM の型解決付きタスクを実行します。KMP の `detektMainJvm` と `detektMainAndroid` は `commonMain` も検査します。iOS の固有コードは iOS ビルドで確認します。`:conformance` の診断には検査用の違反が含まれ、テストはルール名と診断行を照合します。許可した組み立てパッケージの所有モジュール、Gradle の依存宣言、Core と UI の import を同じ検査で確認します。特に基準仕様では、来場受付 Core から参加資格 Core への参照を禁止します。
 
@@ -41,4 +43,4 @@
 | 利用側が必要な結果の違いを取得できること | `Boolean` や `null` にまとめる箇所は、受け取った側の判断まで追ってレビューする |
 | 期限の境界、照会対象、要求回数が正しいこと | 時刻や外部サービスの応答を制御したテストで確かめる |
 
-[検証アプリの実行手順](../docs/android-product.md)にビルドと検査のコマンドを記載しています。規約の設計根拠は、隣接する `usapo-type-driven-design` の `10-coding-principles.md` です。
+[検証アプリの実行手順](../docs/android-product.md)にビルドと検査のコマンドを記載しています。規約が守る前提は[設計思想と判断契約](../docs/architecture.md)を参照してください。

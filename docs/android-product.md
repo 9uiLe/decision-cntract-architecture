@@ -12,7 +12,9 @@ cd product
 ./gradlew :app:assembleDebug
 ```
 
-ほかの対応ホストでは既存の Nix シェルで JDK を用意し、Android SDK Platform 37 と Build Tools 37.0.0 をインストールした SDK を `ANDROID_HOME` に指定してください。
+端末を接続するかエミュレーターを起動し、`product/` で `adb install -r app/build/outputs/apk/debug/app-debug.apk` を実行してください。
+
+ほかの対応ホストでは [Kotlin/JVM サンプル用の Nix シェル](../examples/README.md) で JDK 21 を用意し、Android SDK Platform 37 と Build Tools 37.0.0 を含む SDK を `ANDROID_HOME` に指定してください。変更実験を実行する場合は Python 3 も必要です。
 
 Android Studio で `product/` を開き、Android 8.0（API 26）以降の端末またはエミュレーターを選んで `app` を実行してください。ランチャーに「ワークショップ予約」と「DCA 検証用の操作」が表示されます。
 
@@ -22,15 +24,17 @@ Apple Silicon の macOS では、Xcode と iOS Simulator ランタイムを用�
 
 ```sh
 nix --extra-experimental-features 'nix-command flakes' develop .#ios
+export DEVELOPER_DIR="$(env -u DEVELOPER_DIR /usr/bin/xcode-select -p)"
 cd product/iosApp
 xcodegen generate
 xcrun simctl list devices available
 ```
 
-一覧から iPhone のシミュレーターを選び、下の `<UDID>` をその ID に置き換えてビルドしてください。共通フレームワークは Xcode のビルド時に Gradle が生成します。
+共通コードの iOS Simulator ターゲットは ARM64 です。一覧から iPhone のシミュレーターを選び、下の `<UDID>` をその ID に置き換えてください。Xcode が SDK とコンパイラ、リンカーを選べるよう、ビルドコマンドでは Nix シェルの設定を外します。共通フレームワークは Xcode のビルド時に Gradle が生成します。
 
 ```sh
-xcodebuild -project DcaApp.xcodeproj -scheme DcaApp \
+env -u CC -u CXX -u LD -u SDKROOT \
+  xcodebuild -project DcaApp.xcodeproj -scheme DcaApp \
   -destination 'id=<UDID>' -derivedDataPath build build
 ```
 
@@ -49,10 +53,12 @@ xcrun simctl launch --terminate-running-process '<UDID>' example.reservation.dca
 
 ## 応答が失われた予約を照会する
 
-1. 「DCA 検証用の操作」を開き、次の予約作成の応答に「成立して応答喪失」を指定してください。
+Android ではランチャーの「DCA 検証用の操作」、iOS では `-dca-verification` を指定した起動時の「検証用の操作」タブから、サービスの応答と時刻を設定します。
+
+1. 検証用の操作を開き、「次の予約作成の応答」で「成立して応答喪失」を選びます。
 2. 「ワークショップ予約」を開き、開催回と参加者を選びます。「内容を確認する」を押し、「この内容で予約する」で送信してください。
-3. 「結果不明」が表示されたら、一覧に戻って別の開催回を選んでください。一覧の予約状況への導線から戻ると、最初に送信した開催回が表示されます。
-4. 「状況を照会する」を押してください。画面が「予約確定」になり、予約番号が表示されます。「DCA 検証用の操作」に戻ると、作成要求が1回、照会が1回、成立した予約が1件であることを確認できます。
+3. 「結果不明」が表示されたら、一覧に戻って別の開催回を選びます。一覧の「予約の状況を開く」から、最初に送信した開催回の状態を確認します。
+4. 「状況を照会する」を押します。「予約確定」と予約番号が表示されます。検証用の操作に戻り、作成要求1回、照会1回、成立した予約1件を確認します。
 
 検証用画面では、次の応答、保留の解放、開催回の開始時刻、取消期限も指定できます。シナリオを最初から試す場合は、検証用アプリのプロセスを終了して開き直してください。
 
@@ -66,9 +72,10 @@ xcrun simctl launch --terminate-running-process '<UDID>' example.reservation.dca
 
 ## ビルド時の検査を実行する
 
-`product/` で次のコマンドを実行してください。
+`product/` で `./gradlew check` を実行してください。Apple Silicon の macOS では iOS Simulator 向けのテストも実行します。Nix シェルを起動したあとに `DEVELOPER_DIR` に Xcode の場所を設定してください。`xcode-select` が Xcode を選んでいる環境では次のコマンドで設定できます。
 
 ```sh
+export DEVELOPER_DIR="$(env -u DEVELOPER_DIR /usr/bin/xcode-select -p)"
 ./gradlew check
 ```
 

@@ -16,7 +16,7 @@ fun rejectionMessage(rejection: Rejection): String = when (rejection) {
     Rejection.Stale -> "画面の内容が古くなっています。最新の状態を確認してください。"
     Rejection.Busy -> "処理中、または結果を確認できていない予約操作があります。先にその状況を確認してください。"
     Rejection.RegistrationClosed -> "この開催回は受付を終了しています。別の開催回を選んでください。"
-    Rejection.CancellationClosed -> "取消期限（開始の24時間前）を過ぎているため取り消せません。予約は維持されています。"
+    Rejection.CancellationClosed -> "取消期限（開始の24時間前）に達しているため取り消せません。予約は維持されています。"
     Rejection.QualificationNotRequired -> "この開催回では資格の確認は必要ありません。"
     Rejection.NoParticipants -> "参加者を選んでください。"
 }
