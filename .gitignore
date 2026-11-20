@@ -1,1 +1,6 @@
 .DS_Store
+/product/.gradle/
+/product/.kotlin/
+/product/**/build/
+/product/local.properties
+/runs/

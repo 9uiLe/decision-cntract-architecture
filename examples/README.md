@@ -2,6 +2,8 @@
 
 定員制ワークショップ予約を題材に、結果の違いが次の操作にどう反映されるかを JVM で確かめます。
 
+画面を操作して予約を検証する場合は、[Android の検証用アプリ](../docs/android-product.md)を使ってください。
+
 開発シェルの対象は Apple Silicon の macOS、および arm64 と x86-64 の Linux です。
 
 1. `nix --version` を実行してください。Nix が入っていない場合は、OS に対応する公式手順で導入してください。[Nix のインストール](https://nix.dev/install-nix.html)

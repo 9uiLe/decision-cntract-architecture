@@ -1,0 +1,55 @@
+decision-contract:
+  ExhaustiveDecisionWhen:
+    active: true
+    decisionTypes:
+      - 'example.reservation.core.ActiveRequest'
+      - 'example.reservation.core.ReservationRecord'
+      - 'example.reservation.core.Confirmation'
+      - 'example.reservation.core.Rejection'
+      - 'example.reservation.core.Acceptance'
+      - 'example.reservation.core.ConfirmOutcome'
+      - 'example.reservation.core.CancelFailure'
+      - 'example.reservation.ports.CreateObservation'
+      - 'example.reservation.ports.LookupObservation'
+      - 'example.reservation.ports.CancelObservation'
+      - 'example.reservation.ui.RequestCard'
+      - 'example.reservation.ui.ReservationCard'
+      - 'example.reservation.ui.DetailsStage'
+    decisionFunctions:
+      - 'example.reservation.core.ReservationCore.afterCreate'
+      - 'example.reservation.core.ReservationCore.afterLookup'
+      - 'example.reservation.core.ReservationCore.afterCancel'
+      - 'example.reservation.core.ReservationCore.rejectionForUnmatched'
+      - 'example.reservation.core.ReservationCore.holdsTicket'
+      - 'example.reservation.core.ReservationCore.withClosedResult'
+      - 'example.reservation.core.ReservationCore.blocksNewCreate'
+      - 'example.reservation.core.ReservationCore.blocksCancel'
+      - 'example.reservation.core.ReservationCore.withoutFinishedResult'
+      - 'example.reservation.ui.projectStage'
+      - 'example.reservation.ui.projectRequest'
+      - 'example.reservation.ui.projectReservation'
+      - 'example.reservation.ui.rejectionMessage'
+      - 'example.reservation.ui.cancelFailureMessage'
+      - 'example.reservation.ui.requestHeadline'
+      - 'example.reservation.ui.RequestCardContent'
+      - 'example.reservation.ui.ReservationCardContent'
+      - 'example.reservation.ui.StageContent'
+      - 'example.reservation.ui.ReservationViewModel.relay'
+      - 'example.reservation.conformance.violations.interpretWithFallback'
+      - 'example.reservation.conformance.violations.projectWithFallback'
+      - 'example.reservation.conformance.violations.messageWithFallback'
+      - 'example.reservation.conformance.violations.cardWithFallback'
+      - 'example.reservation.conformance.violations.projectExhaustively'
+      - 'example.reservation.conformance.violations.parseExternalCode'
+  RestrictedCompositionCall:
+    active: true
+    excludes: ['**/test/**']
+    restrictedCallables:
+      - 'example.reservation.core.createReservationCore'
+    allowedCallerPackages:
+      - 'example.app.composition'
+
+reservation-contract:
+  ReservationPortCall:
+    active: true
+    excludes: ['**/test/**']

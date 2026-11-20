@@ -7,5 +7,6 @@ Decision Contract Architecture（DCA）は、仕様を変更したときに見�
 | 読む場所 | 内容 |
 | --- | --- |
 | [設計と検証](docs/README.md) | 判断契約、Android への適用、仕様変更の検証計画 |
-| [運用ルール](rules/README.md) | 型やビルドで制限することと、detekt で検査する候補 |
-| [サンプルを実行](examples/README.md) | Nix での準備と Kotlin/JVM の検証手順 |
+| [運用ルール](rules/README.md) | 汎用の detekt ルールと予約アプリ固有の検査 |
+| [Android の検証用アプリを実行](docs/android-product.md) | Jetpack Compose の予約アプリのビルド、実行、検査 |
+| [Kotlin/JVM サンプルを実行](examples/README.md) | 最小の予約例で判断契約とコンパイル診断を確認 |

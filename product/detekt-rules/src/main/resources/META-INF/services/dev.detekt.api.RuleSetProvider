@@ -1,0 +1,2 @@
+example.detekt.dca.DecisionContractRuleSetProvider
+example.detekt.reservation.ReservationContractRuleSetProvider

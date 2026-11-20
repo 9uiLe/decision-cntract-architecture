@@ -1,43 +1,38 @@
 # 運用ルールと detekt の検査仕様
 
-Kotlin の型と可視性で、許可する呼び出しや生成方法を制限します。Gradle ではモジュール間の依存を検査します。detekt のルールは型検査だけでは見つからない書き方のうち、構文と参照先から判定できるものを対象にします。
+型と可視性で、業務操作に渡せる引数と生成経路を制限します。Gradle はモジュールの依存関係を検査します。detekt は、型検査を通っても必要な分岐や組み立ての制約を迂回するコードを検出します。
 
-## detekt で検査する候補
+## DCA の汎用ルール
 
-次の表は detekt プラグインの実装案です。現在のリポジトリには検出条件と設定項目を記載しています。プラグインを組み込むときに、違反例と許可例を detekt のテストに追加します。
+この表の検出条件は、別のプロダクトへ導入しても共通です。検査対象の関数、型、パッケージは導入先で指定します。
 
-| ルール ID 候補 | 設定する適用範囲 | 違反として報告する条件 | 許可例 |
-| --- | --- | --- | --- |
-| `ExhaustiveDecisionWhen` | `decisionFunctions` に必須判断を持つ関数、`decisionTypes` に閉じた業務型を完全修飾名で指定 | 指定した関数内で、`when` の対象式が指定型に解決され、`else` がある | 外部 DTO のコードを解釈する `else`、Kotlin が網羅性を検査する `when` |
-| `RestrictedCompositionCall` | `restrictedCallables` に組み立て関数のシンボル、`allowedCallerPackages` に許可する呼び出し元のパッケージを指定 | 許可範囲外から対象シンボルを呼び出すか、呼び出し可能参照として取得する | 組み立て側からの呼び出し、別の同名関数 |
+| ルール | 検出条件 | 許可するコード |
+| --- | --- | --- |
+| `ExhaustiveDecisionWhen` | 指定した関数の `when` が指定した型を対象とし、`else` を持つ | 全ケースを列挙した判断。外部サービスの未定義コードを扱う分岐 |
+| `RestrictedCompositionCall` | 許可したパッケージの外で、指定の組み立て関数を呼び出すか、呼び出し可能参照を取得する | 組み立てを担当するコードからの呼び出し。別の同名関数の呼び出し |
 
-両ルールで、解析時に型や関数の参照先を特定するシンボル解決を必須とします。型エイリアスや import の別名を使っていても、参照先が指定の型や関数と同じなら検出します。CI ではシンボル解決を有効にしたタスクを使い、違反例を検出できることを確認します。組み立て関数の呼び出しを制限するときは、許可したパッケージとその配下を対象にします。たとえば `example.app.composition` の許可は、名前の先頭が同じ `example.app.compositionExtra` には及びません。オーバーロードを区別する必要がある場合は、引数型を含むシグネチャを設定します。
+シンボル解決によって、指定の型や関数を参照しているかを判定します。型エイリアスや import の別名があっても、参照先が同じなら検査対象です。許可パッケージは名前が一致するパッケージとその配下です。`example.app.composition` の許可は `example.app.compositionExtra` に及びません。[detekt の型解決](https://detekt.dev/docs/gettingstarted/type-resolution/)
 
-実装時は detekt のバージョンを固定し、そのバージョンの `RuleSetProvider` を ServiceLoader に登録します。プラグインを使うプロジェクトでは、`detektPlugins` に追加し、設定で各ルールを有効にします。検証では実際に設定を読み込ませ、ルールごとに違反例を検出し、許可例を受け入れることを確認します。[detekt の拡張ガイド](https://detekt.dev/docs/introduction/extensions/)
+## 予約アプリ固有の検査
 
-次の YAML は実装案に対応する設定例です。関数名、型名、パッケージ名は適用先のコードに合わせます。
+予約アプリでは、予約の結果を画面状態に変換する関数、画面状態を描画する関数、Core を組み立てられるコードの場所を指定します。アプリを変更するときは、この適用先を実際の型や関数に合わせて更新します。
 
-```yaml
-decision-contract:
-  active: true
-  ExhaustiveDecisionWhen:
-    active: true
-    decisionFunctions: ['dca.ui.project']
-    decisionTypes: ['dca.core.Outcome']
-  RestrictedCompositionCall:
-    active: true
-    restrictedCallables: ['example.reservation.core.createReservationCore']
-    allowedCallerPackages: ['example.app.composition']
-```
+予約の作成・照会・取消は、予約 Core が状態と操作の前提を確認したうえでサービスに要求します。`reservation-contract` の [`ReservationPortCall`](../product/detekt-rules/src/main/kotlin/example/detekt/reservation/ReservationPortCall.kt) は、`ReservationPort` の `create`、`lookup`、`cancel` を予約 Core のパッケージ外から呼び出すか、呼び出し可能参照を取得すると報告します。別のプロダクトでは、その業務の Port と呼び出しを許す場所を定めます。
 
-## 型・ビルド・レビューで守ること
+`ReservationPortCall` は呼び出し先の解決を汎用の実装と共有し、予約固有の対象を別のルールセットに置いています。二つの汎用ルールは `decision-contract` に登録しています。
 
-| 原則 | 確認する場所 |
+適用先は [dca.yml](../product/config/detekt/dca.yml) に記載しています。`decisionFunctions` と `decisionTypes` が必須の判断箇所と型を指定し、`restrictedCallables` と `allowedCallerPackages` が組み立て関数と呼び出し元を指定します。
+
+`product/` の `./gradlew check` は、Android の `detektDebug` と JVM の `detektMain` を使います。検証用の `:conformance` には意図した違反があり、`check` の出力にも診断が表示されます。テストは、検出されたルールと行が検証用コードに記した期待値と一致することを確かめます。設定で指定した型や関数の名前と、許可パッケージを宣言できるモジュールも照合します。
+
+## 型・ビルド・実行時の確認
+
+| 確認したいこと | 方法 |
 | --- | --- |
-| 確認済みの値を任意に発行・改変できると、操作の前提が崩れる | コンストラクタ、発行処理、`copy` の可視性。外部利用側のコンパイル失敗で確認する |
-| 実装の不足を検出するため、必須 Handler のメソッドを抽象にし、組み立て引数を必須にする | Core の公開契約と組み立て箇所。正当な任意引数は許容する |
-| UI が Core の正規入口を迂回して Adapter を使うと、業務判断が分散する | Gradle の依存許可表と、公開 factory に対する呼び出し制限 |
-| 結果を `Boolean` や `null` にまとめると、後続で必要な意味が失われる場合がある | レビューで利用側の判断まで追う。表示用の要約や、本当に値が存在しない場合もあるため、型名だけで違反と判定しない |
-| 開始時刻ちょうどに送信を拒否し、照会には元の要求 ID を使う | 実行テストで、判定時刻・要求 ID・新規送信回数を確認する |
+| モジュール外で確認済みの値や操作の前提を構築できないこと | コンストラクタと発行処理の可視性を絞り、禁止した利用コードのコンパイルが失敗することを確認する |
+| 必須 Handler の実装や供給に漏れがないこと | 委譲がある場合に、抽象メソッドと必須引数を使う |
+| UI が外部 Adapter に直接依存できないこと | Gradle のモジュール依存を確認する。公開された組み立て関数への参照は detekt でも調べる |
+| 利用側が必要な結果の違いを取得できること | `Boolean` や `null` にまとめる箇所は、受け取った側の判断まで追ってレビューする |
+| 期限の境界、照会対象、要求回数が正しいこと | 時刻や外部サービスの応答を制御したテストで確かめる |
 
-規約の設計根拠は `usapo-type-driven-design` の `10-coding-principles.md` です。
+[Android の検証用アプリの実行手順](../docs/android-product.md)にビルドと検査のコマンドを記載しています。規約の設計根拠は、隣接する `usapo-type-driven-design` の `10-coding-principles.md` です。

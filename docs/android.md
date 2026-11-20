@@ -51,8 +51,10 @@ sequenceDiagram
 
 プロセス終了後の復元を扱う場合は、画面を復元するための ID と、元の要求を再照会するための永続情報を、それぞれどこで管理するか決めます。Android の `SavedStateHandle` は画面を再構築する少量の情報に使えます。予約の成立や送信済みの事実は、サービスや永続記録で確認します。[Android の UI 状態保存](https://developer.android.com/topic/libraries/architecture/saving-states?hl=en)
 
-## サンプルと実アプリの境界
+## 検証用アプリでの状態管理
 
-[サンプル](../examples/README.md)で確認できるのは、Android SDK を必要としない Kotlin/JVM 上の判断契約です。Android の画面とライフサイクル、通信、分散環境での重複防止は、実アプリをサービスに接続して試験します。Swift 向けの公開契約を検証するときは、実際に生成した成果物を使って Swift の利用側をコンパイルします。
+[Android の検証用アプリ](android-product.md)では、組み立て時にアプリのプロセスで共有する Core を作ります。Core が下書き、進行中の要求、確定済みの予約を管理します。画面が切り替わっても、元の要求を照会し、確定済みの予約を取り消せます。操作の有効性は Core が判断し、Jetpack Compose は状態に応じた操作を表示します。
 
-責務・Port・Swift 境界の設計根拠は `usapo-type-driven-design` の `08-module-structure.md`、`09-external-adapters.md`、`12-swift-boundary.md` です。
+[Kotlin/JVM のサンプル](../examples/README.md)では、確認済みの値や結果の分岐をコンパイラがどう検査するかを確認できます。Android の検証用アプリは、シミュレーターで再現した結果と実際の画面操作を使って確かめます。
+
+責務と Port の設計根拠は `usapo-type-driven-design` の `08-module-structure.md` と `09-external-adapters.md` です。
