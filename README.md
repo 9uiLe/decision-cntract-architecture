@@ -1,14 +1,30 @@
 # Decision Contract Architecture
 
-Decision Contract Architecture（DCA）は、仕様を変更したときに見直すべき判断を、Kotlin の型と依存関係で明示する設計です。
+**仕様が変わったとき、見直すべき業務判断をコンパイラの診断からたどる。**
 
-定員制ワークショップの予約要求に応答がなければ、予約はすでに成立しているかもしれません。Core は「結果不明」と「未成立が確定」を区別し、前者には元の要求を照会する操作、後者には再試行する操作を渡します。画面状態への変換を網羅的な `when` で書くと、新しい結果の分岐が抜けたときにコンパイラが検出します。
+ワークショップの予約要求に応答がないとき、もう一度送ってよいでしょうか。最初の予約が成立していれば、再送は重複につながります。Decision Contract Architecture（DCA）は、業務操作の前提、結果、次に許される操作を Kotlin の型で表し、その型を利用側が直接参照する設計です。
 
-検証アプリでは、参加資格、予約、来場受付を独立した Core に分けています。Android と iOS の共通画面を使い、資格や予約の契約を変更したとき、どの判断に対応が必要かを確かめられます。
+[最小の JVM サンプルを実行する](examples/reservation-jvm/README.md) · [モバイル版を図で読む](examples/reservation-mobile/docs/README.md)
 
-| 読む場所 | 内容 |
+## 予約フローで見る DCA
+
+Core が確認済みの予約内容を発行し、送信にはその値を要求します。送信後は結果に応じて、画面が利用者に案内できる操作が変わります。
+
+| Core が返す結果 | 次に選べる操作 |
 | --- | --- |
-| [JVM 版の図解](examples/reservation-jvm/docs/README.md) | 一つの予約フローで、前提の型とテストが検知する違いを見る |
-| [モバイル版の図解](examples/reservation-mobile/docs/README.md) | 3つの Core の依存関係と、仕様変更を検知する箇所を見る |
-| [サンプルを実行する](examples/README.md) | JVM 版と Android・iOS 版のセットアップを選ぶ |
-| [ドキュメント索引](docs/README.md) | DCA の設計、モバイル版の仕様、変更実験、detekt のルールを探す |
+| 結果不明 | 元の要求 ID で状況を照会する |
+| 未成立が確定した | 開催回の開始前なら、新しい要求として再試行する |
+
+結果を `sealed` 型で表し、画面への変換を `else` のない `when` で書くと、結果を追加したときに対応漏れをコンパイラが検出します。Core は操作券を現在の状態と照合し、新しく予約要求を送る直前に期限を確認します。開始時刻ちょうどに作成要求を送らないことはテストで確かめられます。 [JVM 版の図解](examples/reservation-jvm/docs/README.md) · [設計思想と判断契約](docs/architecture.md)
+
+## 仕様変更で何が見つかるか
+
+Android・iOS で画面を共有する検証アプリは、参加資格、予約、来場受付を3つの Core に分けています。参加資格に「一時停止」を加えると、予約前の判断や画面表示で対応が必要な箇所にコンパイル診断が出ます。対応後のテストでは、一時停止中に資格が必要な予約の作成要求が送られず、成立済みの予約で来場を受け付けられることを確かめます。 [変更実験 H](docs/experiments/h-suspended-qualification.md) · [診断とテストの記録](docs/mobile-app/verification-results.md#変更実験-hl)
+
+比較実験では、未対応の `when` に `else` を加えるとコンパイルが通り、detekt がその `else` を報告します。 [比較実験 C1](docs/experiments/contract-comparisons.md) · [detekt のルール](docs/detekt-rules.md)
+
+## 自分のプロジェクトで試す
+
+次の操作が結果によって変わる機能を一つ選んでください。結果ごとに許される操作を書き出し、利用側が結果の違いを型で受け取れる形にします。JVM サンプルを実行すると、予約結果にケースを一つ加えたとき、未対応の画面変換に診断が出ることを確認できます。 [JVM 版の実行手順](examples/reservation-jvm/README.md)
+
+[Android・iOS 版の実行手順](docs/mobile-app/setup.md) · [サンプル一覧](examples/README.md) · [ドキュメント索引](docs/README.md)
