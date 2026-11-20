@@ -1,9 +1,11 @@
 # Decision Contract Architecture
 
-仕様が変わったとき、誰が何を決め直すべきかを、Kotlin の型と依存関係で示す設計です。定員制ワークショップ予約を題材に、操作の前提、結果に応じて許す操作、Android の画面状態までをつなぎます。
+Decision Contract Architecture（DCA）は、仕様を変更したときに見直すべき判断を、Kotlin の型と依存関係で明示する設計です。
+
+定員制ワークショップの予約要求に応答がなければ、予約はすでに成立しているかもしれません。Core は「結果不明」と「未成立が確定」を区別し、前者には元の要求を照会する操作、後者には再試行する操作を渡します。画面状態への変換を網羅的な `when` で書くと、新しい結果の分岐が抜けたときにコンパイラが検出します。
 
 | 読む場所 | 内容 |
 | --- | --- |
-| [docs](docs/README.md) | 設計思想、責務と依存の方針、仕様変更の検証方法 |
-| [rules](rules/README.md) | 運用ルールと detekt の検査仕様 |
-| [examples](examples/README.md) | Nix のセットアップと Kotlin の実行例 |
+| [設計と検証](docs/README.md) | 判断契約、Android への適用、仕様変更の検証計画 |
+| [運用ルール](rules/README.md) | 型やビルドで制限することと、detekt で検査する候補 |
+| [サンプルを実行](examples/README.md) | Nix での準備と Kotlin/JVM の検証手順 |

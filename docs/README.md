@@ -1,9 +1,9 @@
 # Decision Contract Architecture の設計
 
-定員制ワークショップの予約を送信した後、応答が途切れたとします。サーバーでは予約が成立しているかもしれません。画面がすべての失敗を一つのエラーにまとめて「再試行」を出すと、同じ予約を二重に作る恐れがあります。一方、未成立が確定していれば、利用者は明示的に再試行できます。この違いを、結果から次の操作を決める場所まで保つのが設計の出発点です。
+判断契約は、業務操作に必要な前提、その操作が返す結果、結果ごとに許される操作を定めます。ワークショップ予約を例に、業務上の判断を誰が担い、仕様変更への対応漏れをどこで検出するかを説明します。
 
-1. [設計思想と判断契約](architecture.md)で、結果を受け取る側にどの判断を求めるかを確認する。
-2. [Android と KMP への適用](android.md)で、Core、Adapter、画面状態、組み立ての責務を確認する。
-3. [仕様変更を使った検証](verification.md)で、コンパイルで検出したい変更と動作テストで確かめる変更を確認する。
+1. [設計思想と判断契約](architecture.md)で、結果を受け取る側にどの判断を求めるかを確認してください。
+2. [Android と KMP への適用](android.md)で、Core、Adapter、画面状態、組み立ての責務を確認してください。
+3. [仕様変更を使った検証](verification.md)で、コンパイルと動作テストで何を確かめるかを確認してください。
 
-設計の根拠は作業ディレクトリに隣接する `usapo-type-driven-design` の `01-design-intent.md` から `13-verification.md` です。予約の要件は `dca-mobile-product-spec` の `product/requirements/`、変更課題は同じ資料の `experiments/` にあります。このリポジトリの読解とサンプルの実行には、隣接ディレクトリのチェックアウトは不要です。
+このリポジトリだけで資料を読み、サンプルを実行できます。設計の出典は隣接する `usapo-type-driven-design` の `01-design-intent.md` から `13-verification.md` です。予約の要件と変更課題は、隣接する `dca-mobile-product-spec` の `product/requirements/` と `experiments/` にあります。
