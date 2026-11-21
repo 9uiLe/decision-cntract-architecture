@@ -34,4 +34,4 @@ Plugin 自体の `plugins/dca/docs/overview.svg` は、このリポジトリで�
 
 Plugin 名は `dca` とし、名称、版、Skill の登録を host 間で整合させます。host ごとの差分を追加しても、共通の判断基準や必須の検証要件を失わせません。未実施、失敗、実行不能の確認を、成功した確認として記録しません。
 
-Plugin の変更は、`plugins/dca` で `python3 -m unittest discover -s tests -t tests` を実行して確認します。CI（`.github/workflows/dca-plugin.yml`）も、同じ検査を実行します。
+Plugin の変更を確認するときは、リポジトリのルートで `nix develop .#dca-plugin` を実行し、`plugins/dca` で `python3 -m unittest discover -s tests -t tests` を実行します。CI（`.github/workflows/dca-plugin.yml`）も同じ devShell を使います。

@@ -21,10 +21,12 @@ dca が意図した場面で働き、過剰に適用せず、検証の欠落を�
 
 ## 決定的に確かめる
 
-次のコマンドは、Plugin のルートで実行します。host も外部のサービスも使いません。
+リポジトリのルートで `nix develop .#dca-plugin` を実行し、Python と Git が使えるシェルを開きます。そのシェルで次のコマンドを実行します。検査はモデルを呼び出さずに実行できます。
 
 ```bash
+cd plugins/dca
 python3 scripts/dca_package.py check
+python3 scripts/dca_overview.py check
 python3 -m unittest discover -s tests -t tests
 ```
 

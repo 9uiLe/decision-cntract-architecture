@@ -37,6 +37,9 @@
         default = pkgs.mkShell {
           packages = [ pkgs.jdk21 pkgs.kotlin ];
         };
+        dca-plugin = pkgs.mkShell {
+          packages = [ pkgs.python312 pkgs.git ];
+        };
       } // nixpkgs.lib.optionalAttrs (system == "aarch64-darwin") {
         android = pkgs.mkShell {
           packages = [ pkgs.jdk21 pkgs.python3 androidSdk ];

@@ -8,6 +8,8 @@ on:
       - ".claude-plugin/**"
       - "docs/**"
       - "CLAUDE.md"
+      - "flake.nix"
+      - "flake.lock"
       - ".github/workflows/dca-plugin.yml"
   pull_request:
     paths:
@@ -15,6 +17,8 @@ on:
       - ".claude-plugin/**"
       - "docs/**"
       - "CLAUDE.md"
+      - "flake.nix"
+      - "flake.lock"
       - ".github/workflows/dca-plugin.yml"
 
 permissions:
@@ -22,26 +26,20 @@ permissions:
 
 jobs:
   check:
-    runs-on: ${{ matrix.runner }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - python-version: "3.9"
-            runner: ubuntu-24.04
-          - python-version: "3.12"
-            runner: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: cachix/install-nix-action@bb0495a1086c46893eee56f32fd192dfe4a15bb9
         with:
-          python-version: ${{ matrix.python-version }}
+          extra_nix_config: experimental-features = nix-command flakes
+      - name: Python と Git の版を記録する
+        run: nix develop "$GITHUB_WORKSPACE#dca-plugin" --command sh -c 'command -v python3 && python3 --version && git --version'
       - name: 配布物の整合を検査する
         working-directory: plugins/dca
-        run: python3 scripts/dca_package.py check
+        run: nix develop "$GITHUB_WORKSPACE#dca-plugin" --command python3 scripts/dca_package.py check
       - name: 構成図の入力、登録集合、再描画の一致を検査する
         working-directory: plugins/dca
-        run: python3 scripts/dca_overview.py check
+        run: nix develop "$GITHUB_WORKSPACE#dca-plugin" --command python3 scripts/dca_overview.py check
       - name: 単体テストを実行する
         working-directory: plugins/dca
-        run: python3 -m unittest discover -s tests -t tests -v
+        run: nix develop "$GITHUB_WORKSPACE#dca-plugin" --command python3 -m unittest discover -s tests -t tests -v
