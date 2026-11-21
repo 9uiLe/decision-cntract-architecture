@@ -1,6 +1,8 @@
-# Android・iOS の検証アプリを実行する
+# KMP 版の検証アプリを実行する
 
 ワークショップ予約の検証用アプリの Gradle ルートは `examples/reservation-mobile/` です。開催回の選択、参加資格の確認、予約、来場受付を Compose Multiplatform の共通画面で操作できます。検証画面では、外部サービスの応答や時刻を変えて境界条件を再現できます。[ソースコードの構成](../../examples/reservation-mobile/README.md)
+
+SwiftUI 版を実行する場合は、専用の手順を参照してください。 [SwiftUI 版の実行手順](../../examples/reservation-ios/README.md)
 
 ![Android と iOS それぞれのビルドから起動まで、検証シナリオと gradlew check へ続く経路。](../assets/mobile-setup-route.svg)
 

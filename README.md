@@ -2,9 +2,9 @@
 
 **仕様が変わったとき、見直すべき業務判断をコンパイラの診断からたどる。**
 
-ワークショップの予約要求に応答がないとき、もう一度送ってよいでしょうか。最初の予約が成立していれば、再送は重複につながります。Decision Contract Architecture（DCA）は、業務操作の前提、結果、次に許される操作を Kotlin の型で表し、その型を利用側が直接参照する設計です。
+ワークショップの予約要求に応答がないとき、もう一度送ってよいでしょうか。最初の予約が成立していれば、再送は重複につながります。Decision Contract Architecture（DCA）は、業務操作の前提、結果、次に許される操作を型で表し、その型を利用側が直接参照する設計です。
 
-[最小の JVM サンプルを実行する](examples/reservation-jvm/README.md) · [モバイル版を図で読む](examples/reservation-mobile/docs/README.md)
+[最小の JVM サンプルを実行する](examples/reservation-jvm/README.md) · [KMP 版を図で読む](examples/reservation-mobile/docs/README.md) · [SwiftUI 版を試す](examples/reservation-ios/README.md)
 
 ## 予約フローで見る DCA
 
@@ -18,7 +18,7 @@ Core が確認済みの予約内容を発行し、送信にはその値を要求
 
 ![資格に一時停止を加えると予約前の判断と画面の分岐に対応が必要。対応後は要資格の新規予約と成立済み予約をそれぞれテストする。](docs/assets/experiment-h.svg)
 
-Android・iOS で画面を共有する検証アプリは、参加資格、予約、来場受付を3つの Core に分けています。参加資格に「一時停止」を加えると、予約前の判断や画面表示で対応が必要な箇所にコンパイル診断が出ます。対応後のテストでは、一時停止中に資格が必要な予約の作成要求が送られず、成立済みの予約で来場を受け付けられることを確かめます。 [変更実験 H](docs/experiments/h-suspended-qualification.md) · [診断とテストの記録](docs/mobile-app/verification-results.md#変更実験-hl)
+Android・iOS で画面を共有する KMP 版は、参加資格、予約、来場受付を3つの Core に分けています。参加資格に「一時停止」を加えると、予約前の判断や画面表示で対応が必要な箇所にコンパイル診断が出ます。対応後のテストでは、一時停止中に資格が必要な予約の作成要求が送られず、成立済みの予約で来場を受け付けられることを確かめます。 [変更実験 H](docs/experiments/h-suspended-qualification.md) · [診断とテストの記録](docs/mobile-app/verification-results.md#変更実験-hl)
 
 比較実験では、未対応の `when` に `else` を加えるとコンパイルが通り、detekt がその `else` を報告します。 [比較実験 C1](docs/experiments/contract-comparisons.md) · [detekt のルール](docs/detekt-rules.md)
 
@@ -26,7 +26,7 @@ Android・iOS で画面を共有する検証アプリは、参加資格、予約
 
 次の操作が結果によって変わる機能を一つ選んでください。結果ごとに許される操作を書き出し、利用側が結果の違いを型で受け取れる形にします。JVM サンプルを実行すると、予約結果にケースを一つ加えたとき、未対応の画面変換に診断が出ることを確認できます。 [JVM 版の実行手順](examples/reservation-jvm/README.md)
 
-[Android・iOS 版の実行手順](docs/mobile-app/setup.md) · [サンプル一覧](examples/README.md) · [ドキュメント索引](docs/README.md)
+[KMP 版の実行手順](docs/mobile-app/setup.md) · [サンプル一覧](examples/README.md) · [ドキュメント索引](docs/README.md)
 
 ## dca Plugin で既存プロジェクトに導入する
 

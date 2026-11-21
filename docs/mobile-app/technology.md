@@ -1,6 +1,6 @@
 # 検証アプリの技術選定
 
-アプリは Android と iOS を対象とします。画面と画面状態の管理は Compose Multiplatform、業務 Core と検証用シミュレーターは Kotlin Multiplatform の共通コードに置きます。各 OS の入口は起動、ライフサイクル、戻る操作の接続を担当します。
+KMP 版は Android と iOS を対象とします。画面と画面状態の管理は Compose Multiplatform、業務 Core と検証用シミュレーターは Kotlin Multiplatform の共通コードに置きます。各 OS 固有のコードでアプリを起動し、ライフサイクルと戻る操作を共通コードにつなぎます。
 
 ![OS ごとの入口、共通 UI、Core とシミュレーターの層と、ビルド・検査に使う技術。](../assets/mobile-technology-layers.svg)
 
@@ -17,3 +17,7 @@ JVM ターゲットは、コンパイル負例、detekt、共通コードの振�
 Core 間の依存と Port の関係は [3つの Core の判断契約](core-contracts.md) の図にあります。外部サービスへの接続はシミュレーターで代替します。資格、予約、来場受付の応答や時刻を独立に操作すると、応答喪失や資格の期限切れを再現できます。
 
 バージョンは [Gradle のバージョンカタログ](../../examples/reservation-mobile/gradle/libs.versions.toml) と [Gradle Wrapper](../../examples/reservation-mobile/gradle/wrapper/gradle-wrapper.properties) で管理します。
+
+## SwiftUI 版
+
+SwiftUI 版は、参加資格・予約・来場受付の共通仕様を Swift で実装し、画面と各 Core の依存関係をローカル Swift Package で表します。コードの規約は SwiftLint、パッケージの境界と発行権限は依存関係の検査とコンパイル負例で確認します。 [SwiftUI 版の構成と検証手順](../../examples/reservation-ios/README.md)

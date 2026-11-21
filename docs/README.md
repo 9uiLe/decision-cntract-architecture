@@ -7,7 +7,8 @@
 | サンプル | 図解 | 実行手順 |
 | --- | --- | --- |
 | Kotlin/JVM | [一つの予約フローの依存関係と検査](../examples/reservation-jvm/docs/README.md) | [JVM 版のセットアップ](../examples/reservation-jvm/README.md) |
-| Android・iOS | [3つの Core の依存関係と検査](../examples/reservation-mobile/docs/README.md) | [モバイル版のセットアップ](mobile-app/setup.md) |
+| KMP（Android・iOS） | [3つの Core の依存関係と検査](../examples/reservation-mobile/docs/README.md) | [KMP 版のセットアップ](mobile-app/setup.md) |
+| SwiftUI（iOS） | [Swift Package の構成と依存方向](../examples/reservation-ios/README.md#構成と依存方向) | [SwiftUI 版の起動と検証](../examples/reservation-ios/README.md#起動する) |
 
 ## 設計と基準仕様
 

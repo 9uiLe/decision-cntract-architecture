@@ -1,0 +1,37 @@
+name: ReservationIos
+options:
+  bundleIdPrefix: example.reservation
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+packages:
+  Composition:
+    path: ../Packages/Composition
+targets:
+  ReservationIos:
+    type: application
+    platform: iOS
+    sources:
+      - ReservationIos
+    dependencies:
+      - package: Composition
+        product: Composition
+    info:
+      path: ReservationIos/Info.plist
+      properties:
+        CFBundleDisplayName: ワークショップ予約
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: example.reservation.ios
+        SWIFT_VERSION: "6.0"
+        SWIFT_UPCOMING_FEATURE_EXISTENTIAL_ANY: YES
+        SWIFT_UPCOMING_FEATURE_INTERNAL_IMPORTS_BY_DEFAULT: YES
+        SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY: YES
+schemes:
+  ReservationIos:
+    build:
+      targets:
+        ReservationIos: all

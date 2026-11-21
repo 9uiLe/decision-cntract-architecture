@@ -1,0 +1,86 @@
+# 検査対象のパスは Tools/check.sh が引数で渡す。fixture を同じ設定で検査できるよう、included と fixture の除外は書かない。
+excluded:
+  - "**/.build"
+  - App/build
+
+opt_in_rules:
+  - force_unwrapping
+
+disabled_rules:
+  - trailing_comma
+  - opening_brace
+  - identifier_name
+  - type_name
+  - function_parameter_count
+  - large_tuple
+
+line_length:
+  warning: 170
+  error: 220
+  ignores_comments: true
+  ignores_urls: true
+
+type_body_length:
+  warning: 350
+  error: 500
+
+file_length:
+  warning: 400
+  error: 600
+
+function_body_length:
+  warning: 60
+  error: 120
+
+cyclomatic_complexity:
+  warning: 15
+  error: 25
+
+# SwiftLint は型解決をしない。次のルールは名前と置き場所で判定し、型から判断する検査はコンパイラと
+# Tools/ArchitectureCheck の負例 fixture に任せる。範囲と限界は README の「静的判定の範囲」に書く。
+custom_rules:
+  no_default_in_switch:
+    name: "判断の switch に default を置かない"
+    message: "default・@unknown default・case _ は新しい結果の追加を隠す。全ての case を列挙する。外部入力の解釈は SimulatorAdapter に置く。"
+    regex: '^\s*(@unknown\s+)?default\s*:|^\s*case\s+_\s*:'
+    included: 'Packages/(Kernel|EligibilityCore|ReservationCore|CheckInCore|ReservationUI|Composition)/Sources/.*\.swift'
+    severity: error
+
+  restricted_factory_call:
+    name: "Core の組み立て関数は Composition だけが呼ぶ"
+    message: "makeEligibilityCore / makeReservationCore / makeCheckInCore は Composition の組み立てから呼ぶ。"
+    regex: '\bmake(Eligibility|Reservation|CheckIn)Core\b'
+    included: '(Packages/.*/Sources/|App/).*\.swift'
+    excluded: 'Packages/Composition/Sources/|/Factory\.swift|TestSupport/'
+    severity: error
+
+  eligibility_port_call:
+    name: "資格の照会は資格 Core だけが呼ぶ"
+    message: "fetchQualification は EligibilityCore だけが呼べる。"
+    regex: '\.fetchQualification\('
+    included: 'Packages/.*/Sources/.*\.swift'
+    excluded: 'Packages/EligibilityCore/Sources/'
+    severity: error
+
+  reservation_port_call:
+    name: "予約の外部要求は予約 Core だけが呼ぶ"
+    message: "createReservation / lookUpReservation / cancelReservation / lookUpUsage は ReservationCore だけが呼べる。"
+    regex: '\.(createReservation|lookUpReservation|cancelReservation|lookUpUsage)\('
+    included: 'Packages/.*/Sources/.*\.swift'
+    excluded: 'Packages/ReservationCore/Sources/'
+    severity: error
+
+  check_in_port_call:
+    name: "受付の外部要求は来場受付 Core だけが呼ぶ"
+    message: "createCheckIn / lookUpCheckIn は CheckInCore だけが呼べる。"
+    regex: '\.(createCheckIn|lookUpCheckIn)\('
+    included: 'Packages/.*/Sources/.*\.swift'
+    excluded: 'Packages/CheckInCore/Sources/'
+    severity: error
+
+  evidence_construction:
+    name: "発行物は公開の構築口を持たない"
+    message: "発行物の init は internal にし、final class にする。構築は発行元の Package だけが行う。"
+    regex: '\bpublic\s+init\b|\bopen\s+class\b|\bpublic\s+class\b|\bopen\s+init\b'
+    included: '.*Evidence\.swift'
+    severity: error
