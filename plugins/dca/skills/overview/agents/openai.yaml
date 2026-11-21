@@ -1,0 +1,7 @@
+interface:
+  display_name: "DCA overview"
+  short_description: "dca 自体の構成図を、実際の登録情報から根拠付きで示す"
+  default_prompt: "$dca:overview dca の Skill と共通資料、成果物の関係を構成図で見せて"
+
+policy:
+  allow_implicit_invocation: false

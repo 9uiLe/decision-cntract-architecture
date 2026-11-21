@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "source_repository": "9uiLe/decision-cntract-architecture",
+  "files": [
+    {
+      "copy": "architecture.md",
+      "source": "docs/architecture.md",
+      "sha256": "c37d37d6d2d5d1b1d3e5295690b15cc968c5ecab336d3c47a0031fbfaf680cf6"
+    },
+    {
+      "copy": "verification.md",
+      "source": "docs/verification.md",
+      "sha256": "998e01fbfdc658e103f328c0a6d3e1b1178e7f77a27aef1d743fa889658102b5"
+    },
+    {
+      "copy": "detekt-rules.md",
+      "source": "docs/detekt-rules.md",
+      "sha256": "424337d940a8430e4813270dbd0efce9e0809dd97932369b75fc435878458157"
+    },
+    {
+      "copy": "experiments/contract-comparisons.md",
+      "source": "docs/experiments/contract-comparisons.md",
+      "sha256": "ed0566be02f8f2e3368a74a63984532a348f9f70483c690346a4f66495c57261"
+    },
+    {
+      "copy": "experiments/i-check-in-qualification.md",
+      "source": "docs/experiments/i-check-in-qualification.md",
+      "sha256": "aa3336277491b63526bc7f4e1c2e4d9c2e7d479bcdd8fb0239d3cc20f1126cf5"
+    },
+    {
+      "copy": "mobile-app/contract-evidence.md",
+      "source": "docs/mobile-app/contract-evidence.md",
+      "sha256": "dfc8aaa3b5205ff05e670d4b3cdc8f09b27b2f25bcb826866e4f99930ded0852"
+    }
+  ]
+}

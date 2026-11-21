@@ -1,0 +1,17 @@
+{
+  "id": "E11",
+  "viewpoint": "両 host",
+  "skills": ["map"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "host-run",
+  "fixture": "kotlin-reservation",
+  "setup": ["同じ fixture、同じ prompt、同じ Plugin の版で、二つの host を実行する"],
+  "prompt": "/dca:map 予約フロー(reserve)の判断と保証の所在を整理してください。フローの鍵は reservation、ラベルは「予約」で合意済みです。",
+  "expected": [
+    "二つの host で、出力の契約と判断の境界が同じである",
+    "host ごとの起動の方法とツールの差を記録する",
+    "実行できなかった host は、成功件数に含めず実行不能として記録する"
+  ],
+  "must_not": ["片方の host の結果を、もう片方の成功として記録する"],
+  "evidence": ["host の名前と版", "配布の経路", "両方の出力と保存先"]
+}

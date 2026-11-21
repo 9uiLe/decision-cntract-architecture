@@ -1,0 +1,18 @@
+{
+  "id": "E02",
+  "viewpoint": "肯定的な起動・map",
+  "skills": ["map"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "host-run",
+  "fixture": "kotlin-reservation",
+  "setup": ["fixture を複写して git init と commit を行う", "DCA_STATE_DIR に一時ディレクトリを指定する"],
+  "prompt": "/dca:map 予約フロー(reserve)の判断と保証の所在を整理してください。フローの鍵は reservation、ラベルは「予約」で合意済みです。",
+  "expected": [
+    "事実、明記仕様(README の仕様メモ)、推測、未確認を区別する",
+    "各要素にファイルとシンボルの根拠が付く",
+    "再送の実装と仕様メモの食い違いを、解消せずに未確認または矛盾として残す",
+    "外部記録に保存し、保存先、選択元、新しい記録かどうか、現在の変更対象を示す"
+  ],
+  "must_not": ["コードを変更する", "違反を確定する", "fixture のリポジトリに記録ファイルを作る"],
+  "evidence": ["応答の本文", "dca_state.py where と read の出力", "fixture の git status が空であること"]
+}

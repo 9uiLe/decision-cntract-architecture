@@ -1,0 +1,7 @@
+interface:
+  display_name: "DCA refactor"
+  short_description: "DCA の適用判断、移行計画、依頼した範囲の変更と検証を進める"
+  default_prompt: "$dca:refactor 対象の業務フローに DCA を適用するか判断して、計画を作って"
+
+policy:
+  allow_implicit_invocation: false

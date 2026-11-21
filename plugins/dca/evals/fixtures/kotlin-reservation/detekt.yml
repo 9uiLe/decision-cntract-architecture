@@ -1,0 +1,13 @@
+build:
+  maxIssues: 0
+
+style:
+  ForbiddenComment:
+    active: true
+  UnusedPrivateMember:
+    active: true
+
+complexity:
+  TooManyFunctions:
+    active: true
+    thresholdInClasses: 11

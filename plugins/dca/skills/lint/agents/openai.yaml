@@ -1,0 +1,7 @@
+interface:
+  display_name: "DCA lint"
+  short_description: "機械で検出できる DCA の指摘を、検査ルールとして調査・提案する"
+  default_prompt: "$dca:lint scan で見つかった問題を、既存の静的解析ルールで検出できるか調べて提案して"
+
+policy:
+  allow_implicit_invocation: false

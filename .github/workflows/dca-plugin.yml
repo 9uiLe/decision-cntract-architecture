@@ -1,0 +1,43 @@
+name: dca-plugin
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "plugins/dca/**"
+      - ".claude-plugin/**"
+      - "docs/**"
+      - "CLAUDE.md"
+      - ".github/workflows/dca-plugin.yml"
+  pull_request:
+    paths:
+      - "plugins/dca/**"
+      - ".claude-plugin/**"
+      - "docs/**"
+      - "CLAUDE.md"
+      - ".github/workflows/dca-plugin.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: 配布物の整合を検査する
+        working-directory: plugins/dca
+        run: python3 scripts/dca_package.py check
+      - name: 構成図の入力、登録集合、再描画の一致を検査する
+        working-directory: plugins/dca
+        run: python3 scripts/dca_overview.py check
+      - name: 単体テストを実行する
+        working-directory: plugins/dca
+        run: python3 -m unittest discover -s tests -t tests -v

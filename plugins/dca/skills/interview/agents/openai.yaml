@@ -1,0 +1,7 @@
+interface:
+  display_name: "DCA interview"
+  short_description: "未決の判断を、推奨付きの質問にして利用者と合意する"
+  default_prompt: "$dca:interview 対象の業務フローで未決になっている判断を整理して、推奨付きの質問にして"
+
+policy:
+  allow_implicit_invocation: false

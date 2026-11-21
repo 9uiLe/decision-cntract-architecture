@@ -1,0 +1,7 @@
+interface:
+  display_name: "DCA scan"
+  short_description: "違反、仕様不足、矛盾、検証不足を、根拠付きで種類を分けて報告する"
+  default_prompt: "$dca:scan 対象の業務フローの問題を、根拠と不足している情報の種類を分けて報告して"
+
+policy:
+  allow_implicit_invocation: false

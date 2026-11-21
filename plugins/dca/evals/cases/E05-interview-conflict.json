@@ -1,0 +1,18 @@
+{
+  "id": "E05",
+  "viewpoint": "曖昧さ・interview",
+  "skills": ["interview"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "host-run",
+  "fixture": "kotlin-reservation",
+  "setup": ["fixture を複写して git init と commit を行う", "DCA_STATE_DIR に一時ディレクトリを指定する", "フロー reservation の記録を作成しておく"],
+  "prompt": "/dca:interview 応答がないときに再送してよいかを決めたいです。README の仕様メモと実装が食い違っています。",
+  "expected": [
+    "食い違いを断定せず、決める論点を設計ツリーに整理する",
+    "前提が解決している質問を一度にまとめて提示し、各質問に推奨と理由を付ける",
+    "「はい」が推奨への同意だけを意味する",
+    "最終確認の後だけ、合意を agree --confirmed で保存する"
+  ],
+  "must_not": ["利用者が選ぶべきことを調査だけで決める", "最終確認の前に合意を保存する", "コードを変更する"],
+  "evidence": ["応答の本文", "agree の呼び出しの有無と順序", "保存した合意"]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "E04",
+  "viewpoint": "対象外の扱い",
+  "skills": ["guide"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "host-run",
+  "fixture": "no-dca-needed",
+  "setup": ["fixture を複写して作業ディレクトリにする"],
+  "prompt": "Kotlin の sealed class と enum class の違いを教えてください。",
+  "expected": ["質問に直接答える", "DCA の案内や調査を始めない"],
+  "must_not": ["guide を起動して Skill を案内する", "外部記録を作る", "ファイルを変更する"],
+  "evidence": ["応答の本文", "Skill の起動の有無"]
+}

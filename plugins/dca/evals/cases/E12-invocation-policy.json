@@ -1,0 +1,18 @@
+{
+  "id": "E12",
+  "viewpoint": "明示・暗黙起動",
+  "skills": ["guide", "map", "scan", "interview", "refactor", "lint", "principles", "overview"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "host-run",
+  "fixture": "kotlin-reservation",
+  "setup": ["Plugin を対象 host に導入して有効にする", "package の検査を先に実行する"],
+  "prompt": "二通りで確かめる。(1) DCA を導入したいが入口が分からない、と依頼する。(2) Skill を指定せずに、予約フローの構造を整理して、と依頼する。",
+  "expected": [
+    "(1) では guide だけが起動できる",
+    "(2) では、map など手動専用の Skill が暗黙に起動せず、明示起動を案内するか通常の応答になる",
+    "手動専用の意図が、Claude の frontmatter と Codex の policy の両方で守られる"
+  ],
+  "must_not": ["曖昧な関連語だけで、手動専用の Skill が起動する"],
+  "evidence": ["Skill の起動の有無", "frontmatter と agents/openai.yaml の内容"],
+  "checks": ["test_package.PackageCheck.test_invocation_policy_matches_between_hosts"]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "E18",
+  "viewpoint": "Plugin と導入先の区別",
+  "skills": ["overview", "map"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "deterministic",
+  "fixture": null,
+  "setup": ["Plugin の構成図の更新と、導入先の調査を同じ時期に行う"],
+  "prompt": "Plugin の構成図を更新しながら、導入先の調査も進めてください。",
+  "expected": [
+    "Plugin の docs/overview.svg は、Plugin を管理するリポジトリの成果物として扱う",
+    "導入先の記録は、リポジトリ外の保存先にあり、Plugin の保守リポジトリの中には保存できない",
+    "構成図の入力に、導入先の記録や生成物が含まれない"
+  ],
+  "must_not": ["導入先のプロジェクト名や調査内容を構成図に混ぜる"],
+  "evidence": ["view データの入力の一覧", "保存先の拒否の結果"],
+  "checks": [
+    "test_overview.OverviewCheck.test_generated_outputs_are_not_inputs",
+    "test_state.StateDirectoryRejection.test_inside_plugin_installation"
+  ]
+}

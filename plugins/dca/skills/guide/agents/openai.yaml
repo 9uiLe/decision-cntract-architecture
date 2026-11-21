@@ -1,0 +1,7 @@
+interface:
+  display_name: "DCA guide"
+  short_description: "DCA の導入や再開で、使う Skill を一つ案内する"
+  default_prompt: "$dca:guide DCA を既存の業務フローに導入したい。どの Skill から始めればよいか案内して"
+
+policy:
+  allow_implicit_invocation: true

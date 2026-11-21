@@ -1,0 +1,7 @@
+interface:
+  display_name: "DCA map"
+  short_description: "業務フローの判断と保証の所在を、根拠付きで整理する"
+  default_prompt: "$dca:map 対象の業務フローについて、判断、契約、状態、副作用、利用側、保証を根拠付きで整理して"
+
+policy:
+  allow_implicit_invocation: false

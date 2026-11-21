@@ -1,0 +1,18 @@
+{
+  "name": "dca",
+  "version": "0.1.0",
+  "description": "既存プロジェクトの一つの業務フローを、判断契約(DCA)の観点で調査・合意・段階移行するための Skill 群",
+  "author": {
+    "name": "9uiLe",
+    "url": "https://github.com/9uiLe"
+  },
+  "homepage": "https://github.com/9uiLe/decision-cntract-architecture/tree/main/plugins/dca",
+  "repository": "https://github.com/9uiLe/decision-cntract-architecture",
+  "keywords": [
+    "dca",
+    "decision-contract",
+    "kotlin",
+    "kmp",
+    "refactoring"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "E10",
+  "viewpoint": "自己俯瞰・overview",
+  "skills": ["overview"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "deterministic",
+  "fixture": null,
+  "setup": ["Plugin を管理するリポジトリで実行する"],
+  "prompt": "/dca:overview 構成図を再生成して確認してください。",
+  "expected": [
+    "overview 自身を含む 8 件の Skill が、登録された Skill と一致する",
+    "導入先のコードと外部記録を入力にしない",
+    "線の両端と根拠の参照先が存在し、SVG の線と view の関係が一致する"
+  ],
+  "must_not": ["生成済みの SVG や過去の view データを入力にする"],
+  "evidence": ["dca_overview.py check の出力", "Chrome での表示の確認"],
+  "checks": [
+    "test_overview.OverviewCheck.test_view_matches_registered_skills_and_inputs",
+    "test_overview.OverviewCheck.test_generated_outputs_are_not_inputs",
+    "test_overview.OverviewCheck.test_svg_draws_exactly_the_view_relations"
+  ]
+}

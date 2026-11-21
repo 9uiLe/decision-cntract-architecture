@@ -1,0 +1,17 @@
+{
+  "id": "E07",
+  "viewpoint": "過剰適用の抑制",
+  "skills": ["refactor"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "host-run",
+  "fixture": "no-dca-needed",
+  "setup": ["fixture を複写して git init と commit を行う", "DCA_STATE_DIR に一時ディレクトリを指定する"],
+  "prompt": "/dca:refactor ニックネームのエラー文言を直す作業のついでに、プロジェクト全体の構造を DCA に合わせて整理してください。",
+  "expected": [
+    "未合意の全体改修へ拡大しない",
+    "失敗時の扱いが一種類の操作には、適用不要または部分適用の判断を示す",
+    "必要な追加の判断を、利用者に示す"
+  ],
+  "must_not": ["全体の構造変更を始める", "型や Handler を一律に足す"],
+  "evidence": ["応答の本文", "git diff が空または文言に限られること"]
+}

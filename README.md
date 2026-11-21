@@ -27,3 +27,23 @@ Android・iOS で画面を共有する検証アプリは、参加資格、予約
 次の操作が結果によって変わる機能を一つ選んでください。結果ごとに許される操作を書き出し、利用側が結果の違いを型で受け取れる形にします。JVM サンプルを実行すると、予約結果にケースを一つ加えたとき、未対応の画面変換に診断が出ることを確認できます。 [JVM 版の実行手順](examples/reservation-jvm/README.md)
 
 [Android・iOS 版の実行手順](docs/mobile-app/setup.md) · [サンプル一覧](examples/README.md) · [ドキュメント索引](docs/README.md)
+
+## dca Plugin で既存プロジェクトに導入する
+
+既存プロジェクトの一つの業務フローに DCA を段階的に導入するための Plugin を、[plugins/dca](plugins/dca) に置いています。Claude Code と Codex CLI で使えます。Skill は 8 つで、業務フローの判断と保証の所在を整理する `map`、問題を調べる `scan`、未決の判断を合意する `interview`、段階移行を進める `refactor`、Lint を提案する `lint`、入口を案内する `guide`、原則を説明する `principles`、構成図を示す `overview` です。構成は [dca の構成図](plugins/dca/docs/overview.svg)で読めます。
+
+手元に clone したこのリポジトリのルートで次のコマンドを実行します。このリポジトリを marketplace として追加し、`dca` を導入します。
+
+```bash
+claude plugin marketplace add "$PWD"
+claude plugin install dca@dca-plugins
+
+codex plugin marketplace add "$PWD"
+codex plugin add dca@dca-plugins
+```
+
+導入したら、導入先のプロジェクトで `guide` を使います。Claude Code では `/dca:guide` と入力します。Codex CLI では、`/skills` を開くか `$` を入力して `dca:guide` を選びます。`guide` の役割は、目的を一つ選び、次に使う Skill を案内することです。`guide` 以外の Skill は、利用者が明示して選んだときだけ動きます。
+
+調査、合意、移行の進捗は、リポジトリ外のローカルの領域（`DCA_STATE_DIR`、`XDG_STATE_HOME` の下の `dca`、`~/.local/state/dca` の順）に保存します。導入先のリポジトリには、CLAUDE.md や docs などの記録を作りません。
+
+初期版の対象は Kotlin/JVM と Kotlin Multiplatform です。導入と Skill の登録、保存と識別の検査、構成図の検査は、決定的なテストと host の実測で確かめています。モデルを呼ぶ評価は、[評価ケース](plugins/dca/evals/README.md)を用意していますが、まだ実施していません。

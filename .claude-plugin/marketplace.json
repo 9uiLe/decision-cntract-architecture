@@ -1,0 +1,25 @@
+{
+  "name": "dca-plugins",
+  "owner": {
+    "name": "9uiLe",
+    "url": "https://github.com/9uiLe"
+  },
+  "metadata": {
+    "description": "Decision Contract Architecture(DCA)の Plugin"
+  },
+  "plugins": [
+    {
+      "name": "dca",
+      "source": "./plugins/dca",
+      "description": "既存プロジェクトの一つの業務フローを、判断契約(DCA)の観点で調査・合意・段階移行するための Skill 群",
+      "version": "0.1.0",
+      "category": "development",
+      "tags": [
+        "dca",
+        "kotlin",
+        "kmp",
+        "refactoring"
+      ]
+    }
+  ]
+}

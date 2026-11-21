@@ -1,0 +1,20 @@
+{
+  "id": "E15",
+  "viewpoint": "再現性",
+  "skills": ["overview"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "deterministic",
+  "fixture": null,
+  "setup": ["同じ view データを、別の時刻と別の作業場所で描画する"],
+  "prompt": "/dca:overview 同じ view データから、同じ SVG が得られることを確認してください。",
+  "expected": [
+    "同じ view データ、描画規則、測定値から、同じ SVG が生成される",
+    "日時と環境に依存するパスが SVG に入らない"
+  ],
+  "must_not": ["描画のたびに差分が出る"],
+  "evidence": ["二つの SVG のバイト列の一致"],
+  "checks": [
+    "test_overview.OverviewCheck.test_renderer_is_deterministic",
+    "test_overview.OverviewCheck.test_svg_has_no_environment_dependent_values"
+  ]
+}

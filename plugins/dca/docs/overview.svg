@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="2127" viewBox="0 0 1480 2127" role="img" aria-labelledby="title desc">
+<title id="title">dca Plugin の構成図</title>
+<desc id="desc">dca Plugin の Skill 8 件と、共通資料、実行環境、成果物の関係。版 0.1.0。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#47647b"/></marker></defs>
+<style>text { font-family: 'Noto Sans CJK JP', 'Hiragino Sans', 'Yu Gothic', sans-serif; }</style>
+<rect width="1480" height="2127" fill="#f7f9fc"/>
+<text x="40" y="76" font-size="36" fill="#142638">dca Plugin の構成</text>
+<text x="40" y="114" font-size="18" fill="#4a6075">Skill 8 件、共通資料、実行環境、成果物の関係。版 0.1.0</text>
+<rect x="40" y="140" width="1400" height="755" rx="14" fill="#fbfcfe" stroke="#5b7fb0" stroke-width="3"/>
+<text x="64" y="172" font-size="22" fill="#142638">Plugin: dca（Skill 8 件。名前空間 dca:）</text>
+<rect x="540" y="188" width="400" height="147" rx="10" fill="#fff4dc" stroke="#c8963c" stroke-width="2" data-node="skill:guide"/>
+<text x="556" y="231" font-size="24" fill="#142638">guide</text>
+<text x="556" y="256" font-size="13" fill="#4a6075">利用者の明示でも、依頼の内容からでも起動する</text>
+<text x="556" y="285" font-size="15" fill="#142638">利用者の目的を一つ選び、使う Skill を一つ案内する。</text>
+<text x="556" y="314" font-size="14" fill="#4a6075">参照: 外部記録</text>
+<rect x="64" y="391" width="326" height="244" rx="10" fill="#eef5fb" stroke="#7ea0c0" stroke-width="2" data-node="skill:map"/>
+<text x="80" y="434" font-size="24" fill="#142638">map</text>
+<text x="80" y="459" font-size="13" fill="#4a6075">利用者が明示して起動する</text>
+<text x="80" y="488" font-size="15" fill="#142638">対象フローの判断と保証の所在を、根拠付</text>
+<text x="80" y="512" font-size="15" fill="#142638">きで対応付ける。</text>
+<text x="80" y="541" font-size="14" fill="#4a6075">参照: 情報モデル・外部記録・同梱思想の索引</text>
+<text x="80" y="566" font-size="14" fill="#4a6075">引き継ぎ先: interview・scan</text>
+<text x="80" y="591" font-size="14" fill="#4a6075">生成: 外部記録</text>
+<rect x="406" y="391" width="326" height="244" rx="10" fill="#eef5fb" stroke="#7ea0c0" stroke-width="2" data-node="skill:scan"/>
+<text x="422" y="434" font-size="24" fill="#142638">scan</text>
+<text x="422" y="459" font-size="13" fill="#4a6075">利用者が明示して起動する</text>
+<text x="422" y="488" font-size="15" fill="#142638">対象フローの問題を、根拠付きで種類を分</text>
+<text x="422" y="512" font-size="15" fill="#142638">けて報告する。</text>
+<text x="422" y="541" font-size="14" fill="#4a6075">参照: 情報モデル・外部記録・検証・同梱思想</text>
+<text x="422" y="564" font-size="14" fill="#4a6075">の索引</text>
+<text x="422" y="589" font-size="14" fill="#4a6075">引き継ぎ先: interview・lint・refactor</text>
+<text x="422" y="614" font-size="14" fill="#4a6075">生成: 外部記録</text>
+<rect x="748" y="391" width="326" height="244" rx="10" fill="#eef5fb" stroke="#7ea0c0" stroke-width="2" data-node="skill:interview"/>
+<text x="764" y="434" font-size="24" fill="#142638">interview</text>
+<text x="764" y="459" font-size="13" fill="#4a6075">利用者が明示して起動する</text>
+<text x="764" y="488" font-size="15" fill="#142638">未決の判断を利用者との対話で合意に変え</text>
+<text x="764" y="512" font-size="15" fill="#142638">る。</text>
+<text x="764" y="541" font-size="14" fill="#4a6075">参照: 情報モデル・段階移行・外部記録・同梱</text>
+<text x="764" y="564" font-size="14" fill="#4a6075">思想の索引</text>
+<text x="764" y="589" font-size="14" fill="#4a6075">引き継ぎ先: refactor</text>
+<text x="764" y="614" font-size="14" fill="#4a6075">生成: 外部記録</text>
+<rect x="1090" y="391" width="326" height="244" rx="10" fill="#eef5fb" stroke="#7ea0c0" stroke-width="2" data-node="skill:refactor"/>
+<text x="1106" y="434" font-size="24" fill="#142638">refactor</text>
+<text x="1106" y="459" font-size="13" fill="#4a6075">利用者が明示して起動する</text>
+<text x="1106" y="488" font-size="15" fill="#142638">対象フローの DCA への段階移行を、依頼さ</text>
+<text x="1106" y="512" font-size="15" fill="#142638">れた範囲で進める。</text>
+<text x="1106" y="541" font-size="14" fill="#4a6075">参照: 情報モデル・段階移行・外部記録・検</text>
+<text x="1106" y="564" font-size="14" fill="#4a6075">証・同梱思想の索引</text>
+<text x="1106" y="589" font-size="14" fill="#4a6075">引き継ぎ先: interview</text>
+<text x="1106" y="614" font-size="14" fill="#4a6075">生成: 外部記録</text>
+<rect x="64" y="675" width="326" height="196" rx="10" fill="#eef5fb" stroke="#7ea0c0" stroke-width="2" data-node="skill:lint"/>
+<text x="80" y="718" font-size="24" fill="#142638">lint</text>
+<text x="80" y="743" font-size="13" fill="#4a6075">利用者が明示して起動する</text>
+<text x="80" y="772" font-size="15" fill="#142638">機械で検出できる範囲と、人の判断が要る</text>
+<text x="80" y="796" font-size="15" fill="#142638">範囲を分け、検査ルールを提案する。</text>
+<text x="80" y="825" font-size="14" fill="#4a6075">参照: 情報モデル・検証・同梱思想の索引</text>
+<rect x="406" y="675" width="326" height="196" rx="10" fill="#e8f3ee" stroke="#5f9c82" stroke-width="2" data-node="skill:principles"/>
+<text x="422" y="718" font-size="24" fill="#142638">principles</text>
+<text x="422" y="743" font-size="13" fill="#4a6075">利用者が明示して起動する</text>
+<text x="422" y="772" font-size="15" fill="#142638">同梱する DCA の思想と、その適用条件、必</text>
+<text x="422" y="796" font-size="15" fill="#142638">須と任意の区別、共通手順の所在を説明す</text>
+<text x="422" y="820" font-size="15" fill="#142638">る。</text>
+<text x="422" y="849" font-size="14" fill="#4a6075">参照: 同梱思想の索引</text>
+<rect x="748" y="675" width="326" height="196" rx="10" fill="#eef5fb" stroke="#7ea0c0" stroke-width="2" data-node="skill:overview"/>
+<text x="764" y="718" font-size="24" fill="#142638">overview</text>
+<text x="764" y="743" font-size="13" fill="#4a6075">利用者が明示して起動する</text>
+<text x="764" y="772" font-size="15" fill="#142638">dca 自体の構成を、根拠付きの SVG で示</text>
+<text x="764" y="796" font-size="15" fill="#142638">す。</text>
+<text x="764" y="825" font-size="14" fill="#4a6075">参照: 構成図の入力と view データ</text>
+<text x="764" y="850" font-size="14" fill="#4a6075">生成: 構成図の SVG・構成図の view データ</text>
+<path d="M 740 335 L 740 363" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" data-bus="案内:skill:guide"/>
+<text x="752" y="357" font-size="14" fill="#4a6075">案内</text>
+<path d="M 52 363 L 1253 363" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" data-bus="案内:skill:guide"/>
+<path d="M 227 363 L 227 391" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)" data-edge="案内:skill:guide&gt;skill:map"/>
+<path d="M 569 363 L 569 391" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)" data-edge="案内:skill:guide&gt;skill:scan"/>
+<path d="M 911 363 L 911 391" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)" data-edge="案内:skill:guide&gt;skill:interview"/>
+<path d="M 1253 363 L 1253 391" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)" data-edge="案内:skill:guide&gt;skill:refactor"/>
+<path d="M 52 655 L 911 655" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" data-bus="案内:skill:guide"/>
+<path d="M 227 655 L 227 675" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)" data-edge="案内:skill:guide&gt;skill:lint"/>
+<path d="M 569 655 L 569 675" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)" data-edge="案内:skill:guide&gt;skill:principles"/>
+<path d="M 911 655 L 911 675" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow)" data-edge="案内:skill:guide&gt;skill:overview"/>
+<path d="M 52 363 L 52 655" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="7 5" data-bus="案内:skill:guide"/>
+<path d="M 692 895 L 692 947" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="2 5" marker-end="url(#arrow)" data-edge="実行環境:plugin:dca&gt;host:claude-code"/>
+<text x="704" y="926" font-size="14" fill="#4a6075">実行環境</text>
+<path d="M 1376 895 L 1376 947" fill="none" stroke="#47647b" stroke-width="2" stroke-dasharray="2 5" marker-end="url(#arrow)" data-edge="実行環境:plugin:dca&gt;host:codex-cli"/>
+<text x="1388" y="926" font-size="14" fill="#4a6075">実行環境</text>
+<rect x="40" y="947" width="1400" height="163" rx="14" fill="#f8f9fa" stroke="#7b8794" stroke-width="2"/>
+<text x="64" y="979" font-size="22" fill="#142638">実行環境（Claude Code、Codex CLI）</text>
+<rect x="64" y="995" width="668" height="91" rx="10" fill="#f1f3f5" stroke="#7b8794" stroke-width="2" data-node="host:claude-code"/>
+<text x="80" y="1036" font-size="22" fill="#142638">Claude Code</text>
+<text x="80" y="1065" font-size="14" fill="#4a6075">マニフェスト: .claude-plugin/plugin.json</text>
+<rect x="748" y="995" width="668" height="91" rx="10" fill="#f1f3f5" stroke="#7b8794" stroke-width="2" data-node="host:codex-cli"/>
+<text x="764" y="1036" font-size="22" fill="#142638">Codex CLI</text>
+<text x="764" y="1065" font-size="14" fill="#4a6075">マニフェスト: plugin.json</text>
+<rect x="40" y="1138" width="1400" height="429" rx="14" fill="#f6fbf8" stroke="#5f9c82" stroke-width="2"/>
+<text x="64" y="1170" font-size="22" fill="#142638">共通資料と同梱思想（Skill が直接読む）</text>
+<rect x="64" y="1186" width="440" height="159" rx="10" fill="#ffffff" stroke="#5f9c82" stroke-width="2" data-node="reference:skills/overview/references/view-data.md"/>
+<text x="80" y="1222" font-size="18" fill="#142638">構成図の入力と view データ</text>
+<text x="80" y="1251" font-size="14" fill="#142638">overview が、dca の実際の登録情報から根拠付きの構成図を作</text>
+<text x="80" y="1274" font-size="14" fill="#142638">り、変更のたびに再確認するための資料。</text>
+<text x="80" y="1301" font-size="14" fill="#4a6075">参照元: overview</text>
+<rect x="520" y="1186" width="440" height="159" rx="10" fill="#ffffff" stroke="#5f9c82" stroke-width="2" data-node="reference:skills/principles/references/common/information-model.md"/>
+<text x="536" y="1222" font-size="18" fill="#142638">情報モデル</text>
+<text x="536" y="1251" font-size="14" fill="#142638">map、scan、interview、refactor が、調査結果・仕様・判断・</text>
+<text x="536" y="1274" font-size="14" fill="#142638">検証結果を同じ分類で扱うための共通資料。出典の記号（S01 な</text>
+<text x="536" y="1297" font-size="14" fill="#142638">ど）は 同梱思想の索引 で引く。</text>
+<text x="536" y="1324" font-size="14" fill="#4a6075">参照元: interview・lint・map・refactor・scan</text>
+<rect x="976" y="1186" width="440" height="159" rx="10" fill="#ffffff" stroke="#5f9c82" stroke-width="2" data-node="reference:skills/principles/references/common/migration-workflow.md"/>
+<text x="992" y="1222" font-size="18" fill="#142638">段階移行</text>
+<text x="992" y="1251" font-size="14" fill="#142638">既存の一つの業務フローを、合意した挙動と保証を保ちながら</text>
+<text x="992" y="1274" font-size="14" fill="#142638">DCA へ段階的に移す手順の共通資料。refactor が主に使い、</text>
+<text x="992" y="1297" font-size="14" fill="#142638">scan と interview は変更範囲の境界を確かめるときに読む。</text>
+<text x="992" y="1324" font-size="14" fill="#4a6075">参照元: interview・refactor</text>
+<rect x="64" y="1361" width="440" height="182" rx="10" fill="#ffffff" stroke="#5f9c82" stroke-width="2" data-node="reference:skills/principles/references/common/record-storage.md"/>
+<text x="80" y="1397" font-size="18" fill="#142638">外部記録</text>
+<text x="80" y="1426" font-size="14" fill="#142638">調査、合意、移行の進捗、検証結果を、対象リポジトリに書き込</text>
+<text x="80" y="1449" font-size="14" fill="#142638">まずに保存し、別の会話から再開するための共通資料。map、</text>
+<text x="80" y="1472" font-size="14" fill="#142638">scan、interview、refactor が記録を読み書きするときに、この</text>
+<text x="80" y="1495" font-size="14" fill="#142638">資料を直接読む。</text>
+<text x="80" y="1522" font-size="14" fill="#4a6075">参照元: guide・interview・map・refactor・scan</text>
+<rect x="520" y="1361" width="440" height="182" rx="10" fill="#ffffff" stroke="#5f9c82" stroke-width="2" data-node="reference:skills/principles/references/common/verification.md"/>
+<text x="536" y="1397" font-size="18" fill="#142638">検証</text>
+<text x="536" y="1426" font-size="14" fill="#142638">移行で主張する保証を、既存の挙動、型、Lint、実行時の条件、</text>
+<text x="536" y="1449" font-size="14" fill="#142638">仕様変更への追従に分けて検証するための共通資料。refactor と</text>
+<text x="536" y="1472" font-size="14" fill="#142638">lint が主に使い、scan は検証不足を判定するときに読む。</text>
+<text x="536" y="1499" font-size="14" fill="#4a6075">参照元: lint・refactor・scan</text>
+<rect x="976" y="1361" width="440" height="182" rx="10" fill="#ffffff" stroke="#5f9c82" stroke-width="2" data-node="reference:skills/principles/references/index.md"/>
+<text x="992" y="1397" font-size="18" fill="#142638">同梱思想の索引</text>
+<text x="992" y="1426" font-size="14" fill="#142638">dca に同梱する DCA の思想と、各 Skill が共通で読む資料の所在</text>
+<text x="992" y="1449" font-size="14" fill="#142638">を示す。作業に必要な行だけを読む。全資料を通して読まない。</text>
+<text x="992" y="1476" font-size="14" fill="#4a6075">参照元: interview・lint・map・principles・refactor・scan</text>
+<text x="992" y="1501" font-size="14" fill="#4a6075">同梱思想 6 ファイル（出典 S01 から S06）</text>
+<rect x="40" y="1595" width="1400" height="210" rx="14" fill="#fdfdfb" stroke="#9a8f6a" stroke-width="2"/>
+<text x="64" y="1627" font-size="22" fill="#142638">成果物（点線の枠は導入先の記録、実線の枠は Plugin の保守成果物）</text>
+<rect x="64" y="1643" width="440" height="138" rx="10" fill="#ffffff" stroke="#5f9c82" stroke-width="2" stroke-dasharray="8 5" data-node="artifact:external-record"/>
+<text x="80" y="1679" font-size="18" fill="#142638">外部記録</text>
+<text x="80" y="1706" font-size="14" fill="#142638">保存先の区分: 導入先の記録</text>
+<text x="80" y="1733" font-size="14" fill="#142638">対象リポジトリの外に置く、調査、合意、進捗、検証結果</text>
+<text x="80" y="1760" font-size="14" fill="#4a6075">生成元: interview・map・refactor・scan</text>
+<rect x="520" y="1643" width="440" height="138" rx="10" fill="#fff9ec" stroke="#c8963c" stroke-width="2" data-node="artifact:overview-svg"/>
+<text x="536" y="1679" font-size="18" fill="#142638">構成図の SVG</text>
+<text x="536" y="1706" font-size="14" fill="#142638">保存先の区分: Plugin の保守成果物</text>
+<text x="536" y="1733" font-size="14" fill="#142638">Plugin 自体の構成を示す図</text>
+<text x="536" y="1760" font-size="14" fill="#4a6075">生成元: overview</text>
+<rect x="976" y="1643" width="440" height="138" rx="10" fill="#fff9ec" stroke="#c8963c" stroke-width="2" data-node="artifact:overview-view"/>
+<text x="992" y="1679" font-size="18" fill="#142638">構成図の view データ</text>
+<text x="992" y="1706" font-size="14" fill="#142638">保存先の区分: Plugin の保守成果物</text>
+<text x="992" y="1733" font-size="14" fill="#142638">入力の hash と根拠を持つ、構成図の元データ</text>
+<text x="992" y="1760" font-size="14" fill="#4a6075">生成元: overview</text>
+<rect x="40" y="1833" width="1400" height="216" rx="14" fill="#ffffff" stroke="#c3ccd6" stroke-width="2"/>
+<text x="64" y="1883" font-size="20" fill="#142638">凡例</text>
+<text x="64" y="1906" font-size="15" fill="#4a6075">矢印の線（破線）: 案内。Skill が利用者の目的に応じて別の Skill を案内する</text>
+<text x="64" y="1929" font-size="15" fill="#4a6075">矢印の線（点線）: 実行環境。Plugin が対象の host で利用される</text>
+<text x="64" y="1952" font-size="15" fill="#4a6075">Skill 内の「参照」: 「読む資料」の節にある共通資料や同梱思想を、判断の根拠として読む</text>
+<text x="64" y="1975" font-size="15" fill="#4a6075">Skill 内の「引き継ぎ先」: 出力を、利用者を介して別の Skill に渡す</text>
+<text x="64" y="1998" font-size="15" fill="#4a6075">Skill 内の「生成」: 成果物を作る</text>
+<text x="64" y="2021" font-size="15" fill="#4a6075">色: 水色は手動起動の Skill、黄色は明示でも暗黙でも起動できる Skill、緑は共通思想。色だけでなく起動の文言も併記する</text>
+<text x="40" y="2087" font-size="13" fill="#4a6075">この図は scripts/dca_overview.py が view データから生成する。フォント: Noto Sans CJK JP 2.004</text>
+</svg>

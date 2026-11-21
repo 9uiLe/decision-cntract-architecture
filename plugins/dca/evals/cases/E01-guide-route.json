@@ -1,0 +1,17 @@
+{
+  "id": "E01",
+  "viewpoint": "肯定的な起動・guide",
+  "skills": ["guide"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "host-run",
+  "fixture": "kotlin-reservation",
+  "setup": ["fixture を作業ディレクトリへ複写し、git init して commit する", "外部記録の保存先は一時ディレクトリを DCA_STATE_DIR に指定する"],
+  "prompt": "これは既存の Kotlin/JVM 製品です。DCA を段階的に導入したいのですが、どこから始めればよいか分かりません。",
+  "expected": [
+    "目的を一つ決め、dca の Skill を一つ案内する",
+    "案内に、選定の理由、必要な入力、得られる成果物が含まれる",
+    "全 Skill の一括実行を前提にしない"
+  ],
+  "must_not": ["他の Skill を実行する", "コードや設定を変更する", "外部記録を作る"],
+  "evidence": ["応答の本文", "実行したコマンドの一覧", "fixture の git status が空であること"]
+}

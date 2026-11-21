@@ -1,0 +1,999 @@
+{
+  "edges": [
+    {
+      "evidence": [
+        {
+          "path": "skills/guide/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:guide",
+      "id": "参照:skill:guide>reference:skills/principles/references/common/record-storage.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 0,
+      "to": "reference:skills/principles/references/common/record-storage.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/interview/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:interview",
+      "id": "参照:skill:interview>reference:skills/principles/references/common/information-model.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 0,
+      "to": "reference:skills/principles/references/common/information-model.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/interview/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:interview",
+      "id": "参照:skill:interview>reference:skills/principles/references/common/migration-workflow.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 2,
+      "to": "reference:skills/principles/references/common/migration-workflow.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/interview/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:interview",
+      "id": "参照:skill:interview>reference:skills/principles/references/common/record-storage.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 1,
+      "to": "reference:skills/principles/references/common/record-storage.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/interview/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:interview",
+      "id": "参照:skill:interview>reference:skills/principles/references/index.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 3,
+      "to": "reference:skills/principles/references/index.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/lint/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:lint",
+      "id": "参照:skill:lint>reference:skills/principles/references/common/information-model.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 1,
+      "to": "reference:skills/principles/references/common/information-model.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/lint/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:lint",
+      "id": "参照:skill:lint>reference:skills/principles/references/common/verification.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 0,
+      "to": "reference:skills/principles/references/common/verification.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/lint/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:lint",
+      "id": "参照:skill:lint>reference:skills/principles/references/index.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 2,
+      "to": "reference:skills/principles/references/index.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/map/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:map",
+      "id": "参照:skill:map>reference:skills/principles/references/common/information-model.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 0,
+      "to": "reference:skills/principles/references/common/information-model.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/map/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:map",
+      "id": "参照:skill:map>reference:skills/principles/references/common/record-storage.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 1,
+      "to": "reference:skills/principles/references/common/record-storage.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/map/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:map",
+      "id": "参照:skill:map>reference:skills/principles/references/index.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 2,
+      "to": "reference:skills/principles/references/index.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/overview/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:overview",
+      "id": "参照:skill:overview>reference:skills/overview/references/view-data.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 0,
+      "to": "reference:skills/overview/references/view-data.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/principles/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:principles",
+      "id": "参照:skill:principles>reference:skills/principles/references/index.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 0,
+      "to": "reference:skills/principles/references/index.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/refactor/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:refactor",
+      "id": "参照:skill:refactor>reference:skills/principles/references/common/information-model.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 2,
+      "to": "reference:skills/principles/references/common/information-model.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/refactor/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:refactor",
+      "id": "参照:skill:refactor>reference:skills/principles/references/common/migration-workflow.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 0,
+      "to": "reference:skills/principles/references/common/migration-workflow.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/refactor/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:refactor",
+      "id": "参照:skill:refactor>reference:skills/principles/references/common/record-storage.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 3,
+      "to": "reference:skills/principles/references/common/record-storage.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/refactor/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:refactor",
+      "id": "参照:skill:refactor>reference:skills/principles/references/common/verification.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 1,
+      "to": "reference:skills/principles/references/common/verification.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/refactor/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:refactor",
+      "id": "参照:skill:refactor>reference:skills/principles/references/index.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 4,
+      "to": "reference:skills/principles/references/index.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/scan/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:scan",
+      "id": "参照:skill:scan>reference:skills/principles/references/common/information-model.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 0,
+      "to": "reference:skills/principles/references/common/information-model.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/scan/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:scan",
+      "id": "参照:skill:scan>reference:skills/principles/references/common/record-storage.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 2,
+      "to": "reference:skills/principles/references/common/record-storage.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/scan/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:scan",
+      "id": "参照:skill:scan>reference:skills/principles/references/common/verification.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 1,
+      "to": "reference:skills/principles/references/common/verification.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/scan/SKILL.md",
+          "section": "読む資料"
+        }
+      ],
+      "from": "skill:scan",
+      "id": "参照:skill:scan>reference:skills/principles/references/index.md",
+      "kind": "参照",
+      "label": "読む資料",
+      "order": 3,
+      "to": "reference:skills/principles/references/index.md"
+    },
+    {
+      "evidence": [
+        {
+          "path": ".claude-plugin/plugin.json",
+          "section": null
+        }
+      ],
+      "from": "plugin:dca",
+      "id": "実行環境:plugin:dca>host:claude-code",
+      "kind": "実行環境",
+      "label": "マニフェスト",
+      "order": 0,
+      "to": "host:claude-code"
+    },
+    {
+      "evidence": [
+        {
+          "path": "plugin.json",
+          "section": "extensions.com.openai"
+        }
+      ],
+      "from": "plugin:dca",
+      "id": "実行環境:plugin:dca>host:codex-cli",
+      "kind": "実行環境",
+      "label": "マニフェスト",
+      "order": 1,
+      "to": "host:codex-cli"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/interview/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:interview",
+      "id": "引き継ぎ:skill:interview>skill:refactor",
+      "kind": "引き継ぎ",
+      "label": "合意した範囲、受入条件、対象外を渡す",
+      "order": 0,
+      "to": "skill:refactor"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/map/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:map",
+      "id": "引き継ぎ:skill:map>skill:interview",
+      "kind": "引き継ぎ",
+      "label": "食い違いや未確認から、決める論点を渡す",
+      "order": 1,
+      "to": "skill:interview"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/map/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:map",
+      "id": "引き継ぎ:skill:map>skill:scan",
+      "kind": "引き継ぎ",
+      "label": "追跡できない関係を、調べる対象として渡す",
+      "order": 0,
+      "to": "skill:scan"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/refactor/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:refactor",
+      "id": "引き継ぎ:skill:refactor>skill:interview",
+      "kind": "引き継ぎ",
+      "label": "未決の事項を解消するための論点を渡す",
+      "order": 0,
+      "to": "skill:interview"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/scan/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:scan",
+      "id": "引き継ぎ:skill:scan>skill:interview",
+      "kind": "引き継ぎ",
+      "label": "人が選ぶ必要がある論点を渡す",
+      "order": 0,
+      "to": "skill:interview"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/scan/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:scan",
+      "id": "引き継ぎ:skill:scan>skill:lint",
+      "kind": "引き継ぎ",
+      "label": "機械で再発を検出できそうな指摘を渡す",
+      "order": 1,
+      "to": "skill:lint"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/scan/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:scan",
+      "id": "引き継ぎ:skill:scan>skill:refactor",
+      "kind": "引き継ぎ",
+      "label": "修正の計画と変更が要る指摘を渡す",
+      "order": 2,
+      "to": "skill:refactor"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/guide/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:guide",
+      "id": "案内:skill:guide>skill:interview",
+      "kind": "案内",
+      "label": "方針や仕様の未決事項を解消したいとき",
+      "order": 2,
+      "to": "skill:interview"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/guide/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:guide",
+      "id": "案内:skill:guide>skill:lint",
+      "kind": "案内",
+      "label": "機械で検査できるルールを提案してほしいとき",
+      "order": 4,
+      "to": "skill:lint"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/guide/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:guide",
+      "id": "案内:skill:guide>skill:map",
+      "kind": "案内",
+      "label": "対象フローの判断、契約、状態、副作用を理解したいとき",
+      "order": 0,
+      "to": "skill:map"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/guide/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:guide",
+      "id": "案内:skill:guide>skill:overview",
+      "kind": "案内",
+      "label": "dca 自体の構成と、成果物の関係を確認したいとき",
+      "order": 6,
+      "to": "skill:overview"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/guide/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:guide",
+      "id": "案内:skill:guide>skill:principles",
+      "kind": "案内",
+      "label": "原則と、必須と任意の区別を確認したいとき",
+      "order": 5,
+      "to": "skill:principles"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/guide/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:guide",
+      "id": "案内:skill:guide>skill:refactor",
+      "kind": "案内",
+      "label": "適用判断、移行計画、依頼した変更を進めたいとき",
+      "order": 3,
+      "to": "skill:refactor"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/guide/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:guide",
+      "id": "案内:skill:guide>skill:scan",
+      "kind": "案内",
+      "label": "根拠付きで問題と不足している情報を見つけたいとき",
+      "order": 1,
+      "to": "skill:scan"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/interview/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:interview",
+      "id": "生成:skill:interview>artifact:external-record",
+      "kind": "生成",
+      "label": "合意した判断と理由、残る不確実性",
+      "order": 1,
+      "to": "artifact:external-record"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/map/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:map",
+      "id": "生成:skill:map>artifact:external-record",
+      "kind": "生成",
+      "label": "判断と保証の対応表、根拠の一覧、未確認の事項",
+      "order": 2,
+      "to": "artifact:external-record"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/overview/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:overview",
+      "id": "生成:skill:overview>artifact:overview-svg",
+      "kind": "生成",
+      "label": "dca 自体の構成図",
+      "order": 1,
+      "to": "artifact:overview-svg"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/overview/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:overview",
+      "id": "生成:skill:overview>artifact:overview-view",
+      "kind": "生成",
+      "label": "入力の hash と根拠を持つ view データ",
+      "order": 0,
+      "to": "artifact:overview-view"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/refactor/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:refactor",
+      "id": "生成:skill:refactor>artifact:external-record",
+      "kind": "生成",
+      "label": "適用判断、計画、検証結果、進捗",
+      "order": 1,
+      "to": "artifact:external-record"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/scan/SKILL.md",
+          "section": "他の Skill との関係"
+        }
+      ],
+      "from": "skill:scan",
+      "id": "生成:skill:scan>artifact:external-record",
+      "kind": "生成",
+      "label": "根拠別の調査報告と、調べた範囲",
+      "order": 3,
+      "to": "artifact:external-record"
+    }
+  ],
+  "format": 1,
+  "inputs": [
+    {
+      "path": ".claude-plugin/plugin.json",
+      "sha256": "b094a52a74023b29687ed5d59c5ab22c278b2ea6edc38d64c2bd3492f56ae22b"
+    },
+    {
+      "path": "plugin.json",
+      "sha256": "d2b9f7b857d382b54fcadeff93bea4d992ed1bbaabce4d79c577f06c8216a1fa"
+    },
+    {
+      "path": "skills/guide/SKILL.md",
+      "sha256": "3cb13659975f634b4765e3696d810004431c80c1e4768393f54600b847cadddc"
+    },
+    {
+      "path": "skills/guide/agents/openai.yaml",
+      "sha256": "51dd70626e9e829b50ce5da4cdb7cb95aff0a860a1ec171d80b3f829fa7986aa"
+    },
+    {
+      "path": "skills/interview/SKILL.md",
+      "sha256": "7d0c7e30d4bfc1c785a6a39dce4e89faa8de7a67c4db574351458848a027e175"
+    },
+    {
+      "path": "skills/interview/agents/openai.yaml",
+      "sha256": "ebd373f85e8724bcf6b9298b8240ab0beec56928fc13721e873d4f04f5980fb4"
+    },
+    {
+      "path": "skills/lint/SKILL.md",
+      "sha256": "0ab514bd2e5386e8dad9fe689e41f88cffee236ab96a7ff3cabe6432f58e09ef"
+    },
+    {
+      "path": "skills/lint/agents/openai.yaml",
+      "sha256": "9b665036642ad5cf35bff5918a843b42005a97ac48098f3a00f991d686392e5e"
+    },
+    {
+      "path": "skills/map/SKILL.md",
+      "sha256": "922aff7c43d5fb946472b987b3893785590a75c983d5532ee853e892b4bf7a52"
+    },
+    {
+      "path": "skills/map/agents/openai.yaml",
+      "sha256": "d2102b996909dbb8d9ba0f860746fffcb11335eebad5ff9ae5dc00a948fd989d"
+    },
+    {
+      "path": "skills/overview/SKILL.md",
+      "sha256": "167f21e1f936541403fe9ca53965432d54e541d47296adafd133f685cfa5331a"
+    },
+    {
+      "path": "skills/overview/agents/openai.yaml",
+      "sha256": "5221b237205e80b490a156110cadbacd3cfc814d074f92976456b4cca3edcdb4"
+    },
+    {
+      "path": "skills/overview/references/view-data.md",
+      "sha256": "e2384d5c149f212c1a080a15b517cbda6bbb7d354c13dac9a4f93eb504ed2618"
+    },
+    {
+      "path": "skills/principles/SKILL.md",
+      "sha256": "a23c4917436e005116610173516ca7b56ff1a60ab8fd0aa84fd2bfd1c60d1074"
+    },
+    {
+      "path": "skills/principles/agents/openai.yaml",
+      "sha256": "96c04bbdb2609e0892fbaebc89cb8d6d083a51bcb9dc309eae4964fb57b89647"
+    },
+    {
+      "path": "skills/principles/references/common/information-model.md",
+      "sha256": "b0a917e554cdd6add5c4779c0622ec4a31d9a96b0b50b159cbee6755361cd23a"
+    },
+    {
+      "path": "skills/principles/references/common/migration-workflow.md",
+      "sha256": "3cd144a9caa02987ea714b12b498844b104cb0aca9f61738e809395e89446bfe"
+    },
+    {
+      "path": "skills/principles/references/common/record-storage.md",
+      "sha256": "18e92eecf89720e0d6da69c5c5c8512979a802a70df42bd88a3cf58aa7669855"
+    },
+    {
+      "path": "skills/principles/references/common/verification.md",
+      "sha256": "327db3a11eb67d48b7839ded131ee911f17e8be8ed319b864a838c73aaa629cf"
+    },
+    {
+      "path": "skills/principles/references/dca/SOURCES.json",
+      "sha256": "d94f3a9c29ff5c0eab29008c84d5491816a86926fbe77771a2bbb35f1540d037"
+    },
+    {
+      "path": "skills/principles/references/index.md",
+      "sha256": "3e15c0cf42143ce69f55b2aad287a66acbf4cfbf54bb2a5f2756e9c6ba348059"
+    },
+    {
+      "path": "skills/refactor/SKILL.md",
+      "sha256": "1a7e549c324a0df216761a2d022bb063217e53424796f52122de4fcbfbbd2074"
+    },
+    {
+      "path": "skills/refactor/agents/openai.yaml",
+      "sha256": "72fc43bad88401aea990085ad730fdc84d5a0c53358a1f466b12027f328720ab"
+    },
+    {
+      "path": "skills/scan/SKILL.md",
+      "sha256": "67cf0cc89bb134a4100375947ef2f5b16cced32686e6956f5c265c5cd52dfb88"
+    },
+    {
+      "path": "skills/scan/agents/openai.yaml",
+      "sha256": "38f5a5c3f2681657df2f5c192914c2fbbbb2c1350c62bc156859d398fe4dd12e"
+    }
+  ],
+  "nodes": [
+    {
+      "evidence": [
+        {
+          "path": "skills/overview/references/view-data.md",
+          "section": "成果物"
+        }
+      ],
+      "id": "artifact:external-record",
+      "kind": "artifact",
+      "label": "外部記録",
+      "storage": "導入先の記録",
+      "summary": "対象リポジトリの外に置く、調査、合意、進捗、検証結果"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/overview/references/view-data.md",
+          "section": "成果物"
+        }
+      ],
+      "id": "artifact:overview-svg",
+      "kind": "artifact",
+      "label": "構成図の SVG",
+      "storage": "Plugin の保守成果物",
+      "summary": "Plugin 自体の構成を示す図"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/overview/references/view-data.md",
+          "section": "成果物"
+        }
+      ],
+      "id": "artifact:overview-view",
+      "kind": "artifact",
+      "label": "構成図の view データ",
+      "storage": "Plugin の保守成果物",
+      "summary": "入力の hash と根拠を持つ、構成図の元データ"
+    },
+    {
+      "evidence": [
+        {
+          "path": ".claude-plugin/plugin.json",
+          "section": null
+        }
+      ],
+      "id": "host:claude-code",
+      "kind": "host",
+      "label": "Claude Code",
+      "summary": "マニフェスト: .claude-plugin/plugin.json"
+    },
+    {
+      "evidence": [
+        {
+          "path": "plugin.json",
+          "section": "extensions.com.openai"
+        }
+      ],
+      "id": "host:codex-cli",
+      "kind": "host",
+      "label": "Codex CLI",
+      "summary": "マニフェスト: plugin.json"
+    },
+    {
+      "evidence": [
+        {
+          "path": "plugin.json",
+          "section": null
+        }
+      ],
+      "id": "plugin:dca",
+      "kind": "plugin",
+      "label": "dca",
+      "summary": "既存プロジェクトの一つの業務フローを、判断契約(DCA)の観点で調査・合意・段階移行するための Skill 群"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/overview/references/view-data.md",
+          "section": "構成図の入力と view データ"
+        }
+      ],
+      "id": "reference:skills/overview/references/view-data.md",
+      "kind": "reference",
+      "label": "構成図の入力と view データ",
+      "summary": "overview が、dca の実際の登録情報から根拠付きの構成図を作り、変更のたびに再確認するための資料。"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/principles/references/common/information-model.md",
+          "section": "情報モデル"
+        }
+      ],
+      "id": "reference:skills/principles/references/common/information-model.md",
+      "kind": "reference",
+      "label": "情報モデル",
+      "summary": "map、scan、interview、refactor が、調査結果・仕様・判断・検証結果を同じ分類で扱うための共通資料。出典の記号（S01 など）は 同梱思想の索引 で引く。"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/principles/references/common/migration-workflow.md",
+          "section": "段階移行"
+        }
+      ],
+      "id": "reference:skills/principles/references/common/migration-workflow.md",
+      "kind": "reference",
+      "label": "段階移行",
+      "summary": "既存の一つの業務フローを、合意した挙動と保証を保ちながら DCA へ段階的に移す手順の共通資料。refactor が主に使い、scan と interview は変更範囲の境界を確かめるときに読む。"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/principles/references/common/record-storage.md",
+          "section": "外部記録"
+        }
+      ],
+      "id": "reference:skills/principles/references/common/record-storage.md",
+      "kind": "reference",
+      "label": "外部記録",
+      "summary": "調査、合意、移行の進捗、検証結果を、対象リポジトリに書き込まずに保存し、別の会話から再開するための共通資料。map、scan、interview、refactor が記録を読み書きするときに、この資料を直接読む。"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/principles/references/common/verification.md",
+          "section": "検証"
+        }
+      ],
+      "id": "reference:skills/principles/references/common/verification.md",
+      "kind": "reference",
+      "label": "検証",
+      "summary": "移行で主張する保証を、既存の挙動、型、Lint、実行時の条件、仕様変更への追従に分けて検証するための共通資料。refactor と lint が主に使い、scan は検証不足を判定するときに読む。"
+    },
+    {
+      "bundled_files": 6,
+      "evidence": [
+        {
+          "path": "skills/principles/references/index.md",
+          "section": "同梱思想の索引"
+        }
+      ],
+      "id": "reference:skills/principles/references/index.md",
+      "kind": "reference",
+      "label": "同梱思想の索引",
+      "summary": "dca に同梱する DCA の思想と、各 Skill が共通で読む資料の所在を示す。作業に必要な行だけを読む。全資料を通して読まない。"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/guide/SKILL.md",
+          "section": "guide"
+        }
+      ],
+      "id": "skill:guide",
+      "invocation": "implicit",
+      "kind": "skill",
+      "label": "guide",
+      "summary": "利用者の目的を一つ選び、使う Skill を一つ案内する。"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/interview/SKILL.md",
+          "section": "interview"
+        }
+      ],
+      "id": "skill:interview",
+      "invocation": "manual",
+      "kind": "skill",
+      "label": "interview",
+      "summary": "未決の判断を利用者との対話で合意に変える。"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/lint/SKILL.md",
+          "section": "lint"
+        }
+      ],
+      "id": "skill:lint",
+      "invocation": "manual",
+      "kind": "skill",
+      "label": "lint",
+      "summary": "機械で検出できる範囲と、人の判断が要る範囲を分け、検査ルールを提案する。"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/map/SKILL.md",
+          "section": "map"
+        }
+      ],
+      "id": "skill:map",
+      "invocation": "manual",
+      "kind": "skill",
+      "label": "map",
+      "summary": "対象フローの判断と保証の所在を、根拠付きで対応付ける。"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/overview/SKILL.md",
+          "section": "overview"
+        }
+      ],
+      "id": "skill:overview",
+      "invocation": "manual",
+      "kind": "skill",
+      "label": "overview",
+      "summary": "dca 自体の構成を、根拠付きの SVG で示す。"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/principles/SKILL.md",
+          "section": "principles"
+        }
+      ],
+      "id": "skill:principles",
+      "invocation": "manual",
+      "kind": "skill",
+      "label": "principles",
+      "summary": "同梱する DCA の思想と、その適用条件、必須と任意の区別、共通手順の所在を説明する。"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/refactor/SKILL.md",
+          "section": "refactor"
+        }
+      ],
+      "id": "skill:refactor",
+      "invocation": "manual",
+      "kind": "skill",
+      "label": "refactor",
+      "summary": "対象フローの DCA への段階移行を、依頼された範囲で進める。"
+    },
+    {
+      "evidence": [
+        {
+          "path": "skills/scan/SKILL.md",
+          "section": "scan"
+        }
+      ],
+      "id": "skill:scan",
+      "invocation": "manual",
+      "kind": "skill",
+      "label": "scan",
+      "summary": "対象フローの問題を、根拠付きで種類を分けて報告する。"
+    }
+  ],
+  "plugin": {
+    "name": "dca",
+    "version": "0.1.0"
+  },
+  "registration": {
+    "skills": [
+      "guide",
+      "interview",
+      "lint",
+      "map",
+      "overview",
+      "principles",
+      "refactor",
+      "scan"
+    ]
+  },
+  "rendering": {
+    "font": "Noto Sans CJK JP 2.004",
+    "metrics_sha256": "3d996512e61db97371c6eee6cd6988d6757e5edaa4a3ead14eda82ddbf2d87df",
+    "renderer": "dca_overview.py/1",
+    "rules": "1"
+  }
+}

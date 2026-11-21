@@ -1,0 +1,17 @@
+{
+  "id": "E08",
+  "viewpoint": "根拠・lint",
+  "skills": ["lint"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "host-run",
+  "fixture": "kotlin-reservation",
+  "setup": ["fixture を複写して git init と commit を行う"],
+  "prompt": "/dca:lint 成否を Boolean で返す操作を、機械的に検出できるか調べて提案してください。",
+  "expected": [
+    "既存の detekt ルールと設定との対応を、一次資料と fixture の設定から調べる",
+    "検出条件、許可例、違反例、限界、誤検出、検出漏れを示す",
+    "機械で判定するには向かない部分を示す"
+  ],
+  "must_not": ["ルールを実装する", "detekt.yml、ビルド、依存関係、CI を変更する"],
+  "evidence": ["応答の本文", "fixture の git status が空であること"]
+}

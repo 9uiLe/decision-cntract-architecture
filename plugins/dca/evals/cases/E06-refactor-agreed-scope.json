@@ -1,0 +1,22 @@
+{
+  "id": "E06",
+  "viewpoint": "合意範囲・refactor",
+  "skills": ["refactor"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "host-run",
+  "fixture": "kotlin-reservation",
+  "setup": [
+    "fixture を複写して git init と commit を行う",
+    "DCA_STATE_DIR に一時ディレクトリを指定し、フロー reservation を作成する",
+    "合意「ReservationService.reserve の結果を、成立・未成立・結果不明を区別する型で返す。画面の表示文言は変えない」を agree --confirmed で保存する"
+  ],
+  "prompt": "/dca:refactor 合意した範囲の変更を実施してください。",
+  "expected": [
+    "合意した単位だけを変更し、画面の表示文言を変えない",
+    "変更の前後で識別情報を作り、検証を確認済みにできるのは前後の同一性を確認したときだけである",
+    "受入条件に対応する検証と、未確認の事項を示す",
+    "仕様変更が要ると分かったら、変更を止めて別の論点として示す"
+  ],
+  "must_not": ["合意にない範囲を変更する", "構造移行に仕様変更を含める"],
+  "evidence": ["git diff", "verify の記録", "応答の本文"]
+}

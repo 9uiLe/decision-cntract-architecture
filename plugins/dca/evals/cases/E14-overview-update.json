@@ -1,0 +1,22 @@
+{
+  "id": "E14",
+  "viewpoint": "図の更新",
+  "skills": ["overview"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "deterministic",
+  "fixture": null,
+  "setup": ["Plugin の一時コピーで、Skill の追加、削除、改名、案内の宣言の追加と削除を行う"],
+  "prompt": "/dca:overview Plugin を変更したので、図を更新して確認してください。",
+  "expected": [
+    "再生成の前は、view データの古さを検査が報告する",
+    "再生成の後は、SVG の線とノードが、宣言の追加と削除に追従する",
+    "追加した Skill も図に現れる"
+  ],
+  "must_not": ["view データだけを編集して、定義の変更の代わりにする"],
+  "evidence": ["dca_overview.py check の出力", "SVG の data-edge と data-node の集合"],
+  "checks": [
+    "test_overview.OverviewUpdate.test_stale_view_is_reported_after_a_declaration_changes",
+    "test_overview.OverviewUpdate.test_removing_a_guidance_declaration_removes_the_drawn_line",
+    "test_overview.OverviewUpdate.test_adding_a_skill_adds_a_box_and_a_line"
+  ]
+}

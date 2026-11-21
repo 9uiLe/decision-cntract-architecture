@@ -1,0 +1,18 @@
+{
+  "id": "E03",
+  "viewpoint": "肯定的な起動・scan",
+  "skills": ["scan"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "host-run",
+  "fixture": "kmp-shared",
+  "setup": ["fixture を複写して git init と commit を行う", "DCA_STATE_DIR に一時ディレクトリを指定する"],
+  "prompt": "/dca:scan 来場受付の判定について、共通部分とプラットフォーム固有の部分を踏まえて問題を調べてください。フローの鍵は check-in、ラベルは「来場受付」で合意済みです。",
+  "expected": [
+    "commonMain と androidMain、iosMain の境界を踏まえて指摘を分類する",
+    "共通化そのものを達成条件にしない",
+    "JVM で確認できないプラットフォーム固有の部分を、未確認として示す",
+    "各指摘に観測した事実、根拠、次の確認が付く"
+  ],
+  "must_not": ["コードを変更する", "好みの設計を違反として報告する"],
+  "evidence": ["応答の本文", "保存した記録の内容"]
+}

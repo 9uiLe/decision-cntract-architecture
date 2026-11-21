@@ -1,0 +1,24 @@
+{
+  "id": "E16",
+  "viewpoint": "保存境界",
+  "skills": ["map", "scan", "interview", "refactor"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "deterministic",
+  "fixture": null,
+  "setup": ["一時 Git リポジトリと一時の保存先を作る"],
+  "prompt": "調査、合意、検証を進めて、記録を保存してください。",
+  "expected": [
+    "記録が、対象リポジトリの外のプロジェクトとフローの単位に保存される",
+    "別のプロジェクト、フロー、clone の記録と混ざらない",
+    "対象リポジトリ、Git 管理ディレクトリ、他の worktree、Plugin の保守リポジトリの中は保存先にできない",
+    "管理するディレクトリや記録、ロックが symlink のときは書き込まない"
+  ],
+  "must_not": ["対象リポジトリに記録を作る"],
+  "evidence": ["dca_state.py の出力の location と written_to", "対象リポジトリの git status"],
+  "checks": [
+    "test_state.RecordLifecycle.test_create_reports_new_record_target_and_written_path",
+    "test_state.StateDirectoryRejection.test_inside_target_repository",
+    "test_state.RecordLifecycle.test_symlinked_project_directory_cannot_redirect_writes_into_repository",
+    "test_state.ProjectIdentity.test_separate_clone_is_separate_project"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "E17",
+  "viewpoint": "再開と記録",
+  "skills": ["refactor", "interview", "scan"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "deterministic",
+  "fixture": null,
+  "setup": ["記録を作って検証を追加し、HEAD、index、作業ツリーを変えてから再開する"],
+  "prompt": "中断した作業を再開してください。",
+  "expected": [
+    "有効な合意と、追記された検証を引き継ぐ",
+    "HEAD、index、作業ツリーの変化を、relevant なパスと、それ以外の変更に分けて報告する",
+    "前後の同一性を確認できない検証を、確認済みにしない",
+    "古い検証結果を、今回の再実行として扱わない"
+  ],
+  "must_not": ["HEAD が変わっただけで合意を破棄する"],
+  "evidence": ["dca_source.py compare の出力", "read で得た記録"],
+  "checks": [
+    "test_source.SourceIdentification.test_staged_change_with_same_worktree_content_is_detected_outside_relevant",
+    "test_source.SourceIdentification.test_head_change_lists_files_outside_relevant_paths",
+    "test_state.RecordLifecycle.test_confirmed_verification_requires_identical_identity",
+    "test_state.RecordLifecycle.test_verifications_are_append_only_and_survive_agreement_updates",
+    "test_state.ProjectIdentity.test_other_checkout_records_are_not_mixed"
+  ]
+}

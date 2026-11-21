@@ -1,0 +1,7 @@
+interface:
+  display_name: "DCA principles"
+  short_description: "同梱する DCA の原則と、必須と任意の区別を説明する"
+  default_prompt: "$dca:principles 次の作業に適用する DCA の原則と、必須と任意の区別を説明して"
+
+policy:
+  allow_implicit_invocation: false

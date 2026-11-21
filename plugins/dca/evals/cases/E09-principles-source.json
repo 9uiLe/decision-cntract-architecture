@@ -1,0 +1,17 @@
+{
+  "id": "E09",
+  "viewpoint": "思想の参照・principles",
+  "skills": ["principles"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "host-run",
+  "fixture": null,
+  "setup": [],
+  "prompt": "/dca:principles Handler は必ず使う必要がありますか。必須の原則と任意の技法の区別も教えてください。",
+  "expected": [
+    "同梱資料(S01)から、Handler は実際に判断を委ねるときの任意の技法だと説明する",
+    "必須の原則と任意の技法を区別し、出典の記号と同梱ファイルを示す",
+    "対象フローの適合や検証完了を宣言しない"
+  ],
+  "must_not": ["外部の文書を取得して答える", "思想に書かれていない判断を必須として説明する"],
+  "evidence": ["応答の本文", "読んだ同梱ファイル"]
+}
