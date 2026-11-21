@@ -14,6 +14,7 @@ public struct CreateBehavior: Equatable, Sendable {
     public static let soldOut = CreateBehavior(effect: .soldOut, delivery: .respond)
     public static let rejectBeforeCreate = CreateBehavior(effect: .reject, delivery: .respond)
     public static let loseResponseAfterCreate = CreateBehavior(effect: .create, delivery: .lose)
+    public static let loseResponseAfterReject = CreateBehavior(effect: .reject, delivery: .lose)
     public static let holdResponse = CreateBehavior(effect: .create, delivery: .hold)
 }
 
@@ -63,6 +64,7 @@ public struct CheckInRecordCount: Equatable, Sendable {
 public struct SimulatorObservations: Equatable, Sendable {
     public var createRequests = 0
     public var lookUpRequests = 0
+    public var lastLookedUpRequest: RequestId?
     public var cancelRequests = 0
     public var usageRequests = 0
     public var qualificationRequests = 0

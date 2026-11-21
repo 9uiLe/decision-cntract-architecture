@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1480" height="2127" viewBox="0 0 1480 2127" role="img" aria-labelledby="title desc">
 <title id="title">dca Plugin の構成図</title>
-<desc id="desc">dca Plugin の Skill 8 件と、共通資料、実行環境、成果物の関係。版 0.1.0。</desc>
+<desc id="desc">dca Plugin の Skill 8 件と、共通資料、実行環境、成果物の関係。版 0.1.1。</desc>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#47647b"/></marker></defs>
 <style>text { font-family: 'Noto Sans CJK JP', 'Hiragino Sans', 'Yu Gothic', sans-serif; }</style>
 <rect width="1480" height="2127" fill="#f7f9fc"/>
 <text x="40" y="76" font-size="36" fill="#142638">dca Plugin の構成</text>
-<text x="40" y="114" font-size="18" fill="#4a6075">Skill 8 件、共通資料、実行環境、成果物の関係。版 0.1.0</text>
+<text x="40" y="114" font-size="18" fill="#4a6075">Skill 8 件、共通資料、実行環境、成果物の関係。版 0.1.1</text>
 <rect x="40" y="140" width="1400" height="755" rx="14" fill="#fbfcfe" stroke="#5b7fb0" stroke-width="3"/>
 <text x="64" y="172" font-size="22" fill="#142638">Plugin: dca（Skill 8 件。名前空間 dca:）</text>
 <rect x="540" y="188" width="400" height="147" rx="10" fill="#fff4dc" stroke="#c8963c" stroke-width="2" data-node="skill:guide"/>

@@ -621,15 +621,15 @@
   "inputs": [
     {
       "path": ".claude-plugin/plugin.json",
-      "sha256": "b094a52a74023b29687ed5d59c5ab22c278b2ea6edc38d64c2bd3492f56ae22b"
+      "sha256": "2f0df5cda0600ce8ea5871573213fb150aec6cf380b949b83f56d4dd83a1b5f2"
     },
     {
       "path": "plugin.json",
-      "sha256": "d2b9f7b857d382b54fcadeff93bea4d992ed1bbaabce4d79c577f06c8216a1fa"
+      "sha256": "c7c1fd2fc0abe4eb0d786985aed5198e39788fbee8a12e371719bbde51a526b5"
     },
     {
       "path": "skills/guide/SKILL.md",
-      "sha256": "3cb13659975f634b4765e3696d810004431c80c1e4768393f54600b847cadddc"
+      "sha256": "ae18ce1f308633e5f0cd74865788e62645906986ea59ebc8769209c8c77ed0b5"
     },
     {
       "path": "skills/guide/agents/openai.yaml",
@@ -637,7 +637,7 @@
     },
     {
       "path": "skills/interview/SKILL.md",
-      "sha256": "7d0c7e30d4bfc1c785a6a39dce4e89faa8de7a67c4db574351458848a027e175"
+      "sha256": "9df10274940d19f1c831f3ad284e33c3915767aaf3ca944b5dc716ec9a08ad90"
     },
     {
       "path": "skills/interview/agents/openai.yaml",
@@ -645,7 +645,7 @@
     },
     {
       "path": "skills/lint/SKILL.md",
-      "sha256": "0ab514bd2e5386e8dad9fe689e41f88cffee236ab96a7ff3cabe6432f58e09ef"
+      "sha256": "1adc8d8b6079708a59065dcb6880fc038788dd3bb7e8b8294af6ef61a3da9db9"
     },
     {
       "path": "skills/lint/agents/openai.yaml",
@@ -653,7 +653,7 @@
     },
     {
       "path": "skills/map/SKILL.md",
-      "sha256": "922aff7c43d5fb946472b987b3893785590a75c983d5532ee853e892b4bf7a52"
+      "sha256": "ef7dba44aba0718d29de11c88b053727503a2867ecf958087eeec42522558950"
     },
     {
       "path": "skills/map/agents/openai.yaml",
@@ -693,19 +693,19 @@
     },
     {
       "path": "skills/principles/references/common/verification.md",
-      "sha256": "327db3a11eb67d48b7839ded131ee911f17e8be8ed319b864a838c73aaa629cf"
+      "sha256": "e12efc5e9e7d05906ef8c67b3c49e428eeb02d1c2272bc3da148eb0d38dcfc18"
     },
     {
       "path": "skills/principles/references/dca/SOURCES.json",
-      "sha256": "d94f3a9c29ff5c0eab29008c84d5491816a86926fbe77771a2bbb35f1540d037"
+      "sha256": "c8285527c0d780f158d31958fec9acefbd6765d00ddee564da826f9c8ccf616a"
     },
     {
       "path": "skills/principles/references/index.md",
-      "sha256": "3e15c0cf42143ce69f55b2aad287a66acbf4cfbf54bb2a5f2756e9c6ba348059"
+      "sha256": "8764920828a2509e5ecbff214cf825d1be1d26119b9b9ebdf5f33bf708800240"
     },
     {
       "path": "skills/refactor/SKILL.md",
-      "sha256": "1a7e549c324a0df216761a2d022bb063217e53424796f52122de4fcbfbbd2074"
+      "sha256": "a6bfd488bb3e8cf8f8bdc222a7fd3646ab49b7bae976e3da508de8efb11ed26e"
     },
     {
       "path": "skills/refactor/agents/openai.yaml",
@@ -713,7 +713,7 @@
     },
     {
       "path": "skills/scan/SKILL.md",
-      "sha256": "67cf0cc89bb134a4100375947ef2f5b16cced32686e6956f5c265c5cd52dfb88"
+      "sha256": "1a4b840b879d8af39e8089e5f21f882a206566b17a3e344bc55e992e3d6ea5db"
     },
     {
       "path": "skills/scan/agents/openai.yaml",
@@ -976,7 +976,7 @@
   ],
   "plugin": {
     "name": "dca",
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "registration": {
     "skills": [

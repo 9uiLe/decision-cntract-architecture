@@ -34,12 +34,17 @@ final class StubReservationPort: ReservationPort {
     let create = LockedValue<CreateObservation>(.created(ReservationId("r-1")))
     let cancel = LockedValue<CancelObservation>(.cancelled)
     let release = LockedValue<KernelTestSupport.Deferred<CancelObservation>?>(nil)
+    let lookUp = LockedValue<LookupObservation>(.notFound)
+    let lookUps = LockedValue<Int>(0)
 
     func createReservation(request: RequestId, session: SessionId, participants: [ParticipantId]) async -> CreateObservation {
         create.withLock { $0 }
     }
 
-    func lookUpReservation(request: RequestId) async -> LookupObservation { .notFound }
+    func lookUpReservation(request: RequestId) async -> LookupObservation {
+        lookUps.withLock { $0 += 1 }
+        return lookUp.withLock { $0 }
+    }
 
     func cancelReservation(_ reservation: ReservationId) async -> CancelObservation {
         if let gate = release.withLock({ $0 }) { return await gate.wait() ?? .noResponse }
@@ -99,6 +104,11 @@ struct Screen {
         timeChanged = continuation
         viewModel = ReservationViewModel(core: core, eligibility: eligibility, checkIn: checkIn, catalog: catalog, timeChanges: changes)
         viewModel.start()
+    }
+
+    func makeEndpoint() -> ReservationViewModel {
+        let (changes, _) = AsyncStream.makeStream(of: Void.self)
+        return ReservationViewModel(core: core, eligibility: eligibility, checkIn: checkIn, catalog: catalog, timeChanges: changes)
     }
 
     func advance(to time: Int64) {

@@ -101,6 +101,7 @@ sh Tools/check.sh
 | 境界（宣言・import・発行物・コンパイル・SwiftLint の負例） | `swift run --package-path Tools/ArchitectureCheck architecture-check all --root "$PWD"` |
 | 各 Package のテスト | `swift test --package-path Packages/<Package>` |
 | 検査自体のテスト | `swift test --package-path Tools/ArchitectureCheck` |
+| Simulator で操作券と実行先の更新を確認 | `sh Tools/ui-click.sh positive --device '<UDID>'` |
 
 ## 規約をどこで守るか
 
@@ -114,6 +115,8 @@ sh Tools/check.sh
 | テスト支援のターゲットを本番が使わない | `ArchitectureCheck` が依存宣言を検査する |
 | 組み立て関数の呼び出し元、Port の呼び出し元 | SwiftLint の独自規則（下記） |
 
+予約の照会と再試行では、画面が表示した券と実行先を操作に保持します。画面入力が更新されても、遅れて届いたイベントは保持していた券で Core の検査を受けます。 [画面操作の更新と検証](../../docs/mobile-app/ui-operation-updates.md)
+
 ## SwiftLint の静的判定の範囲
 
 SwiftLint は型を解決せず、行の文字列と置き場所で判定します。次の独自規則は `.swiftlint.yml` にあり、問題例と正例を `Tools/ArchitectureCheck/Fixtures/lint/` に置いて、検出される行と検出されない行を毎回確認します。
@@ -124,6 +127,8 @@ SwiftLint は型を解決せず、行の文字列と置き場所で判定しま�
 | `restricted_factory_call` | `makeEligibilityCore`・`makeReservationCore`・`makeCheckInCore` の名前が、`Composition`、各 Core の `Factory.swift`、`TestSupport`、`Tests` の外に現れる行（呼び出しと参照の両方） | 同じ名前の別の関数は区別できず、誤検出する |
 | `eligibility_port_call` `reservation_port_call` `check_in_port_call` | `.fetchQualification(` などの Port の呼び出しが、所有する Core の `Sources` の外にある行 | メソッド名で判定する。Port のメソッド名は Package をまたいで一意にしてある。同じ名前の別のメソッドは誤検出し、`(` の無い参照（`let f = port.createReservation`）や別名の包みは見逃す。ViewModel のメソッド名が Port と重なって誤検出された例があり、名前を変えて避けた |
 | `evidence_construction` | `*Evidence.swift` にある `public init`、`open init`、`open class`、`public class` | 他のファイルに置かれた発行物。置き場所は `ArchitectureCheck` が検査し、`IssuedEvidence` を採用する型が `*Evidence.swift` 以外にあれば失敗する |
+| `action_equality_by_identity` | `RequestAction.swift` 内の手書きの比較・ハッシュと、拡張で追加する等価性の適合 | 別ファイルの比較や入れ子の値の意味。券と実行先の参照比較は `ByIdentity` とテストで確認する |
+| `action_button_no_cache` | `ActionButton.swift` 内の `@State` などへの複製や、`.id`、`.equatable()` などの指定境界での更新制御 | 祖先ビューの比較、別のファイルで保持した値、クロージャの意味。画面テストとレビューで扱う |
 
 どの手段でも機械的に検査していないものがあります。Kotlin 版の `RequiredEvidenceParameter` に当たる、発行物を受け取る公開操作の引数に Optional や既定値を付けないことの検査は、この例に入れていません。現在の公開操作（`submit`、`checkStatus`、`retry`、`cancel`、`checkIn` など）は、どれも Optional や既定値のない引数で受け取っています。
 

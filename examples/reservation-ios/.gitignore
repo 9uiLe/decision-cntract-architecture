@@ -4,3 +4,7 @@ App/*.xcodeproj
 App/ReservationIos/Info.plist
 App/build/
 Tools/ArchitectureCheck/.build/
+UITests/ActionFixture.xcodeproj
+UITests/ActionFixture/Info.plist
+UITests/build/
+DerivedData/

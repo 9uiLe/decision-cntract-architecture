@@ -43,6 +43,7 @@ struct ServiceState: Sendable {
 
     var createRequests = 0
     var lookUpRequests = 0
+    var lastLookedUpRequest: RequestId?
     var cancelRequests = 0
     var usageRequests = 0
     var qualificationRequests = 0
@@ -76,6 +77,7 @@ struct ServiceState: Sendable {
         var observed = SimulatorObservations()
         observed.createRequests = createRequests
         observed.lookUpRequests = lookUpRequests
+        observed.lastLookedUpRequest = lastLookedUpRequest
         observed.cancelRequests = cancelRequests
         observed.usageRequests = usageRequests
         observed.qualificationRequests = qualificationRequests

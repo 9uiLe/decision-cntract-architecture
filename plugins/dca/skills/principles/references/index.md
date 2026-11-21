@@ -19,7 +19,7 @@ dca に同梱する DCA の思想と、各 Skill が共通で読む資料の所�
 
 | トピック | 同梱するファイル | 出典 | 複写元 |
 | --- | --- | --- | --- |
-| 判断契約、結果ごとに許される操作、前提と有効期限、Handler、必須の原則と任意の技法 | dca/architecture.md | S01 | docs/architecture.md |
+| 判断契約、前提と有効期限、Handler、操作を持つ画面入力の更新 | dca/architecture.md | S01 | docs/architecture.md |
 | 保証ごとの検証、仕様変更を使った評価 | dca/verification.md | S02 | docs/verification.md |
 | 運用ルールと detekt の検査仕様 | dca/detekt-rules.md | S03 | docs/detekt-rules.md |
 | 契約の制約を弱めた比較 | dca/experiments/contract-comparisons.md | S04 | docs/experiments/contract-comparisons.md |
@@ -39,6 +39,7 @@ dca に同梱する DCA の思想と、各 Skill が共通で読む資料の所�
 | 必須 | 仕様変更のときに再判断する利用側を定める |
 | 必須 | 型検査が働くと説明するときは、通常の利用側と同じコンパイル境界で、正例と負例を確かめる |
 | 必須 | 対象や時刻が一致するか、外部操作が重複しないかは、状態と操作を所有する Core が実行時に判断する |
+| 更新境界の制約 | 操作を持つ入力の更新を省く場合に、表示と操作の差を保つ。古いイベントは保持していた券を Core へ渡す |
 | 任意 | 実際に判断を委ねるときに Handler を使う |
 | 任意 | 独立した判断だけを小さな純粋関数に分ける |
 | 任意 | 宣言から決まる接続が増えたときに、コード生成を選ぶ。生成した接続に、業務判断を補う既定の動作を持たせない |

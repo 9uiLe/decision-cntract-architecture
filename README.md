@@ -46,4 +46,6 @@ codex plugin add dca@dca-plugins
 
 調査、合意、移行の進捗は、リポジトリ外のローカルの領域（`DCA_STATE_DIR`、`XDG_STATE_HOME` の下の `dca`、`~/.local/state/dca` の順）に保存します。導入先のリポジトリには、CLAUDE.md や docs などの記録を作りません。
 
-初期版の対象は Kotlin/JVM と Kotlin Multiplatform です。導入と Skill の登録、保存と識別の検査、構成図の検査は、決定的なテストと host の実測で確かめています。モデルを呼ぶ評価は、[評価ケース](plugins/dca/evals/README.md)を用意していますが、まだ実施していません。
+コード移行の対象は Kotlin/JVM と Kotlin Multiplatform です。SwiftUI では、操作を持つ画面入力の更新について、原則の確認、経路の調査、検査の提案に使えます。 [画面操作の更新](docs/mobile-app/ui-operation-updates.md)
+
+初期版の導入と Skill の登録はホストで確認済みです。保存や識別、構成図には自動検査があり、モデルを呼ぶ評価は未実施です。 [評価ケースと実行方法](plugins/dca/evals/README.md)

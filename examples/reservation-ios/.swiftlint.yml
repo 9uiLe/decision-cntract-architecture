@@ -84,3 +84,17 @@ custom_rules:
     regex: '\bpublic\s+init\b|\bopen\s+class\b|\bpublic\s+class\b|\bopen\s+init\b'
     included: '.*Evidence\.swift'
     severity: error
+
+  action_equality_by_identity:
+    name: "操作の等価性は ByIdentity の合成に任せる"
+    message: "RequestAction は実行先と券を ByIdentity で保持する。== や hash を手書きしたり別の型で Equatable を足したりすると、片方の変更を比較から落とせる。"
+    regex: 'static\s+func\s+==|func\s+hash\(into|extension\s+\w+\s*:\s*[^{]*\b(Equatable|Hashable)\b'
+    included: 'Packages/ReservationUI/Sources/.*RequestAction\.swift'
+    severity: error
+
+  action_button_no_cache:
+    name: "操作の部品は受け取った操作をそのまま実行する"
+    message: "ActionButton は操作を @State などへ写したり、識別や比較の仕組み（.id・.equatable・onChange・onAppear）を足したりしない。券か実行先が変わった更新の後に、古い操作が残る。"
+    regex: '@State\b|@StateObject\b|@Binding\b|\.id\(|\.equatable\(\)|EquatableView|\.onChange\(|\.onAppear\b'
+    included: 'Packages/ReservationUI/Sources/.*ActionButton\.swift'
+    severity: error

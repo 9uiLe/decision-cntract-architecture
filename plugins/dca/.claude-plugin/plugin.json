@@ -1,6 +1,6 @@
 {
   "name": "dca",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "既存プロジェクトの一つの業務フローを、判断契約(DCA)の観点で調査・合意・段階移行するための Skill 群",
   "author": {
     "name": "9uiLe",

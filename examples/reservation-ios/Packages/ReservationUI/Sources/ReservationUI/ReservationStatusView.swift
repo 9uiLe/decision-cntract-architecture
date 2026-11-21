@@ -5,8 +5,7 @@ public import SwiftUI
 
 public struct ReservationStatusView: View {
     let state: StatusState
-    let onCheckStatus: (StatusCheckTicket) -> Void
-    let onRetry: (RetryTicket) -> Void
+    let endpoint: ReservationViewModel
     let onCancel: (CancelTicket) -> Void
     let onCheckIn: (ReservationAdmission) -> Void
     let onLookUpCheckIn: (CheckInStatusTicket) -> Void
@@ -15,8 +14,7 @@ public struct ReservationStatusView: View {
 
     public init(
         state: StatusState,
-        onCheckStatus: @escaping (StatusCheckTicket) -> Void,
-        onRetry: @escaping (RetryTicket) -> Void,
+        endpoint: ReservationViewModel,
         onCancel: @escaping (CancelTicket) -> Void,
         onCheckIn: @escaping (ReservationAdmission) -> Void,
         onLookUpCheckIn: @escaping (CheckInStatusTicket) -> Void,
@@ -24,8 +22,7 @@ public struct ReservationStatusView: View {
         onChooseAgain: @escaping () -> Void
     ) {
         self.state = state
-        self.onCheckStatus = onCheckStatus
-        self.onRetry = onRetry
+        self.endpoint = endpoint
         self.onCancel = onCancel
         self.onCheckIn = onCheckIn
         self.onLookUpCheckIn = onLookUpCheckIn
@@ -65,9 +62,7 @@ public struct ReservationStatusView: View {
                 description: "予約が成立している可能性があります。再試行はできません。元の要求を照会してください。",
                 emphasis: .caution
             ) {
-                Button("状況を照会する") { onCheckStatus(check) }
-                    .buttonStyle(.borderedProminent)
-                    .accessibilityIdentifier("lookup-button")
+                ActionButton(title: "状況を照会する", identifier: "lookup-button", action: .lookingUp(check, on: endpoint))
             }
         case .notCreated(let summary, let retry, let denial, let gate):
             StatusCard(
@@ -78,8 +73,7 @@ public struct ReservationStatusView: View {
             ) {
                 switch gate {
                 case .open:
-                    Button("再試行する") { onRetry(retry) }
-                        .buttonStyle(.borderedProminent).accessibilityIdentifier("retry-button")
+                    ActionButton(title: "再試行する", identifier: "retry-button", action: .retrying(retry, on: endpoint))
                 case .closed:
                     Text(retryUnavailableMessage()).font(.footnote).accessibilityIdentifier("retry-unavailable")
                 }

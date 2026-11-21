@@ -17,6 +17,7 @@
 | 前提・結果・次の操作の関係 | [設計思想と判断契約](architecture.md) |
 | モバイル版で判断を持つ箇所 | [モバイルアプリへの適用](mobile-app/architecture.md) · [3つの Core の判断契約と依存関係](mobile-app/core-contracts.md) |
 | 確認済みの値を使える条件と時点 | [判断済みの値が使える時点](mobile-app/contract-evidence.md) |
+| 同じ表示で操作券や実行先が変わる場合 | [画面操作の更新](mobile-app/ui-operation-updates.md) |
 | 業務と画面の流れ | [参加資格](mobile-app/qualification.md) · [予約の作成・照会・取消](mobile-app/screens.md#予約の作成照会取消) · [来場受付](mobile-app/check-in.md) · [画面と操作](mobile-app/screens.md) |
 | ビルド対象と技術の選定 | [検証アプリの技術選定](mobile-app/technology.md) |
 

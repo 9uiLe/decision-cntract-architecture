@@ -34,5 +34,10 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation(libs.coroutines.test)
         }
+        jvmTest.dependencies {
+            implementation(compose.desktop.currentOs)
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
     }
 }

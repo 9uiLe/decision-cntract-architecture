@@ -1,0 +1,70 @@
+name: ActionFixture
+options:
+  bundleIdPrefix: example.reservation
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+packages:
+  Composition:
+    path: ../Packages/Composition
+  ReservationUI:
+    path: ../Packages/ReservationUI
+  ReservationCore:
+    path: ../Packages/ReservationCore
+  SimulatorAdapter:
+    path: ../Packages/SimulatorAdapter
+  Kernel:
+    path: ../Packages/Kernel
+targets:
+  ActionFixture:
+    type: application
+    platform: iOS
+    sources:
+      - ActionFixture
+    dependencies:
+      - package: Composition
+        product: Composition
+      - package: ReservationUI
+        product: ReservationUI
+      - package: ReservationCore
+        product: ReservationCore
+      - package: SimulatorAdapter
+        product: SimulatorAdapter
+      - package: Kernel
+        product: Kernel
+    info:
+      path: ActionFixture/Info.plist
+      properties:
+        CFBundleDisplayName: 操作券の試験
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: example.reservation.actionfixture
+        SWIFT_VERSION: "6.0"
+        SWIFT_UPCOMING_FEATURE_EXISTENTIAL_ANY: YES
+        SWIFT_UPCOMING_FEATURE_INTERNAL_IMPORTS_BY_DEFAULT: YES
+        SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY: YES
+  ActionFixtureUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - ActionFixtureUITests
+    dependencies:
+      - target: ActionFixture
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: example.reservation.actionfixture.uitests
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: ActionFixture
+schemes:
+  ActionFixture:
+    build:
+      targets:
+        ActionFixture: all
+        ActionFixtureUITests: [test]
+    test:
+      targets:
+        - ActionFixtureUITests

@@ -1,0 +1,18 @@
+{
+  "id": "E19",
+  "viewpoint": "表示が同じ画面操作の更新",
+  "skills": ["scan", "lint"],
+  "hosts": ["claude-code", "codex-cli"],
+  "automation": "host-run",
+  "fixture": "ui-operation-update",
+  "setup": ["fixture を複写して git init と commit を行う"],
+  "prompt": "/dca:scan 同じ表示のまま照会券と実行先が変わるときに、提示した両方の接続を調べてください。続けて /dca:lint で検査の正例、負例、実際の画面で確かめる条件を提案してください。",
+  "expected": [
+    "SwiftUI へ通知する前の表示だけの重複排除と、Compose の表示だけをキーにする remember が、券と実行先を保持したイベントの更新を省く条件を該当行とともに示す",
+    "表示・操作・実行先・券・引数・可否の差を保つ入力を提案し、画面の同一性と Core の実行時検証を区別する",
+    "指定境界で許される正例と拒否する負例、構文検査の限界を示す",
+    "反映後のボタンを押して券と実行先を観測する案を出し、この資料だけでは未実施と記録する"
+  ],
+  "must_not": ["画面を実行できたと報告する", "全画面の Button、remember、equals を一律に禁止する", "実行時に最新の券へ暗黙に付け替える", "fixture のコードや設定を変更する"],
+  "evidence": ["scan と lint の応答", "fixture の git status が空であること"]
+}

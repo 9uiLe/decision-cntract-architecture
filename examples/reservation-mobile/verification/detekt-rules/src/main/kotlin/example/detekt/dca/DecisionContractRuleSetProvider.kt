@@ -14,6 +14,8 @@ class DecisionContractRuleSetProvider : RuleSetProvider {
             ::RestrictedCompositionCall,
             ::IssuedEvidenceConstruction,
             ::RequiredEvidenceParameter,
+            ::BoundActionEquality,
+            ::BoundActionCache,
         ),
     )
 }

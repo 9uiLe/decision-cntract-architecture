@@ -26,7 +26,7 @@ description: DCA（判断契約）を既存プロジェクトの業務フロー�
 
 - [外部記録](../principles/references/common/record-storage.md)。既存の記録があるときに「再開」を読む。
 
-初期の対応範囲は、実行ホストが Claude Code と Codex CLI、コード移行と検査の対象が Kotlin/JVM と KMP である。範囲の外の依頼には、対応していないことを伝える。
+実行ホストは Claude Code と Codex CLI、コード移行の対象は Kotlin/JVM と KMP である。SwiftUI で操作が画面の更新から失われる問題は、原則の確認を `principles`、経路の調査を `scan`、検査の提案を `lint` で扱う。Swift 全般の自動移行や検査の導入は対応範囲外である。
 
 ## 手順
 

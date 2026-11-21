@@ -35,7 +35,7 @@ DECLARABLE_KINDS = ("案内", "呼び出し", "引き継ぎ", "生成")
 LINK = re.compile(r"\]\(([^)\s]+)\)")
 FORBIDDEN_FRAGMENTS = ("/Users/", "/private/", "/home/", "C:\\")
 FORBIDDEN_PATHS = ("hooks", ".mcp.json", "mcp.json", ".app.json", ".codex-plugin")
-EVAL_IDS = tuple("E%02d" % number for number in range(1, 19))
+EVAL_IDS = tuple("E%02d" % number for number in range(1, 20))
 RESULT_STATUSES = ("成功", "失敗", "実行不能", "未実施")
 
 

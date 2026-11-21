@@ -22,14 +22,11 @@ import example.checkin.core.CheckInRetryTicket
 import example.checkin.core.CheckInStatusTicket
 import example.reservation.core.CancelTicket
 import example.reservation.core.ReservationAdmission
-import example.reservation.core.RetryTicket
-import example.reservation.core.StatusCheckTicket
 
 @Composable
 fun ReservationStatusScreen(
     state: StatusState,
-    onCheckStatus: (StatusCheckTicket) -> Unit,
-    onRetry: (RetryTicket) -> Unit,
+    endpoint: ReservationViewModel,
     onCancel: (CancelTicket) -> Unit,
     onCheckIn: (ReservationAdmission) -> Unit,
     onLookUpCheckIn: (CheckInStatusTicket) -> Unit,
@@ -43,7 +40,7 @@ fun ReservationStatusScreen(
         if (state.request == null && state.reservations.isEmpty()) {
             Text("予約の操作はまだありません。", modifier = Modifier.testTag("status-empty"))
         }
-        state.request?.let { RequestCardContent(it, onCheckStatus, onRetry, onChooseAgain) }
+        state.request?.let { RequestCardContent(it, endpoint, onChooseAgain) }
         state.reservations.forEach { ReservationCardContent(it, onCancel, onCheckIn, onLookUpCheckIn, onRetryCheckIn) }
     }
 }
@@ -51,8 +48,7 @@ fun ReservationStatusScreen(
 @Composable
 fun RequestCardContent(
     card: RequestCard,
-    onCheckStatus: (StatusCheckTicket) -> Unit,
-    onRetry: (RetryTicket) -> Unit,
+    endpoint: ReservationViewModel,
     onChooseAgain: () -> Unit,
 ) {
     when (card) {
@@ -69,20 +65,14 @@ fun RequestCardContent(
             description = "予約が成立している可能性があります。再試行はできません。元の要求を照会してください。",
             emphasis = Emphasis.Caution,
         ) {
-            FilledTonalButton(
-                onClick = { onCheckStatus(card.check) },
-                modifier = Modifier.fillMaxWidth().testTag("lookup-button"),
-            ) { Text("状況を照会する") }
+            ActionButton(card.boundTo(endpoint), "状況を照会する", "lookup-button")
         }
         is RequestCard.NotCreated -> StatusCard(
             tag = "request-not-created", label = "未成立が確定", card.summary,
             description = "予約は作成されていません。開催回の開始前なら、同じ内容でもう一度送信できます。" +
                 (card.denial?.let { "\n${createDenialMessage(it)}" } ?: ""),
         ) {
-            Button(
-                onClick = { onRetry(card.retry) },
-                modifier = Modifier.fillMaxWidth().testTag("retry-button"),
-            ) { Text("再試行する") }
+            ActionButton(card.boundTo(endpoint), "再試行する", "retry-button", prominent = true)
         }
         is RequestCard.SoldOut -> StatusCard(
             tag = "request-sold-out", label = "満席", card.summary,
@@ -178,6 +168,17 @@ private fun ParticipantCheckInContent(
             ) { Text("${row.name}をもう一度受付する") }
             is CheckInView.Processing, CheckInView.CheckedIn -> Unit
         }
+    }
+}
+
+// 受け取った action をそのまま実行する。別の値へ写してキャッシュすると、券か実行先が変わった更新の後も古い操作が残る。
+@Composable
+private fun ActionButton(action: RequestAction, label: String, tag: String, prominent: Boolean = false) {
+    val modifier = Modifier.fillMaxWidth().testTag(tag)
+    if (prominent) {
+        Button(onClick = { action.execute() }, modifier = modifier) { Text(label) }
+    } else {
+        FilledTonalButton(onClick = { action.execute() }, modifier = modifier) { Text(label) }
     }
 }
 

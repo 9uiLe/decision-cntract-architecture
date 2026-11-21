@@ -17,4 +17,6 @@ Android・iOS の共通画面で、参加資格の確認、ワークショップ
 
 Gradle のコマンドはこのディレクトリで実行します。モジュールの位置と Gradle のプロジェクト名は [settings.gradle.kts](settings.gradle.kts) で確認できます。
 
+予約の照会と再試行では、画面が表示した券と実行先を操作に保持します。Compose を起動する回帰テストでは、表示を固定して券や実行先だけを更新し、更新後のボタンを押します。 [画面操作の更新と検証](../../docs/mobile-app/ui-operation-updates.md)
+
 [ビルドと実行](../../docs/mobile-app/setup.md) · [3つの Core の判断契約](../../docs/mobile-app/core-contracts.md) · [detekt の運用ルール](../../docs/detekt-rules.md) · [変更実験の実行](../../docs/verification.md#3つの-core-を使う変更実験)

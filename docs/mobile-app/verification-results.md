@@ -62,4 +62,4 @@ cd examples/reservation-mobile
 
 H〜L の段階と期待する診断は、[変更実験の各 `steps.json`](../../examples/reservation-mobile/verification/experiments/) に記載しています。実行すると、診断、成功したテスト、変更範囲が指定した出力先に保存されます。[変更実験の実行手順](../verification.md#3つの-core-を使う変更実験) · [比較実験の実行手順](../experiments/contract-comparisons.md#実行)
 
-端末での検証はエミュレーターとシミュレーターでの操作です。実機での操作と Compose の自動 UI テストは未実施です。外部サービスの観測はシミュレーターの記録に基づきます。
+このページの端末検証はエミュレーターとシミュレーターでの操作です。物理端末では実施していません。外部サービスの観測はシミュレーターの記録に基づきます。 [SwiftUI と Compose の画面操作の更新に関する検証](ui-operation-updates.md)

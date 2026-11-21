@@ -89,8 +89,7 @@ fun ReservationApp(viewModel: ReservationViewModel) {
                     )
                     Route.Status -> ReservationStatusScreen(
                         state = state.status,
-                        onCheckStatus = { viewModel.checkStatus(it) },
-                        onRetry = { viewModel.retry(it) },
+                        endpoint = viewModel,
                         onCancel = { viewModel.cancel(it) },
                         onCheckIn = { viewModel.checkInParticipant(it) },
                         onLookUpCheckIn = { viewModel.lookUpCheckIn(it) },

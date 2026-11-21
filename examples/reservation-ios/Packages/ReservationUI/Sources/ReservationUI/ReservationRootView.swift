@@ -34,8 +34,7 @@ public struct ReservationRootView: View {
                 case .status:
                     ReservationStatusView(
                         state: viewModel.state.status,
-                        onCheckStatus: { _ = viewModel.checkStatus($0) },
-                        onRetry: { _ = viewModel.retry($0) },
+                        endpoint: viewModel,
                         onCancel: { _ = viewModel.cancel($0) },
                         onCheckIn: { viewModel.checkInParticipant($0) },
                         onLookUpCheckIn: { viewModel.checkParticipantStatus($0) },

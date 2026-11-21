@@ -4,7 +4,7 @@ dca が意図した場面で働き、過剰に適用せず、検証の欠落を�
 
 ## ケースの種類
 
-`cases/` に 18 件のケース（E01 から E18）があります。各ケースは JSON で、次の項目を持ちます。
+`cases/` に 19 件のケース（E01 から E19）があります。各ケースは JSON で、次の項目を持ちます。
 
 | 項目 | 内容 |
 | --- | --- |
@@ -17,7 +17,7 @@ dca が意図した場面で働き、過剰に適用せず、検証の欠落を�
 | `evidence` | 判定に使う証拠 |
 | `checks` | 決定的に確かめるテスト。`<テストファイル>.<クラス>.<テスト名>` で書きます |
 
-`fixtures/` には、既存の Kotlin/JVM の予約フロー（`kotlin-reservation`）、Kotlin Multiplatform の構成（`kmp-shared`）、DCA が不要な小さな操作（`no-dca-needed`）があります。
+`fixtures/` には、Kotlin/JVM の予約フロー（`kotlin-reservation`）、Kotlin Multiplatform の構成（`kmp-shared`）、DCA が不要な小さな操作（`no-dca-needed`）、画面の更新で操作が失われる SwiftUI と Compose のコード断片（`ui-operation-update`）があります。
 
 ## 決定的に確かめる
 

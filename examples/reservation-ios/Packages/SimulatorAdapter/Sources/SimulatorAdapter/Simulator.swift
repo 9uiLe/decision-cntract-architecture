@@ -75,6 +75,7 @@ struct ReservationAdapter: ReservationPort {
     func lookUpReservation(request: RequestId) async -> LookupObservation {
         let behavior = service.store.mutate { state -> LookupBehavior in
             state.lookUpRequests += 1
+            state.lastLookedUpRequest = request
             return state.lookUpScript.isEmpty ? .normal : state.lookUpScript.removeFirst()
         }
         switch behavior {

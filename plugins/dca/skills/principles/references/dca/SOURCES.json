@@ -5,17 +5,17 @@
     {
       "copy": "architecture.md",
       "source": "docs/architecture.md",
-      "sha256": "c37d37d6d2d5d1b1d3e5295690b15cc968c5ecab336d3c47a0031fbfaf680cf6"
+      "sha256": "118af3e282ea04dece519ec71bf9a9cc8a52ea597e3070489eb976f2ed347b66"
     },
     {
       "copy": "verification.md",
       "source": "docs/verification.md",
-      "sha256": "998e01fbfdc658e103f328c0a6d3e1b1178e7f77a27aef1d743fa889658102b5"
+      "sha256": "c6ad934a8b501b882d7898f7ad335a7fe62c96827f325659847ca407d0f71426"
     },
     {
       "copy": "detekt-rules.md",
       "source": "docs/detekt-rules.md",
-      "sha256": "424337d940a8430e4813270dbd0efce9e0809dd97932369b75fc435878458157"
+      "sha256": "79359cd2fe33540821959099248594fcfd4c56255f6936d363019a236815aac8"
     },
     {
       "copy": "experiments/contract-comparisons.md",

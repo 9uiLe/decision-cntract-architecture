@@ -12,6 +12,20 @@ decision-contract:
     excludes: ['**/test/**', '**/*Test/**']
     issuedAnnotations:
       - 'example.kernel.IssuedEvidence'
+  BoundActionEquality:
+    active: true
+    boundActionAnnotations:
+      - 'example.kernel.BoundAction'
+  BoundActionCache:
+    active: true
+    excludes: ['**/test/**', '**/*Test/**']
+    boundActionAnnotations:
+      - 'example.kernel.BoundAction'
+    cachingCalls:
+      - 'androidx.compose.runtime.remember'
+      - 'androidx.compose.runtime.saveable.rememberSaveable'
+      - 'androidx.compose.runtime.derivedStateOf'
+      - 'androidx.compose.runtime.produceState'
   RestrictedCompositionCall:
     active: true
     excludes: ['**/test/**', '**/*Test/**']

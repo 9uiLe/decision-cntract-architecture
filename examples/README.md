@@ -7,3 +7,5 @@
 | SwiftUI 版（iOS） | [Swift Package の構成と依存方向](reservation-ios/README.md#構成と依存方向) | [SwiftUI 版の実行手順](reservation-ios/README.md#起動する) |
 
 [ドキュメント索引](../docs/README.md)
+
+[SwiftUI 版と KMP 版の予約操作の更新と検証](../docs/mobile-app/ui-operation-updates.md)
